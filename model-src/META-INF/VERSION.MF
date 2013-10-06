@@ -1,8 +1,0 @@
-#Tue, 01 Oct 2013 01:28:51 +0100
-#Build Number for ANT. Do not edit!
-#Tue Oct 01 01:28:51 WEST 2013
-version=1.0alpha
-build.number=56
-build.date=20131001012851+0100
-build.author=
-id=effortless-model

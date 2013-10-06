@@ -1,6 +1,0 @@
-<zk>
-<!--
-  <tag id="tag" />
--->
-  <decimalbox id="wgt" sclass="number-field" />
-</zk>

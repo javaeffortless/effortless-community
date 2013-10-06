@@ -1,6 +1,0 @@
-<zk>
-<!--
-  <tag id="tag" />
--->
-  <intbox id="wgt" sclass="count-field" />
-</zk>

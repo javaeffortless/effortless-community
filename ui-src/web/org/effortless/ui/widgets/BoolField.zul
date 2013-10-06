@@ -1,6 +1,0 @@
-<zk>
-<!--
-  <tag id="tag" />
--->
-  <checkbox id="wgt" sclass="bool-field" />
-</zk>

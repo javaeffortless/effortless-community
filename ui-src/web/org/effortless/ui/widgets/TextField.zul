@@ -1,6 +1,0 @@
-<zk>
-<!--
-  <tag id="tag" />
--->
-  <textbox id="wgt" sclass="text-field" width="98%" />
-</zk>

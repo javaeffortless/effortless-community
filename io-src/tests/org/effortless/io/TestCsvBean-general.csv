@@ -1,3 +1,0 @@
-"id","name","date","enabled","amount","price","listReferencias","listEntidadesInternas"
-1,"Juan, Dos",22/08/2012,yes,-32,-43.24,{"", "", "", ""},[{"id":1,"name":"Nombre1"}, {"id":2,"name":"Nombre2"}]
-1,"Juan, Dos",22/08/2012,yes,-32,-43.24,"ref1,ref2,ref3",

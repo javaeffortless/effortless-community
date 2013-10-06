@@ -1,6 +1,0 @@
-<zk>
-<!--
-  <tag id="tag" />
--->
-  <datebox id="wgt" sclass="date-field" format="dd/MM/yyyy" />
-</zk>
