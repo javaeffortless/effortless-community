@@ -1,6 +1,6 @@
 <project name="effortless-io" default="build" basedir=".">
 	<target name="build" description="">
-		<ant antfile="build.impl.xml" target="build" inheritrefs="true" inheritAll="true">
+		<ant antfile="../build.impl.xml" target="build" inheritrefs="true" inheritAll="true">
 		  <property name="src" value="."/>
 		  <property name="build_suffix" value=""/>
 			
