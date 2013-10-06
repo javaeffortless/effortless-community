@@ -13,6 +13,7 @@ import org.effortless.ui.Relocatable;
 import org.effortless.ui.Relocator;
 import org.effortless.ui.ViewContext;
 import org.effortless.ui.impl.Components;
+import org.effortless.ui.impl.CteUi;
 import org.effortless.ui.layouts.LayoutGrid;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
@@ -23,6 +24,7 @@ import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.A;
 import org.zkoss.zul.Div;
+import org.zkoss.zul.Hlayout;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Style;
 import org.zkoss.zul.Vlayout;
@@ -86,6 +88,49 @@ public class Menu extends AbstractComponent {
         initiateSelected();
         
         initiateSubitems();
+        initiateAlign();
+    }
+    
+    protected String align;
+    
+    protected void initiateAlign () {
+    	this.align = null;
+    }
+    
+    public String getAlign () {
+    	return this.align;
+    }
+    
+    public void setAlign (String newValue) {
+    	String oldValue = this.align;
+    	if (!ObjectUtils.equals(oldValue, newValue)) {
+    		this.align = newValue;
+    		_updateAlign();
+    	}
+    }
+    
+    protected Hlayout _cmpAlign;
+    
+    protected void _updateAlign () {
+    	if ("horizontal".equals(this.align)) {
+    		if (this._cmpAlign == null) {
+    			this._cmpAlign = new Hlayout();
+    			this._cmpAlign.setSclass("horizontal-align");
+    			this._cmpAlign.appendChild(this.wIcon);
+    			this._cmpAlign.appendChild(this.wTitle);
+    			this._cmpAlign.appendChild(this.wIconSubmenu);
+    			this.wgt.appendChild(this._cmpAlign);
+    		}
+    	}
+    	else {
+    		this.wgt.appendChild(this.wIcon);
+    		this.wgt.appendChild(this.wTitle);
+    		this.wgt.appendChild(this.wIconSubmenu);
+    		if (this._cmpAlign != null) {
+    			this._cmpAlign.detach();
+    			this._cmpAlign = null;
+    		}
+    	}
     }
 
     protected void initUi () {
@@ -302,8 +347,10 @@ public class Menu extends AbstractComponent {
     			String sclass = "menuclass_" + baseName;
     			String content = "." + sclass + " { ";
     			content += "background-image: url('" + url + "');";
-    			content += "width: 48px;";
-    			content += "height: 48px;";
+    			Boolean flag = (Boolean)this.getAttribute(CteUi.INNER_MENU);
+    			String imageSize = (Boolean.TRUE.equals(flag) ? "24px" : "48px");
+    			content += "width: " + imageSize + ";";
+    			content += "height: " + imageSize + ";";
     			content += "margin: auto;";
     			content += "}";
     			style.setContent(content);
@@ -368,6 +415,14 @@ public class Menu extends AbstractComponent {
 //			this.relocator.relocate(this.wSubmenu, newPosition);
 			this.relocator.relocate(this.wSubmenu, this.position);
 		}
+		Menu _menu = null;
+		try { _menu = (Menu)newChild; } catch (ClassCastException e) {}
+		if (_menu != null) {
+			_menu.setAttribute(CteUi.INNER_MENU, Boolean.TRUE);
+//			if (_menu.getAlign() == null) {
+//				_menu.setAlign("horizontal");
+//			}
+		}
    		result = this.wSubmenu.insertBefore(newChild, refChild);
    		this.subitems = (this.subitems != null ? this.subitems : new ArrayList<Component>());
 //		boolean anyMenu = checkAnyMenu();
@@ -404,6 +459,12 @@ public class Menu extends AbstractComponent {
 	public void afterCompose() {
 		if (false && this.relocator != null) {
 			this.relocator.relocate(this.wSubmenu, this.position);
+		}
+		if (this.align == null) {
+			Boolean flag = (Boolean)this.getAttribute(CteUi.INNER_MENU);
+			if (Boolean.TRUE.equals(flag)) {
+				this.setAlign("horizontal");
+			}
 		}
 	}
     

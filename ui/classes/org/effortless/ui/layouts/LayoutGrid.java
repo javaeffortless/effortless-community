@@ -22,6 +22,7 @@ public class LayoutGrid extends AbstractComponent {
 		super.initiate();
 		
 		initiateSize();
+		initiateSpans();
 	}
 	
 	protected Integer size;

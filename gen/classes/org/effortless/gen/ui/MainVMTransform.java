@@ -629,6 +629,7 @@ if (false) {
 					String imgOption = "main/" + lowerOption + ".png";
 					ImageResources.copy(appId, lowerOption, imgOption, 24);
 					if (true) {
+//						zul.add("        <menu link=\"" + StringUtils.capFirst(lowerOption) + "\" align=\"horizontal\" />");
 						zul.add("        <menu link=\"" + StringUtils.capFirst(lowerOption) + "\" />");
 					}
 					else {

@@ -27,6 +27,7 @@ public interface CteUi {
 	public static final String OPEN_POPUP = "OPEN_POPUP";
 	
 	public static final String PIVOT_ACTION_OBJECT = "$PIVOT_ACTION_OBJECT$";
+	public static final String INNER_MENU = "$INNER_MENU$";
 	
 //	public static final boolean _$FINDER_WINDOW_ONLY_EVENTS$_ = true;
 	
