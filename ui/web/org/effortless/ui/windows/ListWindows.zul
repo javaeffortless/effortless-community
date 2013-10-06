@@ -1,0 +1,36 @@
+<zk>
+<!--
+	<tabbox id="wgt" sclass="main-windows" width="100%" height="100%" visible="@load(vm.hasContents)">
+			<tabs visible="false">
+<tab id="mainTabWndIdx0" label="0" visible="@load(not empty vm.wnd0)" closable="false" selected="@load(vm.selectedContentIdx eq 0)" onSelect="@command('selectContentIdx', idx=0)" />
+<tab id="mainTabWndIdx1" label="1" visible="@load(not empty vm.wnd1)" closable="false" selected="@load(vm.selectedContentIdx eq 1)" onSelect="@command('selectContentIdx', idx=1)" />
+<tab id="mainTabWndIdx2" label="2" visible="@load(not empty vm.wnd2)" closable="false" selected="@load(vm.selectedContentIdx eq 2)" onSelect="@command('selectContentIdx', idx=2)" />
+<tab id="mainTabWndIdx3" label="3" visible="@load(not empty vm.wnd3)" closable="false" selected="@load(vm.selectedContentIdx eq 3)" onSelect="@command('selectContentIdx', idx=3)" />
+<tab id="mainTabWndIdx4" label="4" visible="@load(not empty vm.wnd4)" closable="false" selected="@load(vm.selectedContentIdx eq 4)" onSelect="@command('selectContentIdx', idx=4)" />
+<tab id="mainTabWndIdx5" label="5" visible="@load(not empty vm.wnd5)" closable="false" selected="@load(vm.selectedContentIdx eq 5)" onSelect="@command('selectContentIdx', idx=5)" />
+<tab id="mainTabWndIdx6" label="6" visible="@load(not empty vm.wnd6)" closable="false" selected="@load(vm.selectedContentIdx eq 6)" onSelect="@command('selectContentIdx', idx=6)" />
+<tab id="mainTabWndIdx7" label="7" visible="@load(not empty vm.wnd7)" closable="false" selected="@load(vm.selectedContentIdx eq 7)" onSelect="@command('selectContentIdx', idx=7)" />
+<tab id="mainTabWndIdx8" label="8" visible="@load(not empty vm.wnd8)" closable="false" selected="@load(vm.selectedContentIdx eq 8)" onSelect="@command('selectContentIdx', idx=8)" />
+<tab id="mainTabWndIdx9" label="9" visible="@load(not empty vm.wnd9)" closable="false" selected="@load(vm.selectedContentIdx eq 9)" onSelect="@command('selectContentIdx', idx=9)" />
+<tab id="mainTabWndIdx10" label="10" visible="@load(not empty vm.wnd10)" closable="false" selected="@load(vm.selectedContentIdx eq 10)" onSelect="@command('selectContentIdx', idx=10)" />
+<tab id="mainTabWndIdx11" label="11" visible="@load(not empty vm.wnd11)" closable="false" selected="@load(vm.selectedContentIdx eq 11)" onSelect="@command('selectContentIdx', idx=11)" />
+<tab id="mainTabWndIdx12" label="12" visible="@load(not empty vm.wnd12)" closable="false" selected="@load(vm.selectedContentIdx eq 12)" onSelect="@command('selectContentIdx', idx=12)" />
+			</tabs>
+			<tabpanels>
+<tabpanel><include height="100%" visible="@load(not empty vm.wnd0)" args="@load(vm.wnd0.args)" src="@load(vm.wnd0.src)" /></tabpanel>
+<tabpanel><include height="100%" visible="@load(not empty vm.wnd1)" args="@load(vm.wnd1.args)" src="@load(vm.wnd1.src)" /></tabpanel>
+<tabpanel><include height="100%" visible="@load(not empty vm.wnd2)" args="@load(vm.wnd2.args)" src="@load(vm.wnd2.src)" /></tabpanel>
+<tabpanel><include height="100%" visible="@load(not empty vm.wnd3)" args="@load(vm.wnd3.args)" src="@load(vm.wnd3.src)" /></tabpanel>
+<tabpanel><include height="100%" visible="@load(not empty vm.wnd4)" args="@load(vm.wnd4.args)" src="@load(vm.wnd4.src)" /></tabpanel>
+<tabpanel><include height="100%" visible="@load(not empty vm.wnd5)" args="@load(vm.wnd5.args)" src="@load(vm.wnd5.src)" /></tabpanel>
+<tabpanel><include height="100%" visible="@load(not empty vm.wnd6)" args="@load(vm.wnd6.args)" src="@load(vm.wnd6.src)" /></tabpanel>
+<tabpanel><include height="100%" visible="@load(not empty vm.wnd7)" args="@load(vm.wnd7.args)" src="@load(vm.wnd7.src)" /></tabpanel>
+<tabpanel><include height="100%" visible="@load(not empty vm.wnd8)" args="@load(vm.wnd8.args)" src="@load(vm.wnd8.src)" /></tabpanel>
+<tabpanel><include height="100%" visible="@load(not empty vm.wnd9)" args="@load(vm.wnd9.args)" src="@load(vm.wnd9.src)" /></tabpanel>
+<tabpanel><include height="100%" visible="@load(not empty vm.wnd10)" args="@load(vm.wnd10.args)" src="@load(vm.wnd10.src)" /></tabpanel>
+<tabpanel><include height="100%" visible="@load(not empty vm.wnd11)" args="@load(vm.wnd11.args)" src="@load(vm.wnd11.src)" /></tabpanel>
+<tabpanel><include height="100%" visible="@load(not empty vm.wnd12)" args="@load(vm.wnd12.args)" src="@load(vm.wnd12.src)" /></tabpanel>
+			</tabpanels>
+		</tabbox>
+-->
+</zk>

@@ -1,13 +1,13 @@
 <project name="effortless" default="build" basedir=".">
 	<target name="build" description="">
-		<ant antfile="gpw-src/build.xml" target="build" inheritAll="false" />
-		<ant antfile="core-src/build.xml" target="build" inheritAll="false" />
-		<ant antfile="io-src/build.xml" target="build" inheritAll="false" />
-		<ant antfile="server-src/build.xml" target="build" inheritAll="false" />
-		<ant antfile="ann-src/build.xml" target="build" inheritAll="false" />
-		<ant antfile="model-src/build.xml" target="build" inheritAll="false" />
-		<ant antfile="ui-src/build.xml" target="build" inheritAll="false" />
-		<ant antfile="gen-src/build.xml" target="build" inheritAll="false" />
-		<ant antfile="tests-src/build.xml" target="build" inheritAll="false" />
+		<ant antfile="build-gpw.xml" target="build" inheritAll="true" />
+		<ant antfile="build-core.xml" target="build" inheritAll="true" />
+		<ant antfile="build-io.xml" target="build" inheritAll="true" />
+		<ant antfile="build-server.xml" target="build" inheritAll="true" />
+		<ant antfile="build-ann.xml" target="build" inheritAll="true" />
+		<ant antfile="build-model.xml" target="build" inheritAll="true" />
+		<ant antfile="build-ui.xml" target="build" inheritAll="true" />
+		<ant antfile="build-gen.xml" target="build" inheritAll="true" />
+		<ant antfile="build-tests.xml" target="build" inheritAll="true" />
 	</target>
 </project>

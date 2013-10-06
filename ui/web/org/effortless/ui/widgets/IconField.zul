@@ -1,0 +1,18 @@
+<zk>
+  <div id="wgt" sclass="icon-info"></div>
+  <popup width="35%">
+  </popup>
+</zk>
+<!--
+  <tag id="tag" />
+-->
+<!--
+  <div id="wgt" sclass="icon-info" tooltip="wMoreInfo"></div>
+  <popup id="wMoreInfo" width="35%">
+-->
+<!--
+    <info-window id="wWindow" />
+-->
+<!--
+  </popup>
+-->

@@ -1,0 +1,6 @@
+<zk>
+<!--
+  <tag id="tag" />
+-->
+  <datebox id="wgt" sclass="timestamp-field" cols="16" format="dd/MM/yyyy HH:mm" />
+</zk>

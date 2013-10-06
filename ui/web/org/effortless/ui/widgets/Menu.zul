@@ -1,0 +1,11 @@
+<zk>
+	<a id="wgt">
+		<div id="wIcon" />
+		<label id="wTitle" />
+		<div id="wIconSubmenu" />
+	</a>
+<!--
+	<layout-grid id="wSubmenu">
+	</layout-grid>
+-->
+</zk>

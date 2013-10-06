@@ -1,0 +1,6 @@
+<zk>
+<!--
+  <tag id="tag" />
+-->
+  <timebox id="wgt" sclass="time-field" cols="4" format="HH:mm" />
+</zk>

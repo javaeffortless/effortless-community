@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<language-addon>
+    <addon-name>effortless</addon-name>
+    <depends>fluidgrid</depends>
+    <language-name>xul/html</language-name>
+
+	<stylesheet href="~./css/effortless.wcs" type="text/css"/>
+<!-- 
+	<stylesheet href="~./fluidgrid/css/rowlayout.css.dsp" type="text/css"/>
+	<stylesheet href="~./fluidgrid/css/rowchildren.css.dsp" type="text/css"/>
+<stylesheet href="~./zul/css/zk.wcs" type="text/css"/>
+	/web/js/fluidgrid/css/rowlayout.css.dsp
+	/web/js/fluidgrid/css/rowchildren.css.dsp
+-->
+
+
+<!-- 
+	<component>
+	    <component-name>finder-window</component-name>
+	    <component-class>org.effortless.ui.windows.FinderWindow</component-class>
+	    <extends>window</extends>
+	</component>
+-->
+
+	<component>
+	    <component-name>action</component-name>
+	    <component-class>org.effortless.ui.actions.Action</component-class>
+	    <extends>div</extends>
+	</component>
+
+
+
+	<component>
+	    <component-name>msg-window</component-name>
+	    <component-class>org.effortless.ui.windows.MsgWindow</component-class>
+	    <extends>window</extends>
+	</component>
+
+	<component>
+	    <component-name>editor-window</component-name>
+	    <component-class>org.effortless.ui.windows.EditorWindow</component-class>
+	    <extends>window</extends>
+	</component>
+
+	<component>
+	    <component-name>embedded-filter-window</component-name>
+	    <component-class>org.effortless.ui.windows.EmbeddedFilterWindow</component-class>
+	    <extends>window</extends>
+	</component>
+
+	<component>
+	    <component-name>finder-window</component-name>
+	    <component-class>org.effortless.ui.windows.FinderWindow</component-class>
+	    <extends>window</extends>
+	</component>
+
+	<component>
+	    <component-name>info-window</component-name>
+	    <component-class>org.effortless.ui.windows.InfoWindow</component-class>
+	    <extends>window</extends>
+	</component>
+
+	<component>
+	    <component-name>main-window</component-name>
+	    <component-class>org.effortless.ui.windows.MainWindow</component-class>
+	    <extends>window</extends>
+	</component>
+
+
+
+
+	<component>
+	    <component-name>list-windows</component-name>
+	    <component-class>org.effortless.ui.windows.ListWindows</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>breadcrumb</component-name>
+	    <component-class>org.effortless.ui.widgets.Breadcrumb</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>breadcrumb-item</component-name>
+	    <component-class>org.effortless.ui.widgets.BreadcrumbItem</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>icon-field</component-name>
+	    <component-class>org.effortless.ui.widgets.IconField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>layout-grid</component-name>
+	    <component-class>org.effortless.ui.layouts.LayoutGrid</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>menu</component-name>
+	    <component-class>org.effortless.ui.widgets.Menu</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>tag</component-name>
+	    <component-class>org.effortless.ui.widgets.Tag</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>list-field</component-name>
+	    <component-class>org.effortless.ui.widgets.ListField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>label-field</component-name>
+	    <component-class>org.effortless.ui.widgets.LabelField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>text-field</component-name>
+	    <component-class>org.effortless.ui.widgets.TextField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>password-field</component-name>
+	    <component-class>org.effortless.ui.widgets.PasswordField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>comment-field</component-name>
+	    <component-class>org.effortless.ui.widgets.CommentField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>count-field</component-name>
+	    <component-class>org.effortless.ui.widgets.CountField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>number-field</component-name>
+	    <component-class>org.effortless.ui.widgets.NumberField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>bool-field</component-name>
+	    <component-class>org.effortless.ui.widgets.BoolField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>time-field</component-name>
+	    <component-class>org.effortless.ui.widgets.TimeField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>date-field</component-name>
+	    <component-class>org.effortless.ui.widgets.DateField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>timestamp-field</component-name>
+	    <component-class>org.effortless.ui.widgets.TimestampField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>file-field</component-name>
+	    <component-class>org.effortless.ui.widgets.FileField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>photo-field</component-name>
+	    <component-class>org.effortless.ui.widgets.PhotoField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>ref-field</component-name>
+	    <component-class>org.effortless.ui.widgets.RefField</component-class>
+	    <extends>div</extends>
+	</component>
+
+	<component>
+	    <component-name>enum-field</component-name>
+	    <component-class>org.effortless.ui.widgets.EnumField</component-class>
+	    <extends>div</extends>
+	</component>
+
+
+ 
+</language-addon>

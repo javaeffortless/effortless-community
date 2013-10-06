@@ -1,0 +1,15 @@
+<project name="effortless-model" default="build" basedir=".">
+	<target name="build" description="">
+		<ant antfile="build.impl.xml" target="build" inheritrefs="true" inheritAll="true">
+			<property name="src" value="model"/>
+
+			<property name="build_suffix" value=""/>
+				
+			<property name="project.name" value="effortless-model" />
+			<property name="project.title" value="Librería Effortless (effortless-model)" />
+			<property name="project.author" value="" />
+			<property name="project.root" value="org/effortless/model" />
+			<property name="project.version" value="1.0alpha" />
+		</ant>
+	</target>
+</project>

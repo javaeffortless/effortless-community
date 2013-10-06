@@ -1,0 +1,127 @@
+<zk>
+<!--
+  <tag id="tag" />
+-->
+<!--
+  <vlayout width="100%">
+-->
+	<hlayout width="auto">
+	  <label id="labelNumElementsText" />
+	  <label id="labelNumElementsValue" />
+	</hlayout>
+    <listbox id="wgt" width="auto" seltype="single" checkmark="true">
+    </listbox>
+	<hlayout id="wPagination" sclass="z-hlayout-right" width="auto">
+		<a id="btnPreviousPage" />
+		<label id="wPageIndex" />
+		<label id="wPageSeparator" />
+		<label id="wTotalPages" />
+		<a id="btnNextPage" />
+	</hlayout>
+<!--
+  </vlayout>
+-->
+</zk>
+<!--
+      <listhead sizable="false">
+        <listheader label="${i18n.IconTag_name_finderColumnLabel}" />
+        <listheader label="${i18n.IconTag_comentario_finderColumnLabel}" />
+        <listheader label="${i18n.IconTag_hora_finderColumnLabel}" />
+        <listheader label="${i18n.IconTag_fechaHora_finderColumnLabel}" />
+        <listheader label="${i18n.IconTag_fecha_finderColumnLabel}" />
+        <listheader label=" " width="20px" />
+      </listhead>
+      <template name="model">
+        <listitem onMouseOver="@command('changeOver', item=each)">
+          <listcell label="@bind(each.name)" />
+          <listcell label="@bind(each.comentario)" />
+          <listcell label="@bind(each.hora)" />
+          <listcell label="@bind(each.fechaHora)" />
+          <listcell label="@bind(each.fecha)" />
+          <listcell><div sclass="icon-info" tooltip="moreInfo"></div></listcell>
+       </listitem>
+      </template>
+-->
+<!--
+    <popup id="wMoreInfo" width="35%">
+    <layout-grid size="12">
+	<grid height="100%" width="100%">
+		<columns>
+			<column width="25%" />
+			<column width="75%" />
+		</columns>
+		<rows>
+			<row>
+				<label value="${i18n.IconTag_name_label}"/>
+				<label value="@load(item.selectedOver.name)" />
+			</row>
+			<row>
+				<label value="${i18n.IconTag_comentario_label}"/>
+				<label value="@load(item.selectedOver.comentario)" />
+			</row>
+			<row>
+				<label value="${i18n.IconTag_hora_label}"/>
+				<label value="@load(item.selectedOver.hora)" />
+			</row>
+			<row>
+				<label value="${i18n.IconTag_fechaHora_label}"/>
+				<label value="@load(item.selectedOver.fechaHora)" />
+			</row>
+			<row>
+				<label value="${i18n.IconTag_fecha_label}"/>
+				<label value="@load(item.selectedOver.fecha)" />
+			</row>
+		</rows>
+	</grid>
+</popup>
+-->
+<!--
+<zk>
+  <main-window apply="org.zkoss.bind.BindComposer">
+    <menu link="openModule_base">
+        <menu link="word_finder">
+	<label value="CONTENIDO BEGIN" />
+
+	<list-field id="lf">
+	      <template name="content">
+<label value="PREFIX" />
+		<label value="${item.nombre}" />
+<label value="SUFFIX" />
+	      </template>
+	</list-field>
+	<zscript>
+	import org.zkoss.zksandbox.*;
+
+public class Entidad extends Object {
+	    public Entidad(String nombre) {
+		super();
+		this.nombre = nombre;
+	    }
+
+	protected String nombre;
+
+	public String getNombre () {
+System.out.println("READING " + this.nombre);
+	return this.nombre;
+	}
+
+	public void setNombre (String newValue) {
+		this.nombre = newValue;
+	}
+
+};
+
+	java.util.ArrayList listado = new java.util.ArrayList();
+listado.add(new Entidad("Name1"));
+listado.add(new Entidad("Name2"));
+listado.add(new Entidad("Name3"));
+        lf.setValue(listado);
+	</zscript>
+
+
+	<label value="CONTENIDO END" />
+</menu>
+    </menu>
+  </main-window>
+</zk>
+-->

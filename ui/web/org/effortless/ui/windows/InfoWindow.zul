@@ -1,0 +1,9 @@
+<zk>
+  <layout-grid size="2" id="layoutContent" width="100%">
+  </layout-grid>
+</zk>
+<!--
+<info-window>
+  <label-field value="$nombre" />
+</info-window>
+-->

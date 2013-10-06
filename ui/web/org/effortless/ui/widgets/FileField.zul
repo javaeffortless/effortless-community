@@ -1,0 +1,9 @@
+<zk>
+  <button id="btn" sclass="file-field" />
+  <menupopup>
+    <menuitem id="wDownload" label="Descargar" />
+	<menuitem id="wBrowse" label="Examinar ..." upload="true" />
+	<menuitem id="wDelete" label="Eliminar ..." />
+	<menuitem id="wProperties" label="Propiedades" />
+  </menupopup>
+</zk>

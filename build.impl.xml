@@ -1,8 +1,6 @@
 <project name="effortless" default="build" basedir=".">
 	<property file="build.properties" />
-<!--
-	<property file="build.properties" />
--->
+
 	<target name="build" description="">
 		<tstamp><format property="_currentDate" pattern="dd/MM/yyyy HH:mm" /></tstamp>
 		<echo message="Start time (${project.name}): ${_currentDate}" />

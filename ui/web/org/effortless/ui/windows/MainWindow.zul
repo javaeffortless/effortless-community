@@ -1,0 +1,36 @@
+<zk>
+  <style id="wStyle" />
+  <borderlayout height="100%">
+    <north size="85px" border="0" splittable="true" collapsible="true">
+      <hlayout height="100%" id="wHeader">
+        <image id="wLogo" />
+        <hlayout id="wTopMenu" />
+<!-- top menu -->
+      </hlayout>
+    </north>
+    <west id="wWest" width="250px" border="0" splittable="true" collapsible="true" margins="0,5,0,0" autoscroll="true">
+      <vlayout height="100%" id="wLeft">
+<!--
+      <label value="LEFT" />
+-->
+<!-- left menu -->
+      </vlayout>
+    </west>
+    <center autoscroll="true" border="0">
+      <div width="100%" height="100%" id="wContent">
+        <msg-window id="wMessage" />
+        <breadcrumb id="wBreadcrumb" />
+        <list-windows id="wListWindows" sclass="main-windows" />
+      </div>
+    </center>
+    <south size="32px" border="0" style="background: none repeat scroll 0 0 ;">
+      <div height="100%">
+        <toolbar height="32px" align="start" style="border-top: 1px #CCCCCC solid;">
+          <hlayout spacing="10px">
+            <label id="wFooterMsg" />
+          </hlayout>
+        </toolbar>
+      </div>
+    </south>
+  </borderlayout>
+</zk>
