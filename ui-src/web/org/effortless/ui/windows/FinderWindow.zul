@@ -1,0 +1,97 @@
+<zk>
+<!--
+  <vlayout>
+-->
+<!--
+    <div>
+      <include id="wFilter" />
+    </div>
+-->
+    <div id="wFilterContainer" sclass="filter-container">
+    </div>
+    <hlayout sclass="z-hlayout-right finder-row-search">
+      <button id="btnSearch" label="${i18n.finder_button_search_label}" />
+    </hlayout>    
+	<list-field id="wList" sclass="finder-list" />    
+	<hlayout id="wListActions" sclass="z-hlayout-right finder-buttons">
+		<hlayout id="wBottomActions" sclass="z-hlayout-right" visible="false"></hlayout>
+		<button id="btnCloneItem" label="${i18n.finder_button_clone_label}" image="${images}/clone.png" />
+		<button id="btnCreateItem" label="${i18n.finder_button_create_label}" image="${images}/create.png" />
+		<button id="btnReadItem" label="${i18n.finder_button_read_label}" image="${images}/read.png" />
+		<button id="btnUpdateItem" label="${i18n.finder_button_update_label}" image="${images}/update.png" />
+		<button id="btnDeleteItem" label="${i18n.finder_button_delete_label}" image="${images}/delete.png" />
+		
+		<button id="btnOkSelectItem" />
+		<button id="btnCancelSelectItem" />
+	</hlayout>
+<!--
+  </vlayout>
+-->
+</zk>
+<!--
+wnd->title="${i18n.IconTag_finderTitle}"
+ apply="org.zkoss.bind.BindComposer" viewModel="@id('item') @init('org.effortless.ui.vm.FinderVM', filterClass='org.effortless.icondb.icons.IconTagFinderFilter', filterSrc='icontagfinderfilter', editorSrc='icontag_editor', itemClass='org.effortless.icondb.icons.IconTag')"
+	  <include id="wFilter" filter="@load(item.filter)" src="@load(item.filterSrc)" />
+ 
+  <window id="wnd" width="100%" height="100%" contentStyle="overflow:auto" border="normal">
+  
+      <button id="btnSearch" label="${i18n.IconTag_search_finderButtonLabel}" image="${images}/search.png" onClick="@command('search')" />
+	  <label id="labelNumElementsText" value="${i18n.IconTag_size_finderMessage}" />
+	  <label id="labelNumElementsValue" value="@load(item.numElements)" />
+
+    <listbox id="wList" model="@bind(item.list)" emptyMessage="${i18n.IconTag_noItems_finderMessage}" selectedItem="@bind(item.selectedItem)" style="margin-top:10px" rows="@load(item.listSize)">
+  
+-->
+<!--
+		<button onClick="@command('runCustomActionItem', action='activar')" label="${i18n.IconTag_activar_finderButtonLabel}" image="${images}/activar.png" />
+		<button onClick="@command('runCustomActionItem', action='desactivar')" label="${i18n.IconTag_desactivar_finderButtonLabel}" image="${images}/desactivar.png" />
+-->
+<!--
+</window>
+-->
+<!--
+<zk>
+<finder-window id="finder">
+	<zscript>
+	import org.zkoss.zksandbox.*;
+
+	java.util.Date currentDate = new java.util.Date();
+	java.sql.Time hora = new java.sql.Time(currentDate.getTime());
+	java.sql.Timestamp fechaHora = new java.sql.Timestamp(currentDate.getTime());
+
+	java.util.List listadoReferencias = new java.util.ArrayList();
+
+	listadoReferencias.add(new org.effortless.tests.examples.mvvm.Entidad("Referencia 1"));
+	listadoReferencias.add(new org.effortless.tests.examples.mvvm.Entidad("Referencia 2"));
+	listadoReferencias.add(new org.effortless.tests.examples.mvvm.Entidad("Referencia 3"));
+	listadoReferencias.add(new org.effortless.tests.examples.mvvm.Entidad("Referencia 4"));
+	listadoReferencias.add(new org.effortless.tests.examples.mvvm.Entidad("Referencia 5"));
+
+	org.effortless.tests.examples.mvvm.Entidad referencia = (org.effortless.tests.examples.mvvm.Entidad)listadoReferencias.get(0); 
+
+org.effortless.tests.examples.mvvm.Entidad entity = new org.effortless.tests.examples.mvvm.Entidad("Name1");
+entity.setEtiqueta("2,1,1,2");
+entity.setContador(Integer.valueOf(2));
+entity.setPrecio(Double.valueOf(3.141596));
+entity.setActivo(Boolean.TRUE);
+entity.setFecha(currentDate);
+entity.setHora(hora);
+entity.setFechaHora(fechaHora);
+entity.setFichero(new java.io.File("/home/jesus/Escritorio/wa/10 Little Numbers.3gp"));
+entity.setReferencia(referencia);
+entity.setListado(listadoReferencias);
+
+finder.setValue(listadoReferencias);
+	</zscript>
+	<template name="content">
+		<label value="PREFIX" />
+		<text-field value="$nombre" />
+		<label value="SUFFIX" />
+	</template>
+	<template name="bottom-actions">
+		<action name="imprimir" />
+		<action name="descargar" />
+	</template>
+</finder-window>
+</zk>
+-->

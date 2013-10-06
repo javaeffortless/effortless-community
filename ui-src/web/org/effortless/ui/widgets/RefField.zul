@@ -1,0 +1,14 @@
+<zk>
+<!--
+  <tag id="tag" />
+-->
+  <combobox id="wgt" sclass="ref-field" fulfill="onOpen" autocomplete="true" width="100%">
+<!--
+  <combobox id="wgt" sclass="ref-field" fulfill="onOpen" autocomplete="true" width="98%">
+  <template name="model">
+    <comboitem label="@load(each)" />
+  </template>
+  <comboitem label="..." onClick="@command('selectMore')" />
+-->
+  </combobox>
+</zk>

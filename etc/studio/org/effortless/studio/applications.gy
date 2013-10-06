@@ -1,0 +1,42 @@
+package org.effortless.studio.applications
+
+enum ServerStatus {ON, OFF}
+
+enum ServerType {Tomcat, JBoss3, JBoss4, JBoss5, JBoss6, JBoss7}
+
+class Server {
+  String name, code, alias
+  ServerStatus status
+  ServerType type
+  Cfg cfg
+  String comment
+
+  start () {}
+  stop () {}
+  install (Application app) {}
+  uninstall (Application app) {}
+}
+
+class AppServer {
+  Boolean enabled
+  Server server
+  ServerStatus status
+}
+
+class Application {
+  Project project
+  List<AppServer> servers
+  Boolean autorunEdit, autorun
+  
+  installTo (AppServer server) {
+  }
+
+  uninstallFrom (AppServer server) {
+  }
+
+  static Application create (Project project) {
+    return null
+  }
+
+}
+

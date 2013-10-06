@@ -1,0 +1,8 @@
+#Mon, 30 Sep 2013 23:50:26 +0100
+#Build Number for ANT. Do not edit!
+#Mon Sep 30 23:50:26 WEST 2013
+version=1.0alpha
+build.number=86
+build.date=20130930235026+0100
+build.author=
+id=effortless-core

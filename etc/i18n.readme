@@ -1,0 +1,36 @@
+
+Un único fichero por aplicación e idioma
+Nombre: i18n.properties, i18n_en.properties, ...
+Contenido:
+  Nivel máximo de detalle: Vista
+  Siguiente nivel: Modelo
+  Tercer nivel: Conceptos
+  Cuarto nivel: Conceptos predefindos (fichero base_i18n.properties)
+  Quinto nivel: Traducción
+  
+1er nivel: Vista (prefijo: view)
+
+2º nivel: Modelo (prefijo: model)
+
+3er nivel: Conceptos (prefijo: concept)
+
+4º nivel: Conceptos básicos predefindos
+
+5º nivel: Traducción en base a claves
+
+Las propiedades pueden tener varios atributos básicos:
+	ninguno o label: Puede ser empleado como etiqueta.
+	description: Puede ser empleado para los tooltip
+	header: Especial para columnas de los grid 
+Todos los atributos son opcionales.
+
+Ejemplo:
+
+view.${id_screen}.${id_property}.label 
+view.${id_screen}.${id_property}.tooltip
+
+model.${id_entity}.${id_property}.label 
+model.${id_entity}.${id_property}.tooltip
+
+concept.${id_property}.label 
+concept.${id_property}.tooltip

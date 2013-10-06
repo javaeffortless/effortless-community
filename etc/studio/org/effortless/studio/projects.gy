@@ -1,0 +1,56 @@
+package org.effortless.studio.projects
+
+enum PropertyType {Bool, Count, Number, Date, Time, Text, Comment, Ref, List, Password, File, Image, Color, Enum}
+
+class EnumType {
+  String name; List<EnumType.Value> values
+  String code, alias, description, comment
+
+  class Value {
+    String name, value
+    String alias, description, comment
+  }
+}
+
+class DataType {
+}
+
+class Action {
+  String name, alias, code, description, comment
+  
+}
+
+class Entity {
+  String name; List<Property> properties; List<Action> actions
+
+  Entity parent; List<Entity> children
+
+  String description, comment
+}
+
+class Property {
+  String name; PropertyType type
+
+  Entity targetEntity; Enum targetEnum; EnumType enumType
+  String description, defaultValue, options, comment
+}
+
+class Module {
+  String name; List<Entity> entities; List<EnumType> enums
+
+  Date releaseDate
+
+  String code, version, description, comment
+}
+
+class Project extends Module {
+  String title
+  List<Module> modules
+  //List<Module> dependencies
+  //List<Library> libraries
+}
+
+class Customer {
+  String name, website
+  Image logo
+}

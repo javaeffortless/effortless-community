@@ -1,0 +1,117 @@
+<zk>
+  <vlayout width="100%">
+    <layout-grid size="2" id="layoutContent" width="100%">
+    </layout-grid>
+	<hlayout id="toolbar" sclass="z-hlayout-right">
+	  <button id="btnSave" />
+	  <button id="btnCancel" />
+	  <button id="btnClose" />
+	</hlayout>
+  </vlayout>
+</zk>
+<!--
+<div sclass="editor-content" readonly="@bind(editor.readonly)">
+	<grid>
+		<columns>
+			<column width="20%" />
+			<column width="80%" />
+		</columns>
+		<rows>
+<text-field value="@bind(editor.item.name)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_name_label}" />
+<text-field value="@bind(editor.item.comentario)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_comentario_label}" />
+<time-field value="@bind(editor.item.hora)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_hora_label}" />
+<timestamp-field value="@bind(editor.item.fechaHora)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_fechaHora_label}" />
+<date-field value="@bind(editor.item.fecha)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_fecha_label}" />
+<bool-field value="@bind(editor.item.activado)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_activado_label}" />
+<count-field value="@bind(editor.item.numeroDescargas)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_numeroDescargas_label}" />
+<number-field value="@bind(editor.item.precio)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_precio_label}" />
+<combobox apply="org.zkoss.bind.BindComposer" viewModel="@id('fEstado') @init('org.effortless.ui.vm.fields.EnumFieldVM', enumClass='org.effortless.icondb.icons.IconStatus')" fulfill="onOpen" autocomplete="true" model="@load(fEstado.values)" selectedItem="@bind(editor.item.estado)" readonly="@load(editor.readonly)" buttonVisible="@load(editor.readonly eq false)" disabled="@load(editor.readonly)">  <template name="model">    <comboitem label="@load(each)" />  </template></combobox>
+<ref-field type="org.effortless.icondb.icons.LicenseType" value="@bind(editor.item.license)" />
+<file-field value="@bind(editor.item.icon)" type="org.effortless.icondb.IcondbFileEntity" />
+		</rows>
+	</grid>
+-->
+<!--
+ apply="org.zkoss.bind.BindComposer" viewModel="@id('editor') @init('org.effortless.ui.vm.EditorVM')"
+ 
+i18n
+  id="wnd" title="${i18n.IconTag_editorTitle}"
+
+<editor-window value="@bind(editor.item)" size="2" apply="org.zkoss.bind.BindComposer" viewModel="@id('editor') @init('org.effortless.ui.vm.EditorVM')">
+	<text-field value="@bind(editor.item.name)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_name_label}" />
+	<text-field value="@bind(editor.item.comentario)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_comentario_label}" />
+	<time-field value="@bind(editor.item.hora)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_hora_label}" />
+	<timestamp-field value="@bind(editor.item.fechaHora)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_fechaHora_label}" />
+	<date-field value="@bind(editor.item.fecha)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_fecha_label}" />
+	<bool-field value="@bind(editor.item.activado)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_activado_label}" />
+	<count-field value="@bind(editor.item.numeroDescargas)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_numeroDescargas_label}" />
+	<number-field value="@bind(editor.item.precio)" readonly="@bind(editor.readonly)" label="${i18n.IconTag_precio_label}" />
+	<combobox apply="org.zkoss.bind.BindComposer" viewModel="@id('fEstado') @init('org.effortless.ui.vm.fields.EnumFieldVM', enumClass='org.effortless.icondb.icons.IconStatus')" fulfill="onOpen" autocomplete="true" model="@load(fEstado.values)" selectedItem="@bind(editor.item.estado)" readonly="@load(editor.readonly)" buttonVisible="@load(editor.readonly eq false)" disabled="@load(editor.readonly)">  <template name="model">    <comboitem label="@load(each)" />  </template></combobox>
+	<ref-field type="org.effortless.icondb.icons.LicenseType" value="@bind(editor.item.license)" />
+	<file-field value="@bind(editor.item.icon)" type="org.effortless.icondb.IcondbFileEntity" />
+	
+</editor-window>
+
+<window id="wnd" width="100%" height="100%" contentStyle="overflow:auto" border="normal">
+-->
+<!--
+</window>
+-->
+<!--
+<zk>
+<editor-window id="editor" layoutSize="$contador" layoutSpans="$etiqueta">
+	<zscript>
+	import org.zkoss.zksandbox.*;
+
+	java.util.Date currentDate = new java.util.Date();
+	java.sql.Time hora = new java.sql.Time(currentDate.getTime());
+	java.sql.Timestamp fechaHora = new java.sql.Timestamp(currentDate.getTime());
+
+	java.util.List listadoReferencias = new java.util.ArrayList();
+
+	listadoReferencias.add(new org.effortless.tests.examples.mvvm.Entidad("Referencia 1"));
+	listadoReferencias.add(new org.effortless.tests.examples.mvvm.Entidad("Referencia 2"));
+	listadoReferencias.add(new org.effortless.tests.examples.mvvm.Entidad("Referencia 3"));
+	listadoReferencias.add(new org.effortless.tests.examples.mvvm.Entidad("Referencia 4"));
+	listadoReferencias.add(new org.effortless.tests.examples.mvvm.Entidad("Referencia 5"));
+
+	org.effortless.tests.examples.mvvm.Entidad referencia = (org.effortless.tests.examples.mvvm.Entidad)listadoReferencias.get(0); 
+
+org.effortless.tests.examples.mvvm.Entidad entity = new org.effortless.tests.examples.mvvm.Entidad("Name1");
+entity.setEtiqueta("2,1,1,2");
+entity.setContador(Integer.valueOf(2));
+entity.setPrecio(Double.valueOf(3.141596));
+entity.setActivo(Boolean.TRUE);
+entity.setFecha(currentDate);
+entity.setHora(hora);
+entity.setFechaHora(fechaHora);
+entity.setFichero(new java.io.File("/home/jesus/Escritorio/wa/10 Little Numbers.3gp"));
+entity.setReferencia(referencia);
+entity.setListado(listadoReferencias);
+
+editor.setValue(entity);
+	</zscript>
+	
+	<label value="BEGIN" />
+	<file-field name="$etiqueta" content="$fichero" />
+	<timestamp-field value="$fechaHora" />
+	<text-field value="$nombre" />
+	<label-field value="$etiqueta" />
+	<count-field value="$contador" />
+	<bool-field value="$activo" />
+	<date-field value="$fecha" />
+	<time-field value="$hora" />
+	<ref-field values="$listado" value="$referencia" />
+	<list-field value="$listado"><template name="content">
+		<label value="PREFIX" />
+		<text-field value="$nombre" />
+		<label value="SUFFIX" />
+	</template></list-field>	
+	
+	<label value="END" />
+</editor-window>
+</zk>
+-->
+<!--	
+	<number-field value="$precio" />
+-->

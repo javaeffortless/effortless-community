@@ -1,0 +1,32 @@
+<zk>
+<rowlayout id="wgt" ncols="12" spacing="0" sclass="layout-grid">
+<!--
+<rowlayout id="wgt" ncols="12" spacing="1/3">
+  <rowchildren colspan="3" offset="2">
+  </rowchildren>
+-->
+</rowlayout>
+</zk>
+<!--
+<zk>
+<vlayout>
+<label value="PREFIX" />
+<rowlayout ncols="2" spacing="0">
+  <rowchildren colspan="2"><label value="1" /></rowchildren>
+  <rowchildren><label value="2" /></rowchildren>
+  <rowchildren><label value="3" /></rowchildren>
+  <rowchildren><label value="4" /></rowchildren>
+  <rowchildren><label value="5" /></rowchildren>
+</rowlayout>
+<label value="MIDDLE" />
+<layout-grid size="2">
+<label value="1" />
+<label value="2" />
+<label value="3" />
+<label value="4" />
+<label value="5" />
+</layout-grid>
+<label value="END" />
+</vlayout>
+</zk>
+-->

@@ -1,0 +1,194 @@
+<project name="effortless" default="build" basedir=".">
+	<property file="build.properties" />
+<!--
+	<property file="build.properties" />
+-->
+	<target name="build" description="">
+		<tstamp><format property="_currentDate" pattern="dd/MM/yyyy HH:mm" /></tstamp>
+		<echo message="Start time (${project.name}): ${_currentDate}" />
+		
+		<mkdir dir="${src}/META-INF" />
+		<buildnumber file="${src}/META-INF/VERSION.MF" />
+		<tstamp>
+			<format property="project.year" pattern="yyyy" />
+			<format property="currentDay" pattern="yyyyMMdd" />
+		</tstamp>
+		<propertyfile file="${src}/META-INF/VERSION.MF">
+			<entry key="build.date" type="date" value="now" pattern="yyyyMMddHHmmssZ"/>
+			<entry key="id" type="string" value="${project.name}" />
+			<entry key="build.author" type="string" value="${project.author}" />
+			<entry key="version" type="string" value="${project.version}" />
+		</propertyfile>
+		<copy file="${src}/META-INF/VERSION.MF" todir="${src}/classes/${project.root}" />
+
+		<mkdir dir="${target_dist}/${project.name}" />
+
+		<pkgSrc dest="${target_dist}/${project.name}/${project.name}-src.tar.gz" />
+		<copy file="${target_dist}/${project.name}/${project.name}-src.tar.gz" tofile="${target_src}/${project.name}/versions/${currentDay}.${project.name}-src.tar.gz"/>
+		<copy file="${target_dist}/${project.name}/${project.name}-src.tar.gz" tofile="${target_src}/${project.name}/${project.name}-src.tar.gz"/>
+		<copy file="${target_dist}/${project.name}/${project.name}-src.tar.gz" tofile="${target_src}/${project.name}-src.tar.gz"/>
+		
+		<gJar src="${src}" dest="${target_dist}/${project.name}/${project.name}${build_suffix}.jar" debug="${build_debug}"/>
+
+		<mkdir dir="${libs_dependencies}/jtools" />
+	    <delete><fileset dir="${libs_dependencies}/jtools" includes="${project.name}${build_suffix}.jar"/></delete>
+		<copy file="${target_dist}/${project.name}/${project.name}${build_suffix}.jar" tofile="${libs_dependencies}/jtools/${project.name}${build_suffix}.jar"/>
+		
+		<copy file="${target_dist}/${project.name}/${project.name}${build_suffix}.jar" tofile="${libs_dependencies}/${project.name}${build_suffix}.jar" overwrite="true" failonerror="false" />
+
+		<delete><fileset dir="${libs_dev}" includes="${project.name}${build_suffix}.jar"/></delete>
+		<copy file="${target_dist}/${project.name}/${project.name}${build_suffix}.jar" tofile="${libs_dev}/${project.name}${build_suffix}.jar" overwrite="true" failonerror="false" />
+<!--
+		<copy file="dist/${project.name}${build_suffix}.jar" tofile="dist/versions/${currentDay}.${project.name}${build_suffix}.jar"/>
+		<copy file="dist/${project.name}.jar" tofile="dist/versions/${currentDay}.${project.name}.jar"/>
+		<copy file="dist/${project.name}-javadoc.zip" tofile="dist/versions/${currentDay}.${project.name}-javadoc.zip"/>
+-->
+
+		<condition property="mode_release">
+			<equals arg1="${build_mode}" arg2="release" casesensitive="false" trim="true" />
+		</condition>
+		<antcall target="buildRelease" />
+			
+<!--
+		<delete dir="${target_dist}/${project.name}" />
+-->
+		<tstamp><format property="_currentDate" pattern="dd/MM/yyyy HH:mm" /></tstamp>
+		<echo message="End time (${project.name}): ${_currentDate}" />
+	</target>
+
+	<target name="buildRelease" if="mode_release">
+		<echo message="RELEASE" />
+		<gJar src="${src}" dest="${target_dist}/${project.name}/${project.name}.jar" debug="off" />
+		<gDoc dest="${target_dist}/${project.name}/${project.name}-javadoc.zip" title="${project.title}" author="${project.author}" />
+		<zip zipfile="${target_dist}/${project.name}.zip" basedir="${target_dist}/${project.name}" />
+	</target>
+
+	<macrodef name="gJar">
+		<attribute name="src" />
+		<attribute name="dest" />
+		<attribute name="deps" default="" />
+		<attribute name="debug" default="on" />
+		<sequential>
+			<delete dir="tmp" />
+			<mkdir dir="tmp" />
+			<copy todir="tmp">
+				<fileset dir="@{src}" />
+			</copy>
+			<javac encoding="UTF-8" destdir="tmp/classes" source="${javac.source}" target="${javac.target}" fork="yes" executable="${jdk}/bin/javac" compiler="${javac.compiler}" debug="@{debug}" failonerror="true">
+				<compilerarg value="-Xlint:deprecation" />
+<!--
+				<compilerarg value="-Xlint"/>
+-->
+				<src path="tmp/classes" />
+				<classpath>
+					<fileset dir="${jdk}/jre/lib" erroronmissingdir="false">
+						<include name="**/*.jar" />
+					</fileset>
+					<fileset dir="${libs_dependencies}" erroronmissingdir="false">
+						<include name="**/*.jar" />
+					</fileset>
+					<fileset dir="${libs_compiler}" erroronmissingdir="false">
+						<include name="**/*.jar" />
+					</fileset>
+					<pathelement path="@{deps}" />
+				</classpath>
+			</javac>
+			<copy todir="tmp">
+				<fileset dir="tmp/classes">
+					<exclude name="**/*.java" />
+				</fileset>
+			</copy>
+			<delete dir="tmp/classes" />
+			<property file="${src}/META-INF/VERSION.MF" />
+			<manifest file="tmp/META-INF/MANIFEST.MF" mode="replace" encoding="UTF-8">
+<!--
+				<attribute name="Built-By" value="${user.name}"/>
+-->
+				<attribute name="Specification-Title" value="${project.name}"/>
+				<attribute name="Specification-Version" value="${version}"/>
+				<attribute name="Specification-Vendor" value="${build.author}"/>
+				<attribute name="Implementation-Title" value="${project.name}"/>
+				<attribute name="Implementation-Version" value="build ${build.number}"/> 
+				<attribute name="Implementation-Vendor" value="${build.author}"/>
+				<attribute name="Implementation-URL" value="http://"/>
+				<attribute name="Implementation-Date" value="${build.date}"/>
+			</manifest>
+			<zip zipfile="@{dest}" basedir="tmp" />
+			<delete dir="tmp" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="gDoc">
+		<attribute name="dest" />
+		<attribute name="title" default="" />
+		<attribute name="author" default="" />
+		<sequential>
+			<delete dir="tmp" />
+			<mkdir dir="tmp" />
+			<javadoc 
+				destdir="tmp"
+				encoding="UTF-8"
+				charset="UTF-8"
+				author="true"
+				version="true"
+				use="true"
+				windowtitle="@{title}">
+
+				<packageset dir="${src}/classes" defaultexcludes="yes">
+					<include name="*/**"/>
+				</packageset>
+
+				<doctitle><![CDATA[<h1>@{title}</h1>]]></doctitle>
+				<bottom><![CDATA[<i>Copyright &#169;${project.year} @{author} All Rights Reserved.</i>]]></bottom>
+				<tag name="todo" scope="all" description="To do:"/>
+<!--
+				<group title="Group 1 Packages" packages="m.dummy.test.a*"/>
+				<group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*"/>
+				<link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="C:\tmp"/>
+				<link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+-->
+			</javadoc>
+			<zip zipfile="@{dest}" basedir="tmp" />
+			<delete dir="tmp" />
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="pkgSrc">
+		<attribute name="dest" />
+		<sequential>
+			<delete dir="tmp" />
+			<mkdir dir="tmp/${src}" />
+			<copy todir="tmp/${src}">
+				<fileset dir="${src}" />
+			</copy>
+<!--
+			<copy todir="tmp/tests">
+				<fileset dir="tests" />
+			</copy>
+-->
+			<copy todir="tmp">
+				<fileset dir=".">
+					<include name="build.xml" />
+					<include name="build.properties" />
+					<include name=".project" />
+					<include name=".classpath" />
+				</fileset>
+			</copy>
+			<copy todir="tmp/etc">
+				<fileset dir="etc" erroronmissingdir="false">
+					<include name="**/*" />
+				</fileset>
+			</copy>
+   	    	<delete file="@{dest}.tar" />
+	  		<tar destfile="@{dest}.tar" longfile="gnu" basedir="tmp" />
+	  		<gzip destfile="@{dest}" src="@{dest}.tar" />
+   	    	<delete file="@{dest}.tar" />
+
+<!--
+			<zip zipfile="@{dest}" basedir="tmp" />
+-->
+			<delete dir="tmp" />
+		</sequential>
+	</macrodef>
+
+</project>

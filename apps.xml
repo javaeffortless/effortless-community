@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<apps>
+  <app id="model">
+    <entity id="org.effortless.model.LogData"/>
+    <entity id="org.effortless.model.CollectionExclusive"/>
+    <entity id="org.effortless.model.CollectionExclusive$Item"/>
+    <entity id="org.effortless.model.CollectionNonExclusive"/>
+    <entity id="org.effortless.model.ItemNonExclusive"/>
+    <entity id="org.effortless.model.Telephone"/>
+    <entity id="org.effortless.model.AllBasicProperties"/>
+    <entity id="org.effortless.model.AllComplexProperties"/>
+    <entity id="org.effortless.model.FileEntity"/>
+  </app>
+</apps>
