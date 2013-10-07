@@ -12,6 +12,7 @@ import org.effortless.ui.Message;
 import org.effortless.ui.Relocatable;
 import org.effortless.ui.Relocator;
 import org.effortless.ui.ViewContext;
+import org.effortless.ui.impl.CteEvents;
 import org.effortless.ui.layouts.LayoutGrid;
 import org.effortless.ui.listeners.MainCtrl;
 import org.effortless.ui.widgets.AbstractComponent;
@@ -406,6 +407,7 @@ public class MainWindow extends AbstractWindow implements Relocator {
 			LoginWindow loginWindow = new LoginWindow();
 			loginWindow.doEmbedded();
 			this.appendChild(loginWindow);
+			loginWindow.addEventListener(CteEvents.ON_LOGIN, doGetMainMenuListener());
 			session.setAttribute(GlobalContext.CURRENT_USER, "LOGIN");
 		}
 	}
