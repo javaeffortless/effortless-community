@@ -18,10 +18,12 @@ public class GlobalContext extends Object {
 	public static final String HTTP_RESPONSE = "HTTP_RESPONSE";
 	public static final String HTTP_SESSION = "HTTP_SESSION";
 	public static final String APP_ID = "APP_ID";
+	public static final String CURRENT_USER = "CURRENT_USER";
 	
 	protected static final ThreadLocal<Map<String, Object>> tl = new ThreadLocal<Map<String, Object>>();
 
 	public static final String I18N = "I18N";
+
 	
 	public static Session getSession () {
 		return Sessions.getCurrent();

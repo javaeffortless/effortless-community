@@ -1,0 +1,12 @@
+<zk>
+  <hlayout>
+    <div id="wLoginLogo" />
+    <vlayout>
+      <hlayout><label id="wLoginNameTag" /><textbox id="wLoginName" /></hlayout>
+      <hlayout><label id="wLoginPasswordTag" /><textbox type="password" id="wLoginPassword" /></hlayout>
+    </vlayout>
+  </hlayout>
+  <hlayout sclass="z-hlayout-right">
+    <button id="btnLogin" />
+  </hlayout>
+</zk>

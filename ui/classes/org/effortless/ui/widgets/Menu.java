@@ -88,31 +88,31 @@ public class Menu extends AbstractComponent {
         initiateSelected();
         
         initiateSubitems();
-        initiateAlign();
+        initiateAlignMode();
     }
     
-    protected String align;
+    protected String alignMode;
     
-    protected void initiateAlign () {
-    	this.align = null;
+    protected void initiateAlignMode () {
+    	this.alignMode = null;
     }
     
-    public String getAlign () {
-    	return this.align;
+    public String getAlignMode () {
+    	return this.alignMode;
     }
     
-    public void setAlign (String newValue) {
-    	String oldValue = this.align;
+    public void setAlignMode (String newValue) {
+    	String oldValue = this.alignMode;
     	if (!ObjectUtils.equals(oldValue, newValue)) {
-    		this.align = newValue;
-    		_updateAlign();
+    		this.alignMode = newValue;
+    		_updateAlignMode();
     	}
     }
     
     protected Hlayout _cmpAlign;
     
-    protected void _updateAlign () {
-    	if ("horizontal".equals(this.align)) {
+    protected void _updateAlignMode () {
+    	if ("horizontal".equals(this.alignMode)) {
     		if (this._cmpAlign == null) {
     			this._cmpAlign = new Hlayout();
     			this._cmpAlign.setSclass("horizontal-align");
@@ -460,10 +460,10 @@ public class Menu extends AbstractComponent {
 		if (false && this.relocator != null) {
 			this.relocator.relocate(this.wSubmenu, this.position);
 		}
-		if (this.align == null) {
+		if (this.alignMode == null) {
 			Boolean flag = (Boolean)this.getAttribute(CteUi.INNER_MENU);
 			if (Boolean.TRUE.equals(flag)) {
-				this.setAlign("horizontal");
+				this.setAlignMode("horizontal");
 			}
 		}
 	}

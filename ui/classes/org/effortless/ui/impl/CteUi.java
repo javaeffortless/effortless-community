@@ -28,6 +28,8 @@ public interface CteUi {
 	
 	public static final String PIVOT_ACTION_OBJECT = "$PIVOT_ACTION_OBJECT$";
 	public static final String INNER_MENU = "$INNER_MENU$";
+	public static final String LOGIN_NAME = "$LOGIN_NAME$";
+	public static final String LOGIN_PASSWORD = "$LOGIN_PASSWORD$";
 	
 //	public static final boolean _$FINDER_WINDOW_ONLY_EVENTS$_ = true;
 	

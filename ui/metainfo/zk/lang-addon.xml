@@ -38,6 +38,12 @@
 	</component>
 
 	<component>
+	    <component-name>login-window</component-name>
+	    <component-class>org.effortless.ui.windows.LoginWindow</component-class>
+	    <extends>window</extends>
+	</component>
+
+	<component>
 	    <component-name>editor-window</component-name>
 	    <component-class>org.effortless.ui.windows.EditorWindow</component-class>
 	    <extends>window</extends>

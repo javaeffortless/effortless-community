@@ -19,5 +19,6 @@ public interface CteEvents {
 	public static final String ON_SELECT_REF = "onSelectRef";
 	public static final String ON_SELECT_ITEMS = "onSelectItems";
 	public static final String ON_CANCEL_ITEMS = "onCancelItems";
+	public static final String ON_LOGIN = "onLogin";
 	
 }

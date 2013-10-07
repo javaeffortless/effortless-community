@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="ann-src/classes"/>
-	<classpathentry kind="src" path="core-src/classes"/>
-	<classpathentry kind="src" path="gen-src/classes"/>
-	<classpathentry kind="src" path="gpw-src/classes"/>
-	<classpathentry kind="src" path="io-src/classes"/>
-	<classpathentry kind="src" path="io-src/tests"/>
-	<classpathentry kind="src" path="model-src/classes"/>
-	<classpathentry kind="src" path="server-src/classes"/>
-	<classpathentry kind="src" path="tests-src/classes"/>
-	<classpathentry kind="src" path="ui-src/classes"/>
 	<classpathentry kind="src" path="ui/classes"/>
 	<classpathentry kind="src" path="gen/classes"/>
+	<classpathentry kind="src" path="server/classes"/>
+	<classpathentry kind="src" path="core/classes"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/media/jesus/64F27B47F27B1C8C/TRABAJO/runtime/apache-tomcat-7.0.40/webapps/ewp/WEB-INF/lib/effortless-model.jar"/>
 	<classpathentry kind="lib" path="/media/jesus/64F27B47F27B1C8C/TRABAJO/runtime/apache-tomcat-7.0.40/webapps/ewp/WEB-INF/lib/effortless-ui.jar"/>
@@ -137,5 +129,5 @@
 	<classpathentry kind="lib" path="/media/jesus/64F27B47F27B1C8C/TRABAJO/runtime/apache-tomcat-7.0.40/webapps/ewp/WEB-INF/lib/sanselan-0.97-incubator.jar"/>
 	<classpathentry kind="lib" path="/media/jesus/64F27B47F27B1C8C/TRABAJO/runtime/apache-tomcat-7.0.40/webapps/ewp/WEB-INF/lib/commons-collections-3.2.1.jar"/>
 	<classpathentry kind="lib" path="/media/jesus/64F27B47F27B1C8C/TRABAJO/runtime/apache-tomcat-7.0.40/webapps/ewp/WEB-INF/lib/Filters.jar"/>
-	<classpathentry kind="output" path="core-src/bin"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,6 +1,7 @@
 package org.effortless.server;
 
 import java.io.FileInputStream;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -19,6 +20,7 @@ import org.zkoss.zk.ui.GenericRichlet;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.Sessions;
+import org.zkoss.zul.Label;
 
 import groovy.lang.Binding;
 
@@ -103,9 +105,19 @@ public class GroovyRichlet extends GenericRichlet {
 			
 			if (true) {
 				if (appId != null) {
-					String zul = "/" + appId + "/resources/main/main.zul";
-					Component root = org.zkoss.zk.ui.Executions.createComponents(zul, null, null);
-					root.setPage(page);
+					Object currentUser = session.getAttribute(GlobalContext.CURRENT_USER);
+					if (true || currentUser != null) {
+						String zul = "/" + appId + "/resources/main/main.zul";
+						Component root = org.zkoss.zk.ui.Executions.createComponents(zul, null, null);
+						root.setPage(page);
+					}
+					else {
+//						LoginWindow loginWindow = new LoginWindow();
+						Label loginScreen = new Label();
+						loginScreen.setValue("LOGIN SCREEN");
+						loginScreen.setPage(page);
+						session.setAttribute(GlobalContext.CURRENT_USER, "LOGIN");
+					}
 				}
 				else if (false) {
 					try {

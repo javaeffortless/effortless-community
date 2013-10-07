@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.effortless.core.GlobalContext;
 import org.effortless.core.ObjectUtils;
 import org.effortless.model.Entity;
 import org.effortless.ui.Message;
@@ -21,6 +22,8 @@ import org.effortless.ui.widgets.Field;
 import org.effortless.ui.widgets.Menu;
 import org.zkoss.addon.fluidgrid.Rowchildren;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Session;
+import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.annotation.ComponentAnnotation;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -383,5 +386,29 @@ public class MainWindow extends AbstractWindow implements Relocator {
 //		// TODO Auto-generated method stub
 //		return result;
 //	}
-    
+
+	@Override
+	public void beforeCompose() {
+		super.beforeCompose();
+		initLogin();
+	}
+
+	protected void initLogin() {
+		Session session = Sessions.getCurrent();
+
+		Object currentUser = (session != null ? session.getAttribute(GlobalContext.CURRENT_USER) : null);
+		if (currentUser != null) {
+//			String zul = "/" + appId + "/resources/main/main.zul";
+//			Component root = org.zkoss.zk.ui.Executions.createComponents(zul, null, null);
+//			root.setPage(page);
+		}
+		else {
+			LoginWindow loginWindow = new LoginWindow();
+			loginWindow.doEmbedded();
+			this.appendChild(loginWindow);
+			session.setAttribute(GlobalContext.CURRENT_USER, "LOGIN");
+		}
+	}
+	
+	
 }

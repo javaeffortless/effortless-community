@@ -17,6 +17,7 @@ public class MainCtrl extends Object implements org.zkoss.zk.ui.event.EventListe
 		this.finderCtrl = new FinderCtrl(this);
 		this.editorCtrl = new EditorCtrl(this);
 		this.fieldCtrl = new FieldCtrl(this);
+		this.loginCtrl = new LoginCtrl(this);
 	}
 	
 	protected MainWindow mainWindow;
@@ -35,11 +36,13 @@ public class MainCtrl extends Object implements org.zkoss.zk.ui.event.EventListe
 		this.finderCtrl.setMainWindow(newValue);
 		this.editorCtrl.setMainWindow(newValue);
 		this.fieldCtrl.setMainWindow(newValue);
+		this.loginCtrl.setMainWindow(newValue);
 	}
 
 	protected MenuCtrl menuCtrl;
 	protected FinderCtrl finderCtrl;
 	protected EditorCtrl editorCtrl;
+	protected LoginCtrl loginCtrl;
 	protected FieldCtrl fieldCtrl;
 	
 	public void onEvent(Event event) throws Exception {
@@ -50,6 +53,7 @@ public class MainCtrl extends Object implements org.zkoss.zk.ui.event.EventListe
 		this.finderCtrl.onEvent(event);
 		this.editorCtrl.onEvent(event);
 		this.fieldCtrl.onEvent(event);
+		this.loginCtrl.onEvent(event);
 	}
 	
 }
