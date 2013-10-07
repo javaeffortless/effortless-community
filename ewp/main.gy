@@ -1,0 +1,11 @@
+import org.effortless.samples.basic.*
+
+println "process request " + new Date() + " (begin)"
+
+//MySession.closeSession("samples")
+Thread.currentThread().setContextClassLoader(classLoader);
+org.zkoss.zk.ui.Executions.createComponents("/" + app + "/resources/main/main.zul", null, null)
+//org.zkoss.zk.ui.Executions.createComponents("/" + app + "/resources/icontag_finder.zul", null, null)
+
+println "process request " + new Date() + " (end)"
+

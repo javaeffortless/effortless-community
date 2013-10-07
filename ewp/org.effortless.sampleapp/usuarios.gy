@@ -1,0 +1,17 @@
+
+enum TipoUsuario {PARTICIPANTE, ADMINISTRADOR}
+
+class Perfil {
+  String nombre
+  String descripcion
+  String comentario
+}
+
+class Usuario {
+  String login
+  String password
+  TipoUsuario tipo
+  Boolean activo
+  Perfil perfil
+}
+

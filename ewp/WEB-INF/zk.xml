@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk>
+	
+	<!-- Previene que el usuario haga resubmits demasiado rápido -->
+	<client-config>
+		<click-filter-delay>150</click-filter-delay>
+	    <debug-js>false</debug-js>    
+		<disable-behind-modal>true</disable-behind-modal>
+	    <error-reload>    
+	        <error-code>301</error-code>        
+	        <reload-uri></reload-uri>        
+	    </error-reload>    
+	    <keep-across-visits>true</keep-across-visits>    
+	    <processing-prompt-delay>900</processing-prompt-delay>    
+	    <tooltip-delay>800</tooltip-delay>    
+	    <resend-delay>9000</resend-delay>    
+	</client-config>
+
+	<!-- No pone límites al tamaño de los ficheros -->
+	<system-config>
+		<max-upload-size>-1</max-upload-size>
+<!-- Consume menos memoria. No es posible suspender su ejecución. No permite crear ventanas modales
+		<disable-event-thread/>
+-->
+	</system-config>
+<!--
+     <system-config>
+    <au-writer-class>my.AuWriter</au-writer-class>    
+    <cache-provider-class>my.CacheProvider</cache-provider-class>    
+    <disable-event-thread/>    
+    <engine-class>my.UiEngine</engine-class>    
+<failover-manager-class>my.FailoverManager</failover-manager-class>
+    <id-generator-class>my.IdGenerator</id-generator-class>    
+    <max-spare-threads>100</max-spare-threads>    
+    <max-suspended-threads>100</max-suspended-threads>    
+<max-upload-size>5120</max-upload-size>
+    <max-process-time>3000</max-process-time>    
+    <response-charset>UTF-8</response-charset>    
+    <session-cache-class>my.SessionCache</session-cache-class>    
+    <upload-charset>UTF-8</upload-charset>    
+    <upload-charset-finder-class>my.CharsetFinder</upload-charset-finder-class>    
+    <ui-factory-class>my.UiFactory</ui-factory-class>    
+    <url-encoder-class>my.URLEncoder</url-encoder-class>    
+    <web-app-class>my.WebApp</web-app-class>    
+</system-config>
+ -->	
+	
+	<session-config>
+		<session-timeout>600000</session-timeout>
+		<timer-keep-alive>false</timer-keep-alive>
+		<max-desktops-per-session>15</max-desktops-per-session>
+		<max-requests-per-session>5</max-requests-per-session>
+		<max-pushes-per-session>3</max-pushes-per-session>
+		<device-type>ajax</device-type>
+<!--
+		<automatic-timeout>true</automatic-timeout>
+
+		<timeout-uri>/timeout.zul</timeout-uri>
+-->
+	</session-config>
+ 	
+	<desktop-config>
+		<desktop-timeout>-1</desktop-timeout>
+		<file-check-period>2</file-check-period>
+<!--
+		<desktop-timeout>3600</desktop-timeout>
+		<file-check-period>3600</file-check-period>
+		<file-check-period>2</file-check-period>
+		<extendlet-check-period>5</extendlet-check-period>
+
+		<disable-theme-uri>~./zul/css/norm*.css.dsp*</disable-theme-uri>
+		<theme-uri>~./bl/css/norm*.css.dsp*</theme-uri>
+-->
+<!--
+		<theme-provider-class>jweb.zk.DefaultThemeProvider</theme-provider-class>
+-->
+<!--
+		<theme-provider-class>com.idecnet.blacad.app.theme.BlacadThemeProvider</theme-provider-class>
+-->
+	</desktop-config>
+
+	<preference>
+		<name>default.theme</name>
+		<value>bl</value>
+	</preference>
+	<preference>
+		<name>key.locale</name>
+		<value>locale</value>
+	</preference>
+	<preference>
+		<name>zkoss.ui.text.transform</name>
+		<value>uppercase,trimall</value>
+	</preference>
+
+	<preference><name>org.zkoss.zk.ui.WebApp.name</name><value>Effortless Web Platform (EWP)</value></preference>
+
+	<preference><name>memcached.daemon</name><value>false</value></preference>
+	<preference><name>memcached.local</name><value>true</value></preference>
+	<preference><name>memcached.maxmemory</name><value>256</value></preference>
+	<preference><name>memcached.port</name><value>11211</value></preference>
+	<preference><name>memcached.maxconnections</name><value>1024</value></preference>
+
+<listener>
+<!--
+    <listener-class>org.effortless.i18n.I18nVariableResolver</listener-class>
+-->
+    <listener-class>org.effortless.ui.resolvers.I18nVariableResolver</listener-class>
+</listener>
+<listener>
+<!--
+    <listener-class>org.effortless.i18n.ResourcesVariableResolver</listener-class>
+-->
+    <listener-class>org.effortless.ui.resolvers.ResourcesVariableResolver</listener-class>
+</listener>
+<!--
+<listener>
+    <listener-class>org.effortless.ui.MySessionDesktopInit</listener-class>
+</listener>
+-->
+<!--
+  <listener>
+        <listener-class>zk.addons.listener.MemCacheInit</listener-class>
+        <description></description>
+	</listener>
+	
+    <listener>
+        <listener-class>zk.addons.listener.OdfConverterInit</listener-class>
+        <description></description>
+	</listener>
+    <listener>
+        <listener-class>zk.addons.listener.HashInit</listener-class>
+        <description></description>
+	</listener>
+	
+    <listener>
+        <listener-class>zk.addons.listener.OpenOfficeInit</listener-class>
+        <description></description>
+	</listener>
+    <listener>
+        <listener-class>com.idecnet.blacad.app.listeners.LogInOutListener</listener-class>
+        <description></description>
+	</listener>
+-->
+	<library-property>
+		<name>org.zkoss.zul.progressbox.position</name>
+		<value>left,top,center</value>
+	</library-property>
+	<!-- Turn on the following if you want to use the trendy mold as default
+		for all buttons.
+	-->
+	<library-property>
+		<name>org.zkoss.zul.Button.mold</name>
+		<value>trendy</value>
+	</library-property>
+	<!-- [ZK EE]
+		Turn on if you want to enable the render-on-demand feature for grid.
+		It improves the performance for huge grid.
+		Default: false
+	-->
+	<library-property>
+		<name>org.zkoss.zul.grid.rod</name>
+		<value>false</value>
+	</library-property>
+	<!-- [ZK EE]
+		Turn on if you want to enable the render-on-demand feature for listbox.
+		It improves the performance for huge listbox.
+		Default: false
+	-->
+	<library-property>
+		<name>org.zkoss.zul.listbox.rod</name>
+		<value>false</value>
+	</library-property>
+	
+	<library-property>
+		<name>org.zkoss.web.classWebResource.cache</name>
+		<value>true</value>
+	</library-property>	
+	<library-property>
+		<name>org.zkoss.web.classWebResource.cache.CSS.hours</name>
+		<value>8760</value>
+	</library-property>
+	<library-property>
+		<name>org.zkoss.web.classWebResource.cache.etag</name>
+		<value>true</value>
+	</library-property>
+	
+	<library-property>
+		<name>org.zkoss.web.util.resource.dir</name>
+		<value>/app_templates/</value>
+	</library-property>
+
+	<library-property>
+		<name>org.zkoss.zk.ui.macro.autowire.disabled</name>
+		<value>true</value>
+	</library-property>
+
+	<library-property>
+		<name>org.zkoss.zk.ui.macro.autoforward.disabled</name>
+		<value>true</value>
+	</library-property>
+<!--	
+	<listener>
+		<listener-class>zk.addons.listener.ReuseDesktopRecycle</listener-class>
+	</listener>
+-->
+<!--
+    <xel-config>    
+        <evaluator-class>org.zkoss.xel.el.ELFactory</evaluator-class>        
+    </xel-config>    
+    <xel-config>    
+        <evaluator-class>org.zkoss.zkmax.xel.mvel.MVELFactory</evaluator-class>        
+    </xel-config>    
+    <xel-config>    
+        <evaluator-class>org.zkoss.zkmax.xel.ognl.OGNLFactory</evaluator-class>        
+    </xel-config>    
+    <xel-config>    
+        <evaluator-class>org.zkoss.zkmax.xel.el.ApacheELFactory</evaluator-class>        
+    </xel-config>    
+    <xel-config>    
+        <evaluator-class>org.zkoss.zkmax.xel.el21.ApacheELFactory</evaluator-class>        
+    </xel-config>
+-->
+
+	<richlet>
+	    <richlet-name>Groovy</richlet-name>
+	    <richlet-class>org.effortless.server.GroovyRichlet</richlet-class>
+	</richlet>
+
+<!--
+<richlet-mapping>
+    <richlet-name>Groovy</richlet-name>
+    <url-pattern>/test</url-pattern>
+</richlet-mapping>
+<richlet-mapping>
+    <richlet-name>Groovy</richlet-name>
+    <url-pattern>/some/more/*</url-pattern>
+</richlet-mapping>
+-->
+<richlet-mapping>
+    <richlet-name>Groovy</richlet-name>
+    <url-pattern>/*</url-pattern>
+</richlet-mapping>
+
+</zk>
+	

@@ -36,6 +36,9 @@
 
 		<delete><fileset dir="${libs_dev}" includes="${project.name}${build_suffix}.jar"/></delete>
 		<copy file="${target_dist}/${project.name}/${project.name}${build_suffix}.jar" tofile="${libs_dev}/${project.name}${build_suffix}.jar" overwrite="true" failonerror="false" />
+		
+		<copy file="${target_dist}/${project.name}/${project.name}${build_suffix}.jar" tofile="lib/${project.name}${build_suffix}.jar" overwrite="true" failonerror="false" />
+		
 <!--
 		<copy file="dist/${project.name}${build_suffix}.jar" tofile="dist/versions/${currentDay}.${project.name}${build_suffix}.jar"/>
 		<copy file="dist/${project.name}.jar" tofile="dist/versions/${currentDay}.${project.name}.jar"/>
