@@ -3,4 +3,5 @@
 *.project
 */*.classpath
 */*.project
+*/.settings
 
