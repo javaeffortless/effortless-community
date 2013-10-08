@@ -1,6 +1,9 @@
 <zk>
   <login-window id="wLoginWnd" />
   <style id="wStyle" />
+<!--
+  <borderlayout height="100%" fulfill="wLoginWnd.onLoginSuccess">
+-->
   <borderlayout height="100%">
     <north size="85px" border="0" splittable="true" collapsible="true">
       <hlayout height="100%" id="wHeader">

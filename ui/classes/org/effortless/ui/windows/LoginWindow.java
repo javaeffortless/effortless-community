@@ -59,8 +59,9 @@ public class LoginWindow extends AbstractWindow {
     
     protected void initUi_Wnd () {
     	//<window id="wnd" width="100%" height="100%" contentStyle="overflow:auto" border="normal">
-    	this.setWidth("100%");
-    	this.setHeight("100%");
+    	this.setWidth("auto");
+    	this.setHeight("auto");
+    	this.setTitle("Inicio sesión");
     	this.setContentStyle("overflow:auto");
     	this.setBorder("normal");
     	this.setMaximizable(false);

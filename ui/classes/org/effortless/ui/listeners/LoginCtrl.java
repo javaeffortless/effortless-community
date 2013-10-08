@@ -4,6 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.effortless.ann.InfoFacade;
+import org.effortless.core.GlobalContext;
 import org.effortless.model.Filter;
 import org.effortless.model.MapFilter;
 import org.effortless.ui.UiApplication;
@@ -18,6 +19,8 @@ import org.effortless.ui.windows.LoginWindow;
 import org.effortless.ui.windows.MainWindow;
 import org.effortless.ui.windows.Windows;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Session;
+import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 
@@ -78,7 +81,8 @@ public class LoginCtrl extends Object implements org.zkoss.zk.ui.event.EventList
 					if (validLogin) {
 //				    	Events.postEvent(new Event(eventName, ViewContext.getMainWindow(), event.getData()));
 						Events.postEvent(CteEvents.ON_LOGIN_SUCCESS, ViewContext.getMainWindow(), event.getData());
-						wnd.detach();
+						Events.postEvent(CteEvents.ON_LOGIN_SUCCESS, wnd, event.getData());
+						wnd.setVisible(false);
 					}
 					result = true;
 				}
@@ -93,6 +97,10 @@ public class LoginCtrl extends Object implements org.zkoss.zk.ui.event.EventList
     	String loginName = (String)data.get(CteUi.LOGIN_NAME);
     	String loginPassword = (String)data.get(CteUi.LOGIN_PASSWORD);
 		result = "root".equals(loginName) && "pass".equals(loginPassword);
+		if (result) {
+			Session session = Sessions.getCurrent();
+			session.setAttribute(GlobalContext.CURRENT_USER, loginName);
+		}
 		return result;
 	}
 	

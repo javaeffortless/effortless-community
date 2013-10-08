@@ -119,7 +119,9 @@ public class MainWindow extends AbstractWindow implements Relocator {
     }
 
     protected void _onChangeMessage() {
-    	this.wMessage.setMessage(getMessage());
+    	if (this.wMessage != null) {
+    		this.wMessage.setMessage(getMessage());
+    	}
 	}
     
     protected String footerMsg;
@@ -409,10 +411,11 @@ public class MainWindow extends AbstractWindow implements Relocator {
 		}
 		else {
 //			LoginWindow loginWindow = new LoginWindow();
-			this.wLoginWnd.doEmbedded();
+			this.wLoginWnd.setVisible(true);
+			this.wLoginWnd.doHighlighted();
 //			this.appendChild(loginWindow);
 			this.wLoginWnd.addEventListener(CteEvents.ON_LOGIN, doGetMainMenuListener());
-			session.setAttribute(GlobalContext.CURRENT_USER, "LOGIN");
+//			session.setAttribute(GlobalContext.CURRENT_USER, "LOGIN");
 		}
 	}
 	
