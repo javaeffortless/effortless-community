@@ -594,7 +594,7 @@ System.out.println("SEARCH")
 			ImageResources.copy(appId, "logo", logo, 64);
 			
 			zul.add("<zk>");
-			zul.add("  <main-window>");
+			zul.add("  <main-window fulfill=\"onLoginSuccess\">");
 //			zul.add("    <menu-bar>");
 			
 			List<String> modules = getModules(appId);

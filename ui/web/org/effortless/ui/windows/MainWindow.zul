@@ -1,4 +1,5 @@
 <zk>
+  <login-window id="wLoginWnd" />
   <style id="wStyle" />
   <borderlayout height="100%">
     <north size="85px" border="0" splittable="true" collapsible="true">

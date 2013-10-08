@@ -45,6 +45,9 @@ import org.zkoss.zul.Window;
 
 public class MainWindow extends AbstractWindow implements Relocator {
 
+	@Wire
+	protected LoginWindow wLoginWnd;
+	
 //    <hlayout height="100%" id="wHeader">
 	@Wire
 	protected Hlayout wHeader;
@@ -159,6 +162,7 @@ public class MainWindow extends AbstractWindow implements Relocator {
     	this.wLogo.setSrc(_images("main/main_logo.png"));
     	this.wWest.setTitle(ViewContext.i18n("app_title"));
     	_onChangeFooterMsg();
+    	this.wLoginWnd.setVisible(false);
     }
     
 	
@@ -389,8 +393,8 @@ public class MainWindow extends AbstractWindow implements Relocator {
 //	}
 
 	@Override
-	public void beforeCompose() {
-		super.beforeCompose();
+	public void afterCompose() {
+		super.afterCompose();
 		initLogin();
 	}
 
@@ -404,10 +408,10 @@ public class MainWindow extends AbstractWindow implements Relocator {
 //			root.setPage(page);
 		}
 		else {
-			LoginWindow loginWindow = new LoginWindow();
-			loginWindow.doEmbedded();
-			this.appendChild(loginWindow);
-			loginWindow.addEventListener(CteEvents.ON_LOGIN, doGetMainMenuListener());
+//			LoginWindow loginWindow = new LoginWindow();
+			this.wLoginWnd.doEmbedded();
+//			this.appendChild(loginWindow);
+			this.wLoginWnd.addEventListener(CteEvents.ON_LOGIN, doGetMainMenuListener());
 			session.setAttribute(GlobalContext.CURRENT_USER, "LOGIN");
 		}
 	}
