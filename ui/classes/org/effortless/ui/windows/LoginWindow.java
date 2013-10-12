@@ -1,6 +1,10 @@
 package org.effortless.ui.windows;
 
+import java.io.File;
+
+import org.effortless.core.StringUtils;
 import org.effortless.ui.ViewContext;
+import org.effortless.ui.impl.Components;
 import org.effortless.ui.impl.CteEvents;
 import org.effortless.ui.impl.CteUi;
 import org.zkoss.zk.ui.event.Events;
@@ -55,6 +59,7 @@ public class LoginWindow extends AbstractWindow {
     	super.initUi();
     	initUi_Wnd();
     	initUi_BtnLogin();
+    	initUi_Fields();
     }
     
     protected void initUi_Wnd () {
@@ -70,18 +75,42 @@ public class LoginWindow extends AbstractWindow {
     	this.setSclass("login-window");
     }
     
-    protected void initUi_I18n () {
-    	super.initUi_I18n();
-    	
-    	String prefix = (this.i18n != null ? this.i18n + "_" : "");
-    	
-    	this.setTitle(ViewContext.i18n(prefix + "loginTitle", true, "loginTitle"));
-		this.btnLogin.setLabel(ViewContext.i18n(prefix + "login_loginButtonLabel", true, "login_loginButtonLabel"));
-    }
+//    protected void initUi_I18n () {
+//    	super.initUi_I18n();
+//    }
     
 	protected void initUi_BtnLogin() {
+    	String prefix = (this.i18n != null ? this.i18n + "_" : "");
+
+    	String title = ViewContext.i18n(prefix + "loginTitle", true, "loginTitle");
+    	String label = ViewContext.i18n(prefix + "login_loginButtonLabel", true, "login_loginButtonLabel");
+    	
+    	
+    	this.setTitle(title);
+		this.btnLogin.setLabel(label);
+		
 		this.btnLogin.setImage(_images("login.png"));//${images}/close.png
 		this.btnLogin.setVisible(true);
+	}
+	
+	protected void initUi_Fields() {
+    	String prefix = (this.i18n != null ? this.i18n + "_" : "");
+
+//    	String labelLogin = "Nombre de usuario";
+//    	String labelPassword = "Contraseña";
+    	String labelLogin = ViewContext.i18n(prefix + "login_labelLoginField.label", true, "login_labelLoginField.label");
+    	String labelPassword = ViewContext.i18n(prefix + "login_labelPasswordField.label", true, "login_labelPasswordField.label");
+
+    	String tooltipLogin = ViewContext.i18n(prefix + "login_labelLoginField.tooltip", true, "login_labelLoginField.tooltip");
+    	String tooltipPassword = ViewContext.i18n(prefix + "login_labelPasswordField.tooltip", true, "login_labelPasswordField.tooltip");
+
+    	Components.addBackgroundImage(this.wLoginLogo, "login_imgLogo", _images("loginLogo.png"), "48px");
+        
+        this.wLoginNameTag.setValue(labelLogin);
+        this.wLoginName.setTooltiptext(tooltipLogin);
+        
+        this.wLoginPasswordTag.setValue(labelPassword);
+        this.wLoginPassword.setTooltiptext(tooltipPassword);
 	}
 	
 }

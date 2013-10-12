@@ -1,9 +1,12 @@
 package org.effortless.ui.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.HtmlBasedComponent;
+import org.zkoss.zul.Style;
 
 public class Components extends Object {
 
@@ -66,6 +69,20 @@ public class Components extends Object {
 		return result;
 	}
 	
-	
+	public static void addBackgroundImage (HtmlBasedComponent cmp, String sclass, String url, String imageSize) {
+		if (cmp != null) {
+			url = (url.startsWith(File.separator) ? url.substring(1) : url);
+			Style style = new Style();
+			cmp.appendChild(style);
+			String content = "." + sclass + " { ";
+			content += "background-image: url('" + url + "');";
+			content += "width: " + imageSize + ";";
+			content += "height: " + imageSize + ";";
+			content += "margin: auto;";
+			content += "}";
+			style.setContent(content);
+			cmp.setSclass(sclass);
+		}
+	}
 	
 }
