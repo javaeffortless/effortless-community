@@ -351,5 +351,10 @@ public class Permission extends Object implements SecuritySystem {
 	public String toString () {
 		return this.id;
 	}
+
+	@Override
+	public Object login(String loginName, String loginPassword) {
+		throw new UnsupportedOperationException("login not supported.");
+	}
 	
 }

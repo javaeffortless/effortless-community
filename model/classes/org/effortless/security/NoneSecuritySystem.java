@@ -40,4 +40,9 @@ public class NoneSecuritySystem extends Object implements SecuritySystem {
 		return result;
 	}
 
+	@Override
+	public Object login(String loginName, String loginPassword) {
+		return loginName;
+	}
+
 }

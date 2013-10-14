@@ -7,6 +7,7 @@ import org.effortless.ann.InfoFacade;
 import org.effortless.core.GlobalContext;
 import org.effortless.model.Filter;
 import org.effortless.model.MapFilter;
+import org.effortless.security.SecuritySystem;
 import org.effortless.ui.UiApplication;
 import org.effortless.ui.ViewContext;
 import org.effortless.ui.impl.CteEvents;
@@ -96,11 +97,19 @@ public class LoginCtrl extends Object implements org.zkoss.zk.ui.event.EventList
 		java.util.Map data = (java.util.Map)event.getData();
     	String loginName = (String)data.get(CteUi.LOGIN_NAME);
     	String loginPassword = (String)data.get(CteUi.LOGIN_PASSWORD);
-		result = "root".equals(loginName) && "pass".equals(loginPassword);
-		if (result) {
-			Session session = Sessions.getCurrent();
-			session.setAttribute(GlobalContext.CURRENT_USER, loginName);
+		Session session = Sessions.getCurrent();
+		SecuritySystem securitySystem = (session != null ? (SecuritySystem)session.getAttribute(GlobalContext.SECURITY_CONTEXT) : null);
+		if (securitySystem != null) {
+			Object currentUser = securitySystem.login(loginName, loginPassword);
+			result = (currentUser != null);
+			if (result) {
+				session.setAttribute(GlobalContext.CURRENT_USER, currentUser);
+			}
 		}
+//		result = "root".equals(loginName) && "pass".equals(loginPassword);
+//		if (result) {
+//			session.setAttribute(GlobalContext.CURRENT_USER, loginName);
+//		}
 		return result;
 	}
 	

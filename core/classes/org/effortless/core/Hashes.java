@@ -1,4 +1,4 @@
-package org.effortless.util;
+package org.effortless.core;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,12 +11,10 @@ import net.jpountz.xxhash.StreamingXXHash32;
 import net.jpountz.xxhash.XXHash32;
 import net.jpountz.xxhash.XXHashFactory;
 
-import org.effortless.core.Hex;
-import org.effortless.core.ModelException;
 
-public class FileHashes extends Object {
+public class Hashes extends Object {
 
-	protected FileHashes () {
+	protected Hashes () {
 		super();
 		initiate();
 	}
@@ -24,11 +22,11 @@ public class FileHashes extends Object {
 	protected void initiate () {
 	}
 	
-	protected static FileHashes instance;
+	protected static Hashes instance;
 	
-	public static FileHashes getInstance () {
+	public static Hashes getInstance () {
 		if (instance == null) {
-			instance = new FileHashes();
+			instance = new Hashes();
 		}
 		return instance;
 	}
@@ -57,6 +55,21 @@ public class FileHashes extends Object {
     	    	this.crc32 = new CRC32();
     	    }
     	}
+	}
+	
+	public String md5 (String text) {
+		String result = null;
+		if (text != null) {
+			if (this.md5 == null) {
+				try {
+					this.md5 = MessageDigest.getInstance("MD5");
+				} catch (NoSuchAlgorithmException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			result = Hex.toHex(this.md5.digest(text.getBytes()));
+		}
+		return result;
 	}
 	
 	protected MessageDigest md5;

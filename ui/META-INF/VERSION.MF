@@ -1,8 +1,8 @@
-#Sat, 12 Oct 2013 02:30:50 +0100
+#Mon, 14 Oct 2013 20:48:39 +0100
 #Build Number for ANT. Do not edit!
-#Sat Oct 12 02:30:50 WEST 2013
+#Mon Oct 14 20:48:39 WEST 2013
 version=1.0alpha
-build.number=667
-build.date=20131012023050+0100
-id=effortless-ui
+build.number=668
+build.date=20131014204839+0100
 build.author=
+id=effortless-ui

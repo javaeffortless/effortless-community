@@ -24,6 +24,8 @@ public class GlobalContext extends Object {
 
 	public static final String I18N = "I18N";
 
+	public static final String SECURITY_CONTEXT = "SECURITY_CONTEXT";
+
 	
 	public static Session getSession () {
 		return Sessions.getCurrent();

@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.effortless.core.GlobalContext;
 import org.effortless.core.StringUtils;
+import org.effortless.security.AbstractSecuritySystem;
+import org.effortless.security.SecuritySystem;
 import org.effortless.server.binder.EffortlessELFactory;
 import org.zkoss.lang.ClassResolver;
 import org.zkoss.lang.ImportedClassResolver;
@@ -84,6 +86,9 @@ public class GroovyRichlet extends GenericRichlet {
 			ServerContext.setAppId(appId);
 			ServerContext.setRootContext(realPath);
 			ServerContext.setServletContext(servletContext);
+			if (session != null) {
+				initSecuritySystem(session);
+			}
 			
 ////			String resourcesContext = "resources" + File.separator + appId;// + File.separator + "resources";
 //			String resourcesContext = appId + File.separator + "resources";
@@ -153,6 +158,24 @@ public class GroovyRichlet extends GenericRichlet {
 				IOUtils.closeQuietly(output);
 			}
 		}
+	}
+
+	protected void initSecuritySystem(Session session) {
+		if (session != null) {
+			SecuritySystem ss = (SecuritySystem)session.getAttribute(GlobalContext.SECURITY_CONTEXT);
+			ss = (ss != null ? ss : buildSecuritySystem(session));
+			session.setAttribute(GlobalContext.SECURITY_CONTEXT, ss);
+		}
+	}
+	
+	protected SecuritySystem buildSecuritySystem (Session session) {
+		SecuritySystem result = null;
+		if (session != null) {
+			String appId = ServerContext.getAppId();
+			AbstractSecuritySystem _ss = new AbstractSecuritySystem();
+			result = _ss;
+		}
+		return result;
 	}
 
 	protected ClassResolver createClassResolver(ScriptEngine gse) {
