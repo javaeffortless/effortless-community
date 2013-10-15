@@ -6,10 +6,15 @@
 -->
   <borderlayout height="100%">
     <north size="85px" border="0" splittable="true" collapsible="true">
-      <hlayout height="100%" id="wHeader">
-        <image id="wLogo" />
-        <hlayout id="wTopMenu" />
-<!-- top menu -->
+      <hlayout>
+	      <hlayout height="100%" id="wHeader">
+	        <image id="wLogo" />
+	        <hlayout id="wTopMenu" />
+	<!-- top menu -->
+	      </hlayout>
+		  <hlayout sclass="z-hlayout-right">
+		    <button label="Logout" id="wLogout" />
+		  </hlayout>
       </hlayout>
     </north>
     <west id="wWest" width="250px" border="0" splittable="true" collapsible="true" margins="0,5,0,0" autoscroll="true">

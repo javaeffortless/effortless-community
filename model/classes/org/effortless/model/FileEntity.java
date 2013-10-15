@@ -20,7 +20,6 @@ import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 
-import org.effortless.core.Hashes;
 import org.effortless.core.FileUtils;
 import org.effortless.core.FilenameUtils;
 import org.effortless.core.Hex;
@@ -28,6 +27,7 @@ import org.effortless.core.IOUtils;
 import org.effortless.core.MetadataFiles;
 import org.effortless.core.ModelException;
 import org.effortless.core.ObjectUtils;
+import org.effortless.util.FileHashes;
 import org.hibernate.annotations.Tuplizer;
 import org.hibernate.tuple.entity.PojoEntityTuplizer;
 
@@ -901,7 +901,7 @@ public class FileEntity<Type extends FileEntity<Type>> extends AbstractIdEntity<
 		this.setRegisterDate(new java.util.Date());
 		this.setFormat(FilenameUtils.getExtension(absolutePath));
 		
-		String[] toHashes = Hashes.getInstance().tryToHashes(file);
+		String[] toHashes = FileHashes.getInstance().tryToHashes(file);
 		this.setHash1((toHashes != null && toHashes.length > 0 ? toHashes[0] : null));
 		this.setHash2((toHashes != null && toHashes.length > 1 ? toHashes[1] : null));
 		this.setHash3((toHashes != null && toHashes.length > 2 ? toHashes[2] : null));

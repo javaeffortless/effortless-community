@@ -17,6 +17,7 @@ import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.ann.Finder;
 import org.effortless.ann.NoTransform;
+import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.Collections;
 import org.effortless.core.GlobalContext;
 import org.effortless.core.StringUtils;

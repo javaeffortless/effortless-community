@@ -5,6 +5,7 @@
 	<classpathentry kind="src" path="server/classes"/>
 	<classpathentry kind="src" path="core/classes"/>
 	<classpathentry kind="src" path="model/classes"/>
+	<classpathentry kind="src" path="ann/classes"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/media/jesus/64F27B47F27B1C8C/TRABAJO/runtime/apache-tomcat-7.0.40/webapps/ewp/WEB-INF/lib/effortless-model.jar"/>
 	<classpathentry kind="lib" path="/media/jesus/64F27B47F27B1C8C/TRABAJO/runtime/apache-tomcat-7.0.40/webapps/ewp/WEB-INF/lib/effortless-ui.jar"/>

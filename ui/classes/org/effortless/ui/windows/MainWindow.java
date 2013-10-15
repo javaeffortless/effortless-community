@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.effortless.core.GlobalContext;
 import org.effortless.core.ObjectUtils;
+import org.effortless.core.StringUtils;
 import org.effortless.model.Entity;
 import org.effortless.ui.Message;
 import org.effortless.ui.Relocatable;
@@ -23,6 +24,7 @@ import org.effortless.ui.widgets.Field;
 import org.effortless.ui.widgets.Menu;
 import org.zkoss.addon.fluidgrid.Rowchildren;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.annotation.ComponentAnnotation;
@@ -418,6 +420,10 @@ public class MainWindow extends AbstractWindow implements Relocator {
 //			session.setAttribute(GlobalContext.CURRENT_USER, "LOGIN");
 		}
 	}
-	
+
+	@Listen("onClick = #wLogout")
+	public void _onClick_wLogout () {
+		ViewContext.logout();
+    }
 	
 }

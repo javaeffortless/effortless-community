@@ -445,9 +445,8 @@ public class AbstractSecuritySystem extends Object implements SecuritySystem {
 				String defaultHash = this.securityFile.getString("cfg.default.hash");
 				defaultHash = (defaultHash != null ? defaultHash.trim() : "");
 				defaultHash = (defaultHash.length() > 0 ? defaultHash : "MD5");
-				String hashPassword = Hashes.getInstance().md5(loginPassword);
+				String hashPassword = Hashes.getInstance().digest(defaultHash, loginPassword);
 				
-
 				String storePassword = this.securityFile.getString("user." + loginName + ".pass");
 				if (hashPassword != null && hashPassword.equals(storePassword)) {
 					result = loginName;

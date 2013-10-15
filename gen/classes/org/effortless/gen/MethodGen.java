@@ -44,6 +44,7 @@ import org.codehaus.groovy.ast.stmt.TryCatchStatement;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
+import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.Collections;
 import org.effortless.model.AbstractEntity;
 import org.objectweb.asm.Opcodes;

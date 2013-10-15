@@ -7,6 +7,8 @@ import org.effortless.ui.ViewContext;
 import org.effortless.ui.impl.Components;
 import org.effortless.ui.impl.CteEvents;
 import org.effortless.ui.impl.CteUi;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
@@ -44,7 +46,10 @@ public class LoginWindow extends AbstractWindow {
 	@Wire
 	protected Button btnLogin;
 
-	
+	public void _onOK () {
+    	_onLogin();
+    }
+
     @Listen("onClick = #btnLogin")
 	public void _onLogin () {
     	String loginName = this.wLoginName.getValue();
@@ -73,6 +78,15 @@ public class LoginWindow extends AbstractWindow {
     	this.setMinimizable(false);
     	this.setClosable(false);
     	this.setSclass("login-window");
+    	final LoginWindow _this = this;
+    	this.addEventListener(Events.ON_OK, new EventListener () {
+
+			@Override
+			public void onEvent(Event evt) throws Exception {
+				_this._onOK();
+			}
+    		
+    	});
     }
     
 //    protected void initUi_I18n () {

@@ -41,6 +41,8 @@ import org.codehaus.groovy.ast.stmt.TryCatchStatement;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
+import org.effortless.ann.InfoFacade;
+import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.Collections;
 import org.effortless.core.ModelException;
 import org.effortless.core.StringUtils;
@@ -358,14 +360,17 @@ public class EntityClassGen extends ClassGen {
 	public static final String[] ARRAY_NOT_NULL = {"code", "codigo", "nombre", "apellido", "name", "surname", "cif", "nif", "dni", "passport", "pasaporte"};
 	
 	public Boolean isNotNull (FieldNode field) {
-		Boolean result = false;
+		Boolean result = Boolean.FALSE;
 		if (this.clazz != null && field != null) {
-			String fieldName = field.getName().toLowerCase();
-			for (String it : ARRAY_NOT_NULL) {
-				if (fieldName.contains(it)) {
-					result = true;
-//					println "$fieldName is not null on class ${clazz.name}"
-					break;
+			result = InfoFacade.checkNotNull(field);
+			if (result == null) {
+				String fieldName = field.getName().toLowerCase();
+				for (String it : ARRAY_NOT_NULL) {
+					if (fieldName.contains(it)) {
+						result = Boolean.TRUE;
+	//					println "$fieldName is not null on class ${clazz.name}"
+						break;
+					}
 				}
 			}
 		}

@@ -9,8 +9,8 @@ import java.util.List;
 
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
+import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.StringUtils;
-import org.effortless.gen.ClassNodeHelper;
 
 public class FieldTransform {
 

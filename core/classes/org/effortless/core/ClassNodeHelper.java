@@ -1,4 +1,4 @@
-package org.effortless.gen;
+package org.effortless.core;
 
 import java.util.HashMap;
 import java.util.Map;

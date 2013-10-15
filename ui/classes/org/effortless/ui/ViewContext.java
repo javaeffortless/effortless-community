@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.effortless.core.GlobalContext;
 import org.effortless.core.I18nProperties;
+import org.effortless.core.StringUtils;
 import org.effortless.server.ServerContext;
 import org.effortless.server.WebUtils;
 import org.zkoss.zk.ui.Component;
@@ -127,6 +128,16 @@ public class ViewContext {
 //    	String nkey = this.i18n + "_" + key;
     	result = (String)getI18n().getKey(key, save);
     	return result;
+    }
+    
+    public static void logout () {
+		Session session = Sessions.getCurrent();
+		if (session != null) {
+			session.invalidate();
+		}
+		String appId = GlobalContext.get(GlobalContext.APP_ID, String.class);
+		String url = StringUtils.lastPart(appId, "\\.");
+		Executions.sendRedirect(url);
     }
 	
 }

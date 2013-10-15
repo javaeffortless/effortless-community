@@ -26,6 +26,7 @@ import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
 import org.effortless.ann.Finder;
+import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.DebugUtils;
 import org.effortless.core.StringUtils;
 import org.effortless.gen.fields.BaseFields;

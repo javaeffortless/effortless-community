@@ -11,8 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.effortless.core.Hashes;
 import org.effortless.core.ModelException;
+import org.effortless.util.FileHashes;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
@@ -307,7 +307,7 @@ public class CriteriaFilter<Type extends Entity<Type>> extends AbstractFilter<Ty
 	public Filter<Type> eqFile (String name, File param, String hash1, String hash2, String hash3) {
 		if (param != null) {
 			if (hash1 == null && hash2 == null && hash3 == null) {
-				String[] hashes = Hashes.getInstance().tryToHashes(param);
+				String[] hashes = FileHashes.getInstance().tryToHashes(param);
 				hash1 = hashes[0];
 				hash2 = hashes[1];
 				hash3 = hashes[2];
