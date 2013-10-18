@@ -18,7 +18,9 @@ import org.objectweb.asm.Opcodes;
 
 import org.effortless.core.ModelException;
 import org.effortless.gen.AppTransform;
+import org.effortless.gen.ClassTransform;
 import org.effortless.gen.GenContext;
+import org.effortless.gen.ModuleTransform;
 import org.effortless.gen.fields.DeletedField;
 import org.effortless.gen.fields.PkField;
 import org.effortless.gen.fields.UserFields;
@@ -47,102 +49,46 @@ public class EntityASTTransformation implements ASTTransformation, Opcodes {
 //			processClass(clazz)
 //		}
 		
-		String pkgName = getPackage(sourceUnit);
-		String appId = (pkgName != null ? SessionManager.getDbId(pkgName) : null);
+		String appId = GenContext.loadAppId(sourceUnit);
 		if (appId != null) {
 			AppTransform appTransform = GenContext.getAppTransform(appId, true);
 			
 			if (!appTransform.containsUnit(sourceUnit)) {
-				if (EntityClassTransformation.ONE_PACKAGE) {
-					setupPackage(sourceUnit);
-				}
-				if (nodes == null) {
-					List<ClassNode> classes = sourceUnit.getAST().getClasses();
-					int size = (classes != null ? classes.size() : 0);
-					for (int i = 0; i < size; i++) {
-						ClassNode clazz = classes.get(i);
-						EntityClassTransformation.processClass(clazz, sourceUnit);
+				List<ModuleTransform> moduleTransforms = GenContext.getModuleTransforms();
+				if (moduleTransforms != null) {
+					for (ModuleTransform transform : moduleTransforms) {
+						transform.process(sourceUnit);
 					}
 				}
-				else {
-					for (ASTNode node : nodes) {
-	//					nodes.each { ASTNode node ->
-							if (node instanceof ClassNode) {
-								EntityClassTransformation.processClass((ClassNode)node, sourceUnit);
+//				if (EntityClassTransformation.ONE_PACKAGE) {
+//					setupPackage(sourceUnit);
+//				}
+				List<ClassTransform> classTransforms = GenContext.getClassTransforms();
+				if (classTransforms != null) {
+					if (nodes == null) {
+						List<ClassNode> classes = sourceUnit.getAST().getClasses();
+						int size = (classes != null ? classes.size() : 0);
+						for (int i = 0; i < size; i++) {
+							ClassNode clazz = classes.get(i);
+							for (ClassTransform transform : classTransforms) {
+								transform.process(clazz, sourceUnit);
 							}
+	//						EntityClassTransformation.processClass(clazz, sourceUnit);
 						}
+					}
+					else {
+						for (ASTNode node : nodes) {
+		//					nodes.each { ASTNode node ->
+								if (node instanceof ClassNode) {
+									for (ClassTransform transform : classTransforms) {
+										transform.process((ClassNode)node, sourceUnit);
+									}
+	//								EntityClassTransformation.processClass((ClassNode)node, sourceUnit);
+								}
+							}
+					}
 				}
 				appTransform.addItem(nodes, sourceUnit);
-			}
-		}
-	}
-	
-	protected String getPackage (SourceUnit sourceUnit) {
-		String result = null;
-		if (sourceUnit != null) {
-			ModuleNode module = sourceUnit.getAST();
-			result = module.getPackageName();
-			if (result == null) {
-				String rootCtx = ServerContext.getRootContext();
-				String sourceUnitName = sourceUnit.getName();
-				if (sourceUnitName.startsWith(rootCtx)) {
-					if (EntityClassTransformation.ONE_PACKAGE) {
-						String fileName = FilenameUtils.getName(sourceUnitName);
-						sourceUnitName = (fileName != null ? sourceUnitName.substring(0, sourceUnitName.length() - (fileName.length() + 1)) : sourceUnitName);
-						if (rootCtx.length() <= sourceUnitName.length()) {
-							String suffix = sourceUnitName.substring(rootCtx.length());
-							if (suffix != null) {
-								result = suffix.replaceAll("/", ".");
-							}
-						}
-					}
-					else {
-						String extension = FilenameUtils.getExtension(sourceUnitName);
-						sourceUnitName = (extension != null ? sourceUnitName.substring(0, sourceUnitName.length() - (extension.length() + 1)) : sourceUnitName);
-						if (rootCtx.length() <= sourceUnitName.length()) {
-							String suffix = sourceUnitName.substring(rootCtx.length());
-							if (suffix != null) {
-								result = suffix.replaceAll("/", ".");
-							}
-						}
-					}
-				}
-			}
-		}
-		return result;
-	}
-	
-	protected void setupPackage (SourceUnit sourceUnit) {
-		if (sourceUnit != null) {
-			ModuleNode module = sourceUnit.getAST();
-			String packageName = module.getPackageName();
-			if (packageName == null) {
-				String rootCtx = ServerContext.getRootContext();
-				String sourceUnitName = sourceUnit.getName();
-				if (sourceUnitName.startsWith(rootCtx)) {
-					if (EntityClassTransformation.ONE_PACKAGE) {
-						String fileName = FilenameUtils.getName(sourceUnitName);
-						sourceUnitName = (fileName != null ? sourceUnitName.substring(0, sourceUnitName.length() - (fileName.length() + 1)) : sourceUnitName);
-						if (rootCtx.length() <= sourceUnitName.length()) {
-							String suffix = sourceUnitName.substring(rootCtx.length());
-							if (suffix != null) {
-								String newPackageName = suffix.replaceAll("/", ".");
-								module.setPackageName(newPackageName);
-							}
-						}
-					}
-					else {
-						String extension = FilenameUtils.getExtension(sourceUnitName);
-						sourceUnitName = (extension != null ? sourceUnitName.substring(0, sourceUnitName.length() - (extension.length() + 1)) : sourceUnitName);
-						if (rootCtx.length() <= sourceUnitName.length()) {
-							String suffix = sourceUnitName.substring(rootCtx.length());
-							if (suffix != null) {
-								String newPackageName = suffix.replaceAll("/", ".");
-								module.setPackageName(newPackageName);
-							}
-						}
-					}
-				}
 			}
 		}
 	}

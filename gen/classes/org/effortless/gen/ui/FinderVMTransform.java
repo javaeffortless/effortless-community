@@ -48,6 +48,8 @@ import org.effortless.core.Collections;
 import org.effortless.core.ModelException;
 import org.effortless.core.StringUtils;
 import org.effortless.gen.ClassGen;
+import org.effortless.gen.ClassTransform;
+import org.effortless.gen.InfoClassNode;
 import org.effortless.gen.MethodGen;
 import org.effortless.gen.ViewClassGen;
 import org.effortless.gen.classes.EntityClassTransformation;
@@ -111,7 +113,7 @@ System.out.println("SEARCH")
  *
  */
 
-public class FinderVMTransform {
+public class FinderVMTransform extends Object implements ClassTransform {
 
 	public static final ClassNode HASH_CODE_BUILDER = new ClassNode(org.apache.commons.lang3.builder.HashCodeBuilder.class);
 	
@@ -121,8 +123,8 @@ public class FinderVMTransform {
 		return result;
 	}
 	
-	public static void processClass (ClassNode clazz, SourceUnit sourceUnit) {
-		if (clazz != null) {
+	public void process (ClassNode clazz, SourceUnit sourceUnit) {
+		if (clazz != null && InfoClassNode.checkEntityValid(clazz, sourceUnit) && !InfoClassNode.checkEnum(clazz, sourceUnit)) {
 			
 			if (true) {
 				ViewClassGen cg = new ViewClassGen(clazz, sourceUnit);
@@ -189,7 +191,7 @@ if (finderFilter != null) {
 
 		String zulName = className.trim() + CteUi.SUFFIX_INFO_ZUL + CteUi.EXT_ZUL;
 		String folder = clazz.getClassNode().getPackageName();
-		if (!EntityClassTransformation.ONE_PACKAGE) {
+		if (!ClassGen.ONE_PACKAGE) {
 			int idx = folder.lastIndexOf(".");
 			folder = (idx < 0 ? folder : folder.substring(0, idx));
 		}
@@ -240,7 +242,7 @@ if (finderFilter != null) {
 
 		String zulName = className.trim() + "moreinfo.zul";
 		String folder = clazz.getClassNode().getPackageName();
-		if (!EntityClassTransformation.ONE_PACKAGE) {
+		if (!ClassGen.ONE_PACKAGE) {
 			int idx = folder.lastIndexOf(".");
 			folder = (idx < 0 ? folder : folder.substring(0, idx));
 		}
@@ -318,7 +320,7 @@ if (finderFilter != null) {
 
 		String zulName = className.trim() + ".zul";
 		String folder = clazz.getPackageName();
-		if (!EntityClassTransformation.ONE_PACKAGE) {
+		if (!ClassGen.ONE_PACKAGE) {
 			int idx = folder.lastIndexOf(".");
 			folder = (idx < 0 ? folder : folder.substring(0, idx));
 		}
@@ -399,7 +401,7 @@ if (false) {
 
 		String zulName = className.trim() + ".zul";
 		String folder = clazz.getPackageName();
-		if (!EntityClassTransformation.ONE_PACKAGE) {
+		if (!ClassGen.ONE_PACKAGE) {
 			int idx = folder.lastIndexOf(".");
 			folder = (idx < 0 ? folder : folder.substring(0, idx));
 		}
@@ -745,7 +747,7 @@ if (false) {
 
 		String zulName = clazz.getNameWithoutPackage().trim() + "_finder.zul";
 		String folder = clazz.getPackageName();
-		if (!EntityClassTransformation.ONE_PACKAGE) {
+		if (!ClassGen.ONE_PACKAGE) {
 			int idx = folder.lastIndexOf(".");
 			folder = (idx < 0 ? folder : folder.substring(0, idx));
 		}
@@ -912,7 +914,7 @@ if (false) {
 
 		String zulName = clazz.getNameWithoutPackage().trim() + "_finder.zul";
 		String folder = clazz.getPackageName();
-		if (!EntityClassTransformation.ONE_PACKAGE) {
+		if (!ClassGen.ONE_PACKAGE) {
 			int idx = folder.lastIndexOf(".");
 			folder = (idx < 0 ? folder : folder.substring(0, idx));
 		}

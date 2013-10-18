@@ -21,9 +21,11 @@ import org.codehaus.groovy.syntax.*;
 import org.codehaus.groovy.ast.builder.*;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.ModelException;
+import org.effortless.gen.ClassGen;
 import org.effortless.gen.GenContext;
 import org.effortless.gen.classes.EntityClassTransformation;
 import org.effortless.model.FileEntity;
+import org.effortless.model.FileEntityTuplizer;
 import org.effortless.model.StartupDb;
 import org.objectweb.asm.Opcodes;
 
@@ -57,7 +59,7 @@ public class FileFields {
 	public static void processField (ClassNode clazz, FieldNode field, SourceUnit sourceUnit) {
 		String keyFileEntity = clazz.getName() + "." + FileEntity.KEY_CLASS_NEEDS;
 		GenContext.set(keyFileEntity, Boolean.TRUE);
-		ClassNode fileClazz = EntityClassTransformation.tryNeedsFileEntity(clazz, sourceUnit);
+		ClassNode fileClazz = ClassGen.tryNeedsNewExternalEntity(clazz, sourceUnit, FileEntity.class, FileEntity.KEY_CLASS_NEEDS, FileEntity.KEY_APP_NEEDS, FileEntityTuplizer.class);//EntityClassTransformation.tryNeedsFileEntity(clazz, sourceUnit);
 		alterField(clazz, field, fileClazz);
 		UserFields.addInitiate(clazz, field);
 		MethodNode getter = UserFields.addGetter(clazz, field, false);

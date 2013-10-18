@@ -46,6 +46,8 @@ import org.codehaus.groovy.syntax.Types;
 import org.effortless.core.ModelException;
 import org.effortless.core.StringUtils;
 import org.effortless.gen.ClassGen;
+import org.effortless.gen.ClassTransform;
+import org.effortless.gen.InfoClassNode;
 import org.effortless.gen.MethodGen;
 import org.effortless.gen.ViewClassGen;
 import org.effortless.gen.classes.EntityClassTransformation;
@@ -95,7 +97,7 @@ public class BasicEditorViewModel {
  *
  */
 
-public class EditorVMTransform {
+public class EditorVMTransform extends Object implements ClassTransform {
 
 	public static String getEditorName (ClassNode clazz, SourceUnit sourceUnit) {
 		String result = null;
@@ -103,8 +105,8 @@ public class EditorVMTransform {
 		return result;
 	}
 	
-	public static void processClass (ClassNode clazz, SourceUnit sourceUnit) {
-		if (clazz != null) {
+	public void process (ClassNode clazz, SourceUnit sourceUnit) {
+		if (clazz != null && InfoClassNode.checkEntityValid(clazz, sourceUnit) && !InfoClassNode.checkEnum(clazz, sourceUnit)) {
 			ViewClassGen cg = new ViewClassGen(clazz, sourceUnit);
 			ClassGen vm = null;//cg.addEditorVM();
 			
@@ -172,7 +174,7 @@ public class EditorVMTransform {
 		
 		String zulName = clazz.getNameWithoutPackage().trim() + "_editor.zul";
 		String folder = clazz.getPackageName();
-		if (!EntityClassTransformation.ONE_PACKAGE) {
+		if (!ClassGen.ONE_PACKAGE) {
 			int idx = folder.lastIndexOf(".");
 			folder = (idx < 0 ? folder : folder.substring(0, idx));
 		}
@@ -281,7 +283,7 @@ public class EditorVMTransform {
 		
 		String zulName = clazz.getNameWithoutPackage().trim() + "_editor.zul";
 		String folder = clazz.getPackageName();
-		if (!EntityClassTransformation.ONE_PACKAGE) {
+		if (!ClassGen.ONE_PACKAGE) {
 			int idx = folder.lastIndexOf(".");
 			folder = (idx < 0 ? folder : folder.substring(0, idx));
 		}

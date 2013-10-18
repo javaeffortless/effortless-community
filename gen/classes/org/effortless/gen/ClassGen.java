@@ -14,6 +14,7 @@ import org.codehaus.groovy.ast.InnerClassNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.expr.BinaryExpression;
+import org.codehaus.groovy.ast.expr.ClassExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.FieldExpression;
@@ -30,6 +31,8 @@ import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.DebugUtils;
 import org.effortless.core.StringUtils;
 import org.effortless.gen.fields.BaseFields;
+import org.effortless.gen.impl.FileEntityTransform;
+import org.effortless.model.SessionManager;
 import org.objectweb.asm.Opcodes;
 
 public class ClassGen extends Object {
@@ -512,4 +515,86 @@ public class ClassGen extends Object {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static ClassNode tryNeedsNewExternalEntity(ClassNode clazz, SourceUnit sourceUnit, Class externalEntity, String suffixClass, String suffixApp, Class tuplizer) {
+		ClassNode result = null;
+		String className = clazz.getName();
+		String key = className + "." + suffixClass;
+		Boolean needs = (Boolean)GenContext.get(key);
+		if (needs != null && needs.booleanValue()) {
+			String dbId = SessionManager.getDbId(className);
+			key = dbId + "." + suffixApp;
+			needs = (Boolean)GenContext.get(key);
+			if (needs == null || needs.booleanValue() == false) {
+				result = addNewExternalClass(clazz, sourceUnit, externalEntity, true);
+				GenContext.set(key, Boolean.TRUE);
+			}
+			else {
+				result = addNewExternalClass(clazz, sourceUnit, externalEntity, false);
+			}
+			if (result != null && tuplizer != null && false) {
+				AnnotationNode annTuplizer = new AnnotationNode(new ClassNode(org.hibernate.annotations.Tuplizer.class));
+				annTuplizer.setMember("impl", new ClassExpression(ClassNodeHelper.toClassNode(tuplizer)));
+				clazz.addAnnotation(annTuplizer);
+			}
+		}
+		return result;
+	}
+
+	public static ClassNode addNewExternalClass (ClassNode clazz, SourceUnit sourceUnit, Class externalClass, boolean add) {
+		ClassNode result = null;
+		ClassNode externClazz = new ClassNode(externalClass);
+		ClassNode newClazz = new ClassNode(externClazz.getNameWithoutPackage(), externClazz.getModifiers(), externClazz);
+		String newName = newNameExternalClass(clazz, sourceUnit, externClazz);
+		newClazz.setName(newName);
+		
+		//IMPLEMENT ME!!!
+		if (add) {
+			sourceUnit.getAST().addClass(newClazz);
+			
+			FileEntityTransform transform = new FileEntityTransform();
+			transform.process(newClazz, sourceUnit);
+//			addAnnotations(newClazz);
+//			addStaticMethods(newClazz, sourceUnit);
+//			
+//			updateDb(newClazz, sourceUnit);
+		}
+		
+		result = newClazz;
+		return result;
+	}
+	
+	public static String newNameExternalClass (ClassNode clazz, SourceUnit sourceUnit, ClassNode externClazz) {
+		String result = null;
+		String packageName = clazz.getPackageName();
+		if (!ONE_PACKAGE) {
+			int lastIdx = (packageName != null ? packageName.lastIndexOf(".") : -1);
+			packageName = (lastIdx > -1 ? packageName.substring(0, lastIdx) : "");
+		}
+
+		int lastIdx = (packageName != null ? packageName.lastIndexOf(".") : -1);
+		String appName = (lastIdx > -1 ? packageName.substring(lastIdx + 1) : "");
+		
+		String className = externClazz.getNameWithoutPackage();
+		if (appName != null && appName.length() > 0) {
+			className = appName.substring(0, 1).toUpperCase() + appName.substring(1) + className.substring(0, 1).toUpperCase() + className.substring(1);
+		}
+		packageName += (packageName != null && packageName.length() > 0 ? "." : "");
+		result = packageName + className;
+		return result;
+	}
+
+	public static final boolean ONE_PACKAGE = true;
+
 }

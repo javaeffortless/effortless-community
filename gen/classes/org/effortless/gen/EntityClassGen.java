@@ -1,7 +1,6 @@
 package org.effortless.gen;
 
 import java.io.File;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -13,54 +12,16 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.Parameter;
-import org.codehaus.groovy.ast.builder.AstBuilder;
-import org.codehaus.groovy.ast.expr.ArgumentListExpression;
-import org.codehaus.groovy.ast.expr.BinaryExpression;
-import org.codehaus.groovy.ast.expr.BooleanExpression;
-import org.codehaus.groovy.ast.expr.ClassExpression;
-import org.codehaus.groovy.ast.expr.ConstantExpression;
-import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
-import org.codehaus.groovy.ast.expr.DeclarationExpression;
 import org.codehaus.groovy.ast.expr.Expression;
-import org.codehaus.groovy.ast.expr.FieldExpression;
-import org.codehaus.groovy.ast.expr.ListExpression;
-import org.codehaus.groovy.ast.expr.MethodCallExpression;
-import org.codehaus.groovy.ast.expr.NotExpression;
-import org.codehaus.groovy.ast.expr.PropertyExpression;
-import org.codehaus.groovy.ast.expr.TernaryExpression;
-import org.codehaus.groovy.ast.expr.VariableExpression;
-import org.codehaus.groovy.ast.stmt.BlockStatement;
-import org.codehaus.groovy.ast.stmt.CatchStatement;
-import org.codehaus.groovy.ast.stmt.EmptyStatement;
-import org.codehaus.groovy.ast.stmt.ExpressionStatement;
-import org.codehaus.groovy.ast.stmt.IfStatement;
-import org.codehaus.groovy.ast.stmt.ReturnStatement;
-import org.codehaus.groovy.ast.stmt.Statement;
-import org.codehaus.groovy.ast.stmt.ThrowStatement;
-import org.codehaus.groovy.ast.stmt.TryCatchStatement;
 import org.codehaus.groovy.control.SourceUnit;
-import org.codehaus.groovy.syntax.Token;
-import org.codehaus.groovy.syntax.Types;
-import org.effortless.ann.InfoFacade;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.Collections;
 import org.effortless.core.ModelException;
 import org.effortless.core.StringUtils;
-import org.effortless.gen.classes.EntityClassTransformation;
-import org.effortless.gen.fields.BaseFields;
-import org.effortless.gen.fields.BoolFields;
-import org.effortless.gen.fields.CountFields;
-import org.effortless.gen.fields.DateFields;
-import org.effortless.gen.fields.EnumFields;
-import org.effortless.gen.fields.FileFields;
-import org.effortless.gen.fields.ListFields;
-import org.effortless.gen.fields.NumberFields;
-import org.effortless.gen.fields.RefFields;
 import org.effortless.gen.fields.Restrictions;
-import org.effortless.gen.fields.TextFields;
-import org.effortless.gen.fields.UserFields;
 import org.effortless.model.AbstractEntity;
 import org.effortless.model.FileEntity;
+import org.effortless.model.FileEntityTuplizer;
 import org.objectweb.asm.Opcodes;
 
 public class EntityClassGen extends ClassGen {
@@ -174,6 +135,66 @@ public class EntityClassGen extends ClassGen {
 		return this;
 	}
 	
+	
+	
+	public EntityClassGen addInitiateDefaultBoolean (FieldNode field) {
+		String methodName = getInitiateName(field);
+		
+		MethodGen mg = this.addMethod(methodName).setProtected(true);
+		boolean defaultValue = loadDefaultBooleanValue(field);
+		Expression defaultExpression = (defaultValue ? mg.cteTRUE() : mg.cteFALSE());
+		mg.add(mg.assign(mg.field(field.getName()), defaultExpression));
+		
+		return this;
+	}
+	
+	public static final String[] BOOL_DEFAULT_TRUE = {"activo", "enabled"};
+	
+	public boolean loadDefaultBooleanValue (FieldNode field) {
+		boolean result = false;
+		String fieldName = (field != null ? field.getName() : null);
+		result = Collections.contains(BOOL_DEFAULT_TRUE, fieldName);
+		return result;
+	}
+
+	
+	
+	
+	
+	public EntityClassGen addInitiateDefaultDate (FieldNode field) {
+		String methodName = getInitiateName(field);
+		
+		MethodGen mg = this.addMethod(methodName).setProtected(true);
+		boolean defaultValue = loadDefaultDateValue(field);
+		Expression defaultExpression = (defaultValue ? mg.callConstructor(java.util.Date.class) : mg.cteNull());
+		mg.add(mg.assign(mg.field(field.getName()), defaultExpression));
+		
+		return this;
+	}
+	
+	public static final String[] DATE_CURRENT_DEFAULT_TRUE = {"alta", "create"};
+	
+	public boolean loadDefaultDateValue (FieldNode field) {
+		boolean result = false;
+		String fieldName = (field != null ? field.getName() : null);
+		result = Collections.contains(DATE_CURRENT_DEFAULT_TRUE, fieldName);
+		return result;
+	}
+	
+	
+	
+
+	
+	public EntityClassGen addInitiateDefaultNumber (FieldNode field) {
+		String methodName = getInitiateName(field);
+		
+		MethodGen mg = this.addMethod(methodName).setProtected(true);
+		Expression defaultExpression = mg.callStatic(Double.class, "valueOf", mg.cte(0.0));
+		mg.add(mg.assign(mg.field(field.getName()), defaultExpression));
+		
+		return this;
+	}
+	
 	public MethodGen addEntityGetter (FieldNode field, boolean includeAnnotation) {
 		MethodGen result = null;
 		String methodName = getGetterName(field);
@@ -191,7 +212,7 @@ public class EntityClassGen extends ClassGen {
 			if (isNotNull(field)) {
 				column.addMember("nullable", mg.cteFalse());
 			}
-			if (field.getType().isDerivedFrom(new ClassNode(String.class))) {
+			if (field.getType().isDerivedFrom(ClassNodeHelper.toClassNode(String.class))) {
 				String fieldName = field.getName();
 				int length = (checkCommentField(fieldName) ? 3072 : 255);
 				column.addMember("length", mg.cte(Integer.valueOf(length)));
@@ -358,12 +379,13 @@ public class EntityClassGen extends ClassGen {
 	}
 	
 	public static final String[] ARRAY_NOT_NULL = {"code", "codigo", "nombre", "apellido", "name", "surname", "cif", "nif", "dni", "passport", "pasaporte"};
+//	public static final String[] ARRAY_NOT_NULL = {"code", "codigo", "nombre", "name", "surname", "cif", "nif", "dni", "passport", "pasaporte"};
 	
 	public Boolean isNotNull (FieldNode field) {
 		Boolean result = Boolean.FALSE;
 		if (this.clazz != null && field != null) {
-			result = InfoFacade.checkNotNull(field);
-			if (result == null) {
+//			result = InfoFacade.checkNotNull(field);
+			if (true || result == null) {
 				String fieldName = field.getName().toLowerCase();
 				for (String it : ARRAY_NOT_NULL) {
 					if (fieldName.contains(it)) {
@@ -423,7 +445,7 @@ public class EntityClassGen extends ClassGen {
 	
 	protected void dateProcessField (FieldNode field) {
 		this.protectField(field);
-		this.addInitiate(field);
+		this.addInitiateDefaultDate(field);
 		MethodGen getter = this.addEntityGetter(field, true);
 		this.addEntitySetter(field);
 		
@@ -456,7 +478,7 @@ public class EntityClassGen extends ClassGen {
 	
 	protected void boolProcessField (FieldNode field) {
 		this.protectField(field);
-		this.addInitiate(field);
+		this.addInitiateDefaultBoolean(field);
 		this.addEntityGetter(field, true);
 		this.addEntitySetter(field);
 	}
@@ -470,7 +492,7 @@ public class EntityClassGen extends ClassGen {
 	
 	protected void numberProcessField (FieldNode field) {
 		this.protectField(field);
-		this.addInitiate(field);
+		this.addInitiateDefaultNumber(field);
 		this.addEntityGetter(field, true);
 		this.addEntitySetter(field);
 	}
@@ -490,7 +512,8 @@ public class EntityClassGen extends ClassGen {
 		String setterName = getSetterName(field);
 		String keyFileEntity = this.clazz.getName() + "." + FileEntity.KEY_CLASS_NEEDS;
 		GenContext.set(keyFileEntity, Boolean.TRUE);
-		ClassNode fileClazz = EntityClassTransformation.tryNeedsFileEntity(this.clazz, this.sourceUnit);
+		ClassNode fileClazz = ClassGen.tryNeedsNewExternalEntity(this.clazz, this.sourceUnit, FileEntity.class, FileEntity.KEY_CLASS_NEEDS, FileEntity.KEY_APP_NEEDS, FileEntityTuplizer.class);
+
 		
 		//	protected FileEntity fichero;
 		field.setModifiers(Opcodes.ACC_PROTECTED);
@@ -829,6 +852,18 @@ public class EntityClassGen extends ClassGen {
 			result = false;
 		}
 		return result;
+	}
+
+	public void addInitiate() {
+		List<FieldNode> fields = this.clazz.getFields();
+		if (fields != null && fields.size() > 0) {
+			MethodGen mg = new MethodGen("initiate", this).setProtected(true);
+			
+			for (FieldNode field : fields) {
+				String methodName = "initiate" + StringUtils.capFirst(field.getName());
+				mg.add(mg.call(mg.cteThis(), methodName));
+			}
+		}
 	}
 	
 	
