@@ -23,7 +23,6 @@ import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.ModelException;
 import org.effortless.gen.ClassGen;
 import org.effortless.gen.GenContext;
-import org.effortless.gen.classes.EntityClassTransformation;
 import org.effortless.model.FileEntity;
 import org.effortless.model.FileEntityTuplizer;
 import org.effortless.model.StartupDb;

@@ -50,7 +50,6 @@ import org.effortless.gen.ClassTransform;
 import org.effortless.gen.InfoClassNode;
 import org.effortless.gen.MethodGen;
 import org.effortless.gen.ViewClassGen;
-import org.effortless.gen.classes.EntityClassTransformation;
 import org.effortless.gen.fields.BaseFields;
 import org.effortless.gen.fields.Restrictions;
 import org.effortless.model.AbstractEntity;

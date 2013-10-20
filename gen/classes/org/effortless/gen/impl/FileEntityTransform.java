@@ -20,8 +20,9 @@ public class FileEntityTransform extends HibernateEntityClassTransform {
 
 	@Override
 	public void process(ClassNode clazz, SourceUnit sourceUnit) {
-		addAnnotations(clazz);
-		addStaticMethods(clazz, sourceUnit);
+		new SetupEntityParentClassTransform().process(clazz, sourceUnit);
+//		addAnnotations(clazz);
+		new EntityStaticMethodsClassTransform().process(clazz, sourceUnit);//addStaticMethods(clazz, sourceUnit);
 
 		UpdateDbClassTransform updateDb = new UpdateDbClassTransform();
 		updateDb.process(clazz, sourceUnit);

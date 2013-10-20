@@ -12,7 +12,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.core.GlobalContext;
-import org.effortless.gen.classes.EntityClassTransformation;
 import org.effortless.gen.impl.HibernateEntityClassTransform;
 import org.effortless.gen.impl.SamePackageClassTransform;
 import org.effortless.gen.impl.SamePackageModuleTransform;

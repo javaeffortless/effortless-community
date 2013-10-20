@@ -6,7 +6,6 @@ import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.gen.ClassGen;
 import org.effortless.gen.ModuleTransform;
-import org.effortless.gen.classes.EntityClassTransformation;
 import org.effortless.model.FileEntity;
 import org.effortless.model.FileEntityTuplizer;
 import org.effortless.server.ServerContext;

@@ -35,7 +35,8 @@ public class HibernateEntityClassTransform extends Object implements ClassTransf
 	public void process(ClassNode clazz, SourceUnit sourceUnit) {
 		if (InfoClassNode.checkEntityValid(clazz, sourceUnit) && !InfoClassNode.checkEnum(clazz, sourceUnit)) {
 			EntityClassGen ecg = new EntityClassGen(clazz, sourceUnit);
-			ecg.alterActions();
+			new AlterActionsClassTransform().process(clazz, sourceUnit);
+//			ecg.alterActions();
 //				ActionsTransform.processClass(clazz, sourceUnit);
 				
 			new SetupEntityParentClassTransform().process(clazz, sourceUnit);
@@ -50,17 +51,20 @@ public class HibernateEntityClassTransform extends Object implements ClassTransf
 				new FinalFieldsTransform().process(clazz, sourceUnit);
 			}
 				
-			addMethods(clazz, sourceUnit);
-			addStaticMethods(clazz, sourceUnit);
+			new ReferenciableTransform().process(clazz, sourceUnit);
+			new SavePropertiesTransform().process(clazz, sourceUnit);
+			
+			new EntityStaticMethodsClassTransform().process(clazz, sourceUnit);
 				
-			ecg.addInitiate();
-			ecg.addDoHashCode();//HashCodeTransform.processClass(clazz, sourceUnit);
-			ecg.addDoEquals();//EqualsTransform.processClass(clazz, sourceUnit);
-			ecg.addDoCompare();//CompareToTransform.processClass(clazz, sourceUnit);
-			ecg.addDoToString();//ToStringTransform.processClass(clazz, sourceUnit);
+			new InitiateMethodClassTransform().process(clazz, sourceUnit);//ecg.addInitiate();
+			new HashCodeMethodClassTransform().process(clazz, sourceUnit);//ecg.addDoHashCode();//HashCodeTransform.processClass(clazz, sourceUnit);
+			new EqualsMethodClassTransform().process(clazz, sourceUnit);//ecg.addDoEquals();//EqualsTransform.processClass(clazz, sourceUnit);
+			new CompareMethodClassTransform().process(clazz, sourceUnit);//ecg.addDoCompare();//CompareToTransform.processClass(clazz, sourceUnit);
+			new ToStringMethodClassTransform().process(clazz, sourceUnit);//ecg.addDoToString();//ToStringTransform.processClass(clazz, sourceUnit);
 
 			KryoTransform.processClass(clazz, sourceUnit);
-			ecg.addCreateClone();//CloneTransform.processClass(clazz, sourceUnit);
+			new CloneMethodClassTransform().process(clazz, sourceUnit);
+//			ecg.addCreateClone();//CloneTransform.processClass(clazz, sourceUnit);
 				
 	//			addPrimitiveFields(clazz);
 	//			AutoSession.generate(clazz);
@@ -72,35 +76,6 @@ public class HibernateEntityClassTransform extends Object implements ClassTransf
 				
 //				tryNeedsFileEntity(clazz, sourceUnit);
 		}
-	}
-
-	protected void addMethods(ClassNode clazz, SourceUnit sourceUnit) {
-		new ReferenciableTransform().process(clazz, sourceUnit);
-		new SavePropertiesTransform().process(clazz, sourceUnit);
-	//	addMethodsToLabelLocale(clazz, sourceUnit);
-	}
-
-	/**
-	 * 
-		public static Filter<AllBasicProperties> listBy () {
-			return AbstractIdEntity.listBy(AllBasicProperties.class);
-		}
-	 * 
-	 * @param clazz
-	 * @param sourceUnit
-	 */
-	protected void addStaticMethods(ClassNode clazz, SourceUnit sourceUnit) {
-		String methodName = "listBy";
-		
-		Expression arguments = new ArgumentListExpression(new Expression[] {new ClassExpression(clazz)});
-		StaticMethodCallExpression call = new StaticMethodCallExpression(new ClassNode(AbstractIdEntity.class), "listBy", arguments);
-		ReturnStatement returnCode = new ReturnStatement(call);
-		ClassNode returnType = new ClassNode(Filter.class);
-//		returnType.setUsingGenerics(true);
-//		returnType.setGenericsTypes(new GenericsType[] {new GenericsType(clazz)});
-		MethodNode method = new MethodNode(methodName, Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC, returnType, Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, returnCode);
-
-		clazz.addMethod(method);
 	}
 
 }
