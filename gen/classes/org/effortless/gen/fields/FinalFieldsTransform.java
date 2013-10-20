@@ -39,6 +39,7 @@ import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
 import org.effortless.core.ModelException;
 import org.effortless.core.StringUtils;
+import org.effortless.gen.ClassTransform;
 import org.effortless.model.AbstractEntity;
 import org.effortless.model.Entity;
 import org.objectweb.asm.Opcodes;
@@ -53,11 +54,9 @@ import org.objectweb.asm.Opcodes;
  * @author jesus
  *
  */
-public class FinalFieldsTransform {
+public class FinalFieldsTransform extends Object implements ClassTransform {
 
-	
-	
-	public static void processClass (ClassNode clazz, SourceUnit sourceUnit) {
+	public void process (ClassNode clazz, SourceUnit sourceUnit) {
 		if (clazz != null) {
 			
 			List<FieldNode> fields = listRefFields(clazz, sourceUnit);

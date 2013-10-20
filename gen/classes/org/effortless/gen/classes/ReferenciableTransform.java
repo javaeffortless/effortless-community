@@ -1,47 +1,33 @@
 package org.effortless.gen.classes;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.codehaus.groovy.ast.ClassHelper;
+//import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
-import org.codehaus.groovy.ast.MethodNode;
-import org.codehaus.groovy.ast.Parameter;
-import org.codehaus.groovy.ast.expr.ArgumentListExpression;
-import org.codehaus.groovy.ast.expr.BinaryExpression;
-import org.codehaus.groovy.ast.expr.BooleanExpression;
-import org.codehaus.groovy.ast.expr.ClassExpression;
-import org.codehaus.groovy.ast.expr.ConstantExpression;
-import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
-import org.codehaus.groovy.ast.expr.DeclarationExpression;
-import org.codehaus.groovy.ast.expr.Expression;
-import org.codehaus.groovy.ast.expr.ListExpression;
-import org.codehaus.groovy.ast.expr.MethodCallExpression;
-import org.codehaus.groovy.ast.expr.NotExpression;
-import org.codehaus.groovy.ast.expr.PropertyExpression;
-import org.codehaus.groovy.ast.expr.VariableExpression;
-import org.codehaus.groovy.ast.stmt.BlockStatement;
-import org.codehaus.groovy.ast.stmt.CatchStatement;
-import org.codehaus.groovy.ast.stmt.EmptyStatement;
-import org.codehaus.groovy.ast.stmt.ExpressionStatement;
-import org.codehaus.groovy.ast.stmt.IfStatement;
-import org.codehaus.groovy.ast.stmt.ReturnStatement;
-import org.codehaus.groovy.ast.stmt.Statement;
-import org.codehaus.groovy.ast.stmt.ThrowStatement;
-import org.codehaus.groovy.ast.stmt.TryCatchStatement;
+//import org.codehaus.groovy.ast.MethodNode;
+//import org.codehaus.groovy.ast.Parameter;
+//import org.codehaus.groovy.ast.expr.ArgumentListExpression;
+//import org.codehaus.groovy.ast.expr.BinaryExpression;
+//import org.codehaus.groovy.ast.expr.ConstantExpression;
+//import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
+//import org.codehaus.groovy.ast.expr.DeclarationExpression;
+//import org.codehaus.groovy.ast.expr.MethodCallExpression;
+//import org.codehaus.groovy.ast.expr.VariableExpression;
+//import org.codehaus.groovy.ast.stmt.BlockStatement;
+//import org.codehaus.groovy.ast.stmt.ExpressionStatement;
+//import org.codehaus.groovy.ast.stmt.ReturnStatement;
 import org.codehaus.groovy.control.SourceUnit;
-import org.codehaus.groovy.syntax.Token;
-import org.codehaus.groovy.syntax.Types;
-import org.effortless.core.ModelException;
+//import org.codehaus.groovy.syntax.Token;
+//import org.codehaus.groovy.syntax.Types;
 import org.effortless.gen.ClassGen;
+import org.effortless.gen.ClassTransform;
 import org.effortless.gen.MethodGen;
 import org.effortless.gen.fields.BaseFields;
 import org.effortless.gen.fields.Restrictions;
-import org.effortless.model.AbstractEntity;
 import org.effortless.model.Referenciable;
-import org.objectweb.asm.Opcodes;
+//import org.objectweb.asm.Opcodes;
 
 /**
  *
@@ -61,17 +47,15 @@ import org.objectweb.asm.Opcodes;
  * @author jesus
  *
  */
-public class ReferenciableTransform {
+public class ReferenciableTransform extends Object implements ClassTransform {
 
-	
-	
-	public static void processClass (ClassNode clazz, SourceUnit sourceUnit) {
+	public void process (ClassNode clazz, SourceUnit sourceUnit) {
 		if (clazz != null) {
 			ClassGen cg = new ClassGen(clazz);
 			
 			List<FieldNode> fields = Restrictions.listNotNullUnique(clazz);
 			
-			if (true) {
+//			if (true) {
 				cg.addInterface(Referenciable.class);
 				MethodGen mg = null;
 				
@@ -107,42 +91,42 @@ public class ReferenciableTransform {
 				mg = cg.addMethod("toImage").setReturnType(String.class).addParameter(Locale.class, "locale");
 				mg.addReturn(mg.cteNull());
 				
-			}
-			else {
-				BlockStatement code = new BlockStatement();
-
-				//String result = null
-				VariableExpression varResult = new VariableExpression("result", ClassHelper.STRING_TYPE);
-				DeclarationExpression declResult = new DeclarationExpression(varResult, Token.newSymbol(Types.ASSIGN, -1, -1), ConstantExpression.NULL);
-				code.addStatement(new ExpressionStatement(declResult));
-
-				//org.effortless.util.ToLabel toLabel = new org.effortless.util.ToLabel()
-				ClassNode clazzToLabel = new ClassNode(org.effortless.util.ToLabel.class);
-				VariableExpression varToLabel = new VariableExpression("toLabel", clazzToLabel);
-				ConstructorCallExpression newToLabel = new ConstructorCallExpression(clazzToLabel, ArgumentListExpression.EMPTY_ARGUMENTS);
-				DeclarationExpression declToLabel = new DeclarationExpression(varToLabel, Token.newSymbol(Types.ASSIGN, -1, -1), newToLabel);
-				code.addStatement(new ExpressionStatement(declToLabel));
-				
-				for (FieldNode field : fields) {
-					//toLabel.add(getName())
-					String getterName = BaseFields.getGetterName(field);
-					MethodCallExpression getProperty = new MethodCallExpression(VariableExpression.THIS_EXPRESSION, getterName, ArgumentListExpression.EMPTY_ARGUMENTS);
-					MethodCallExpression toLabelAdd = new MethodCallExpression(varToLabel, "add", getProperty);
-					code.addStatement(new ExpressionStatement(toLabelAdd));
-				}
-
-				//result = toLabel.getText()
-				MethodCallExpression getText = new MethodCallExpression(varToLabel, "getText", ArgumentListExpression.EMPTY_ARGUMENTS);
-				BinaryExpression assignResult = new BinaryExpression(varResult, Token.newSymbol(Types.ASSIGN, -1, -1), getText);
-				code.addStatement(new ExpressionStatement(assignResult));
-
-				//return result
-				code.addStatement(new ReturnStatement(varResult));
-				
-				Parameter[] parameterTypes = new Parameter [] {new Parameter(new ClassNode(java.util.Locale.class), "locale")};
-				MethodNode method = new MethodNode("toLabel", Opcodes.ACC_PUBLIC, ClassHelper.STRING_TYPE, parameterTypes, ClassNode.EMPTY_ARRAY, code);
-				clazz.addMethod(method);
-			}
+//			}
+//			else {
+//				BlockStatement code = new BlockStatement();
+//
+//				//String result = null
+//				VariableExpression varResult = new VariableExpression("result", ClassHelper.STRING_TYPE);
+//				DeclarationExpression declResult = new DeclarationExpression(varResult, Token.newSymbol(Types.ASSIGN, -1, -1), ConstantExpression.NULL);
+//				code.addStatement(new ExpressionStatement(declResult));
+//
+//				//org.effortless.util.ToLabel toLabel = new org.effortless.util.ToLabel()
+//				ClassNode clazzToLabel = new ClassNode(org.effortless.util.ToLabel.class);
+//				VariableExpression varToLabel = new VariableExpression("toLabel", clazzToLabel);
+//				ConstructorCallExpression newToLabel = new ConstructorCallExpression(clazzToLabel, ArgumentListExpression.EMPTY_ARGUMENTS);
+//				DeclarationExpression declToLabel = new DeclarationExpression(varToLabel, Token.newSymbol(Types.ASSIGN, -1, -1), newToLabel);
+//				code.addStatement(new ExpressionStatement(declToLabel));
+//				
+//				for (FieldNode field : fields) {
+//					//toLabel.add(getName())
+//					String getterName = BaseFields.getGetterName(field);
+//					MethodCallExpression getProperty = new MethodCallExpression(VariableExpression.THIS_EXPRESSION, getterName, ArgumentListExpression.EMPTY_ARGUMENTS);
+//					MethodCallExpression toLabelAdd = new MethodCallExpression(varToLabel, "add", getProperty);
+//					code.addStatement(new ExpressionStatement(toLabelAdd));
+//				}
+//
+//				//result = toLabel.getText()
+//				MethodCallExpression getText = new MethodCallExpression(varToLabel, "getText", ArgumentListExpression.EMPTY_ARGUMENTS);
+//				BinaryExpression assignResult = new BinaryExpression(varResult, Token.newSymbol(Types.ASSIGN, -1, -1), getText);
+//				code.addStatement(new ExpressionStatement(assignResult));
+//
+//				//return result
+//				code.addStatement(new ReturnStatement(varResult));
+//				
+//				Parameter[] parameterTypes = new Parameter [] {new Parameter(new ClassNode(java.util.Locale.class), "locale")};
+//				MethodNode method = new MethodNode("toLabel", Opcodes.ACC_PUBLIC, ClassHelper.STRING_TYPE, parameterTypes, ClassNode.EMPTY_ARRAY, code);
+//				clazz.addMethod(method);
+//			}
 		}
 	}
 	
