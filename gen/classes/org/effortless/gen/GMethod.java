@@ -49,9 +49,9 @@ import org.effortless.core.Collections;
 import org.effortless.model.AbstractEntity;
 import org.objectweb.asm.Opcodes;
 
-public class MethodGen extends Object {
+public class GMethod extends Object {
 
-	protected MethodGen () {
+	protected GMethod () {
 		super();
 		initiate();
 	}
@@ -64,7 +64,7 @@ public class MethodGen extends Object {
 		this.previousCode = null;
 	}
 	
-	public MethodGen (String name, ClassGen classGen) {
+	public GMethod (String name, GClass classGen) {
 		this.code = new BlockStatement();
 		this.code.addStatement(EmptyStatement.INSTANCE);
 		this.methodNode = new MethodNode(name, Opcodes.ACC_PUBLIC, ClassHelper.VOID_TYPE, Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, this.code);
@@ -72,11 +72,11 @@ public class MethodGen extends Object {
 		this.classGen.getClassNode().addMethod(this.methodNode);
 	}
 	
-	public MethodGen (MethodNode methodNode) {
-		this(methodNode, new ClassGen(methodNode.getDeclaringClass()));
+	public GMethod (MethodNode methodNode) {
+		this(methodNode, new GClass(methodNode.getDeclaringClass()));
 	}
 	
-	public MethodGen (MethodNode methodNode, ClassGen classGen) {
+	public GMethod (MethodNode methodNode, GClass classGen) {
 		this.methodNode = methodNode;
 		this.classGen = classGen;
 		this.code = new BlockStatement();
@@ -85,67 +85,67 @@ public class MethodGen extends Object {
 	
 	protected MethodNode methodNode;
 	
-	protected ClassGen classGen;
+	protected GClass classGen;
 
 	public MethodNode getMethodNode () {
 		return this.methodNode;
 	}
 	
-	public ClassGen getClassGen () {
+	public GClass getClassGen () {
 		return this.classGen;
 	}
 	
-	public MethodGen setPublic (boolean newValue) {
+	public GMethod setPublic (boolean newValue) {
 		if (newValue) {
 			this.methodNode.setModifiers(Opcodes.ACC_PUBLIC);
 		}
 		return this;
 	}
 	
-	public MethodGen setProtected (boolean newValue) {
+	public GMethod setProtected (boolean newValue) {
 		if (newValue) {
 			this.methodNode.setModifiers(Opcodes.ACC_PROTECTED);
 		}
 		return this;
 	}
 
-	public MethodGen setPrivate (boolean newValue) {
+	public GMethod setPrivate (boolean newValue) {
 		if (newValue) {
 			this.methodNode.setModifiers(Opcodes.ACC_PRIVATE);
 		}
 		return this;
 	}
 	
-	public MethodGen setReturnType (Class<?> type) {
+	public GMethod setReturnType (Class<?> type) {
 		return setReturnType(ClassNodeHelper.toClassNode(type));
 	}
 
-	public MethodGen setReturnType (ClassNode type) {
+	public GMethod setReturnType (ClassNode type) {
 		this.methodNode.setReturnType(type);
 		return this;
 	}
 
-	public MethodGen addParameter (Class<?> type, String name) {
+	public GMethod addParameter (Class<?> type, String name) {
 		return addParameter(ClassNodeHelper.toClassNode(type), name);
 	}
 
-	public MethodGen addParameter (ClassNode type, String name) {
+	public GMethod addParameter (ClassNode type, String name) {
 		return addParameter(new Parameter(type, name));
 	}
 
-	public MethodGen addParameter (ClassNode type, String name, AnnotationNode ann) {
+	public GMethod addParameter (ClassNode type, String name, AnnotationNode ann) {
 		Parameter param = new Parameter(type, name);
 		param.addAnnotation(ann);
 		return addParameter(param);
 	}
 
-	public MethodGen addParameter (Class<?> type, String name, AnnotationNode ann) {
+	public GMethod addParameter (Class<?> type, String name, AnnotationNode ann) {
 		Parameter param = new Parameter(ClassNodeHelper.toClassNode(type), name);
 		param.addAnnotation(ann);
 		return addParameter(param);
 	}
 
-	public MethodGen addParameter (Parameter param) {
+	public GMethod addParameter (Parameter param) {
 		if (param != null) {
 			this._saveVariableParam(param);
 			java.util.List<Parameter> list = Collections.asList(this.methodNode.getParameters());
@@ -156,7 +156,7 @@ public class MethodGen extends Object {
 		return this;
 	}
 
-	public MethodGen addParameters (Parameter... params) {
+	public GMethod addParameters (Parameter... params) {
 		if (params != null) {
 			for (Parameter param : params) {
 				this._saveVariableParam(param);
@@ -314,11 +314,11 @@ public class MethodGen extends Object {
 	
 	protected BlockStatement code;
 	
-	public MethodGen gPrintln (String msg) {
+	public GMethod gPrintln (String msg) {
 		return gPrintln(new ConstantExpression(msg));
 	}
 	
-	public MethodGen gPrintln (Expression msg) {
+	public GMethod gPrintln (Expression msg) {
 		Statement statement = null;
 		ClassExpression system = new ClassExpression(new ClassNode(System.class));
 		PropertyExpression systemOut = new PropertyExpression(system, "out");
@@ -328,7 +328,7 @@ public class MethodGen extends Object {
 		return this;
 	}
 
-	public MethodGen newObjectArray (String varName, Parameter[] parameters) {
+	public GMethod newObjectArray (String varName, Parameter[] parameters) {
 		VariableExpression[] variables = new VariableExpression[parameters.length];
 		int index = 0;
 		for (Parameter param : parameters) {
@@ -338,7 +338,7 @@ public class MethodGen extends Object {
 		return newObjectArray(varName, variables);
 	}
 	
-	public MethodGen newObjectArray (String varName, VariableExpression[] variables) {
+	public GMethod newObjectArray (String varName, VariableExpression[] variables) {
 		//Object[] __paramValues = [text, ammount];
 		ClassNode objectArrayType = ClassHelper.OBJECT_TYPE.makeArray();
 		VariableExpression varParamValues = new VariableExpression("__paramValues", objectArrayType);
@@ -400,19 +400,19 @@ public class MethodGen extends Object {
 //		return this;
 //	}
 
-	public MethodGen declVariable (Class<?> type, String name) {
+	public GMethod declVariable (Class<?> type, String name) {
 		return declVariable(ClassNodeHelper.toClassNode(type), name, ConstantExpression.NULL);
 	}
 	
-	public MethodGen declVariable (ClassNode type, String name) {
+	public GMethod declVariable (ClassNode type, String name) {
 		return declVariable(type, name, ConstantExpression.NULL);
 	}
 	
-	public MethodGen declVariable (Class<?> type, String name, Expression defaultValue) {
+	public GMethod declVariable (Class<?> type, String name, Expression defaultValue) {
 		return declVariable(ClassNodeHelper.toClassNode(type), name, defaultValue);
 	}
 
-	public MethodGen declVariable (ClassNode type, String name, Expression defaultValue) {
+	public GMethod declVariable (ClassNode type, String name, Expression defaultValue) {
 		VariableExpression var = new VariableExpression(name, type);
 		this._saveVariable(name, var);
 		DeclarationExpression assign = new DeclarationExpression(var, Token.newSymbol(Types.ASSIGN, -1, -1), defaultValue);
@@ -421,19 +421,19 @@ public class MethodGen extends Object {
 	}
 
 	
-	public MethodGen declFinalVariable (Class<?> type, String name) {
+	public GMethod declFinalVariable (Class<?> type, String name) {
 		return declFinalVariable(ClassNodeHelper.toClassNode(type), name, ConstantExpression.NULL);
 	}
 	
-	public MethodGen declFinalVariable (ClassNode type, String name) {
+	public GMethod declFinalVariable (ClassNode type, String name) {
 		return declVariable(type, name, ConstantExpression.NULL);
 	}
 	
-	public MethodGen declFinalVariable (Class<?> type, String name, Expression defaultValue) {
+	public GMethod declFinalVariable (Class<?> type, String name, Expression defaultValue) {
 		return declVariable(ClassNodeHelper.toClassNode(type), name, defaultValue);
 	}
 
-	public MethodGen declFinalVariable (ClassNode type, String name, Expression defaultValue) {
+	public GMethod declFinalVariable (ClassNode type, String name, Expression defaultValue) {
 		VariableExpression var = new VariableExpression(name, type);
 		var.setModifiers(Opcodes.ACC_FINAL);
 		this._saveVariable(name, var);
@@ -630,11 +630,11 @@ public class MethodGen extends Object {
 	 * 
 	 * 
 	 */
-	public MethodGen addReturn(String var) {
+	public GMethod addReturn(String var) {
 		return addReturn(this._loadVariable(var));
 	}
 
-	public MethodGen addReturn(Expression expr) {
+	public GMethod addReturn(Expression expr) {
 		ReturnStatement returnResult = new ReturnStatement(expr);
 		this.code.addStatement(returnResult);
 		return this;
@@ -840,6 +840,10 @@ public class MethodGen extends Object {
 	
 	public Expression field (String fieldName) {
 		return field(this.classGen.getClassNode().getField(fieldName));
+	}
+
+	public Expression field (GField field) {
+		return (field != null ? field(field.getField()) : null);
 	}
 
 	public Expression field (FieldNode field) {
@@ -1052,22 +1056,22 @@ public class MethodGen extends Object {
 		return result;
 	}
 
-	public MethodGen add (Expression expr) {
+	public GMethod add (Expression expr) {
 		if (expr != null) {
 			this.code.addStatement(new ExpressionStatement(expr));
 		}
 		return this;
 	}
 
-	public MethodGen addIf(Expression condition, MethodGen ifCode) {
-		return this.addIf(condition, ifCode, (MethodGen)null);
+	public GMethod addIf(Expression condition, GMethod ifCode) {
+		return this.addIf(condition, ifCode, (GMethod)null);
 	}
 	
-	public MethodGen addIf(Expression condition, MethodGen ifCode, MethodGen elseBlock) {
+	public GMethod addIf(Expression condition, GMethod ifCode, GMethod elseBlock) {
 		return this.addIf(condition, (ifCode != null ? ifCode.getCode() : null), (elseBlock != null ? elseBlock.getCode() : null));
 	}
 
-	public MethodGen addIf(Expression condition, Statement ifBlock) {
+	public GMethod addIf(Expression condition, Statement ifBlock) {
 		return addIf(condition, ifBlock, null);
 	}
 	
@@ -1082,7 +1086,7 @@ public class MethodGen extends Object {
 		return result;
 	}
 	
-	public MethodGen addIf(Expression condition, Statement ifBlock, Statement elseBlock) {
+	public GMethod addIf(Expression condition, Statement ifBlock, Statement elseBlock) {
 		BooleanExpression booleanExpression = _toBooleanExpression(condition);
 		ifBlock = (ifBlock != null ? ifBlock : EmptyStatement.INSTANCE);
 		elseBlock = (elseBlock != null ? elseBlock : EmptyStatement.INSTANCE);
@@ -1091,9 +1095,9 @@ public class MethodGen extends Object {
 		return this;
 	}
 
-	public MethodGen newBlock() {
-		MethodGen result = null;
-		result = new MethodGen();
+	public GMethod newBlock() {
+		GMethod result = null;
+		result = new GMethod();
 		
 		result.methodNode = this.methodNode;
 		result.classGen = this.classGen;
@@ -1249,13 +1253,13 @@ public class MethodGen extends Object {
 		return result;
 	}
 
-	public void addTryCatch(MethodGen tryBlock, Object[]... catchs) {
+	public void addTryCatch(GMethod tryBlock, Object[]... catchs) {
 		TryCatchStatement tcs = new TryCatchStatement(tryBlock.getCode(), new EmptyStatement());
 		for (Object[] item : catchs) {
 			if (item != null && item.length >= 3) {
 				Class<?> type = (Class<?>)item[0];
 				String name = (String)item[1];
-				MethodGen code = (MethodGen)item[2];
+				GMethod code = (GMethod)item[2];
 				
 				ClassNode varExceptionType = ClassNodeHelper.toClassNode(type);
 //				VariableExpression varException = this._loadVariable(name);
@@ -1278,17 +1282,17 @@ public class MethodGen extends Object {
 		return result;
 	}
 
-	public MethodGen throwException(String name) {
+	public GMethod throwException(String name) {
 		return throwException(this._loadVariable(name));
 	}
 	
-	public MethodGen throwException(Expression expr) {
+	public GMethod throwException(Expression expr) {
 		ThrowStatement throwE = new ThrowStatement(expr);
 		this.code.addStatement(throwE);
 		return this;
 	}
 
-	public MethodGen addFirstPreserveCode() {
+	public GMethod addFirstPreserveCode() {
 		List<Statement> statements = (this.previousCode != null ? this.previousCode.getStatements() : null);
 		int size = (statements != null ? statements.size() : 0);
 		if (size > 0) {
@@ -1300,7 +1304,7 @@ public class MethodGen extends Object {
 		return this;
 	}
 
-	public MethodGen addLastPreserveCode() {
+	public GMethod addLastPreserveCode() {
 		List<Statement> statements = (this.previousCode != null ? this.previousCode.getStatements() : null);
 		int size = (statements != null ? statements.size() : 0);
 		if (size > 0) {
@@ -1313,12 +1317,12 @@ public class MethodGen extends Object {
 	}
 
 	
-	public ClassGen addAnonymousClass (Class<?> superClass) {
+	public GClass addAnonymousClass (Class<?> superClass) {
 		return addAnonymousClass(ClassNodeHelper.toClassNode(superClass));
 	}
 	
-	public ClassGen addAnonymousClass (ClassNode superClass) {
-		ClassGen result = null;
+	public GClass addAnonymousClass (ClassNode superClass) {
+		GClass result = null;
 		String suffix = "" + (this.classGen.getInnerClassesSize() + 1);
 //		String suffix = System.currentTimeMillis();
 //		String name = this.clazz.getName() + "$" + suffix;
@@ -1326,7 +1330,7 @@ public class MethodGen extends Object {
 		String name = this.classGen.getClassNode().getNameWithoutPackage() + "$" + suffix;
 		InnerClassNode inner = new InnerClassNode(this.classGen.getClassNode(), name, Opcodes.ACC_PUBLIC, superClass);
 		inner.setAnonymous(true);
-		result = new ClassGen(inner, this.classGen.getSourceUnit());
+		result = new GClass(inner, this.classGen.getSourceUnit());
 //		this.add(new ClassExpression(inner));
 		this.classGen.getSourceUnit().getAST().addClass(inner);
 		return result;

@@ -1,19 +1,20 @@
 package org.effortless.gen.impl;
 
 import org.codehaus.groovy.ast.ClassNode;
-import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.gen.ClassTransform;
+import org.effortless.gen.GClass;
 import org.effortless.model.AbstractIdEntity;
 
 public class SetupEntityParentClassTransform extends Object implements ClassTransform {
 
 	@Override
-	public void process(ClassNode clazz, SourceUnit sourceUnit) {
-		setupParent(clazz);
+	public void process(GClass cg) {
+		setupParent(cg);
 	}
 	
 	 //extends AbstractIdEntity<AllBasicProperties>		
-	protected void setupParent (ClassNode clazz) {
+	protected void setupParent (GClass cg) {
+		ClassNode clazz = cg.getClassNode();
 		ClassNode superClass = clazz.getSuperClass();
 		if (superClass == null || "java.lang.Object".equals(superClass.getName())) {
 		superClass = new ClassNode(AbstractIdEntity.class);

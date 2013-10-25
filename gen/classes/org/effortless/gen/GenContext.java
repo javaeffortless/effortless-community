@@ -155,7 +155,7 @@ public class GenContext {
 				String rootCtx = ServerContext.getRootContext();
 				String sourceUnitName = sourceUnit.getName();
 				if (sourceUnitName.startsWith(rootCtx)) {
-					if (ClassGen.ONE_PACKAGE) {
+					if (GClass.ONE_PACKAGE) {
 						String fileName = FilenameUtils.getName(sourceUnitName);
 						sourceUnitName = (fileName != null ? sourceUnitName.substring(0, sourceUnitName.length() - (fileName.length() + 1)) : sourceUnitName);
 						if (rootCtx.length() <= sourceUnitName.length()) {

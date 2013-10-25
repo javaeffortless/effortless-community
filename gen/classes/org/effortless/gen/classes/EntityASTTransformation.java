@@ -19,6 +19,7 @@ import org.objectweb.asm.Opcodes;
 import org.effortless.core.ModelException;
 import org.effortless.gen.AppTransform;
 import org.effortless.gen.ClassTransform;
+import org.effortless.gen.GClass;
 import org.effortless.gen.GenContext;
 import org.effortless.gen.ModuleTransform;
 import org.effortless.gen.fields.DeletedField;
@@ -70,8 +71,9 @@ public class EntityASTTransformation implements ASTTransformation, Opcodes {
 						int size = (classes != null ? classes.size() : 0);
 						for (int i = 0; i < size; i++) {
 							ClassNode clazz = classes.get(i);
+							GClass gClazz = new GClass(clazz, sourceUnit);
 							for (ClassTransform transform : classTransforms) {
-								transform.process(clazz, sourceUnit);
+								transform.process(gClazz);
 							}
 	//						EntityClassTransformation.processClass(clazz, sourceUnit);
 						}
@@ -80,8 +82,9 @@ public class EntityASTTransformation implements ASTTransformation, Opcodes {
 						for (ASTNode node : nodes) {
 		//					nodes.each { ASTNode node ->
 								if (node instanceof ClassNode) {
+									GClass gClazz = new GClass((ClassNode)node, sourceUnit);
 									for (ClassTransform transform : classTransforms) {
-										transform.process((ClassNode)node, sourceUnit);
+										transform.process(gClazz);
 									}
 	//								EntityClassTransformation.processClass((ClassNode)node, sourceUnit);
 								}

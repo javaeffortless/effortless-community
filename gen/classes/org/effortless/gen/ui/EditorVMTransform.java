@@ -45,10 +45,11 @@ import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
 import org.effortless.core.ModelException;
 import org.effortless.core.StringUtils;
-import org.effortless.gen.ClassGen;
+import org.effortless.gen.GClass;
 import org.effortless.gen.ClassTransform;
+import org.effortless.gen.GField;
 import org.effortless.gen.InfoClassNode;
-import org.effortless.gen.MethodGen;
+import org.effortless.gen.GMethod;
 import org.effortless.gen.ViewClassGen;
 import org.effortless.gen.fields.BaseFields;
 import org.effortless.gen.fields.Restrictions;
@@ -98,18 +99,9 @@ public class BasicEditorViewModel {
 
 public class EditorVMTransform extends Object implements ClassTransform {
 
-	public static String getEditorName (ClassNode clazz, SourceUnit sourceUnit) {
-		String result = null;
-		result = clazz.getName() + "EditorViewModel";
-		return result;
-	}
-	
-	public void process (ClassNode clazz, SourceUnit sourceUnit) {
-		if (clazz != null && InfoClassNode.checkEntityValid(clazz, sourceUnit) && !InfoClassNode.checkEnum(clazz, sourceUnit)) {
-			ViewClassGen cg = new ViewClassGen(clazz, sourceUnit);
-			ClassGen vm = null;//cg.addEditorVM();
-			
-			writeZul((vm != null ? vm.getClassNode() : null), clazz, sourceUnit);
+	public void process (GClass cg) {
+		if (cg != null && cg.checkEntityValid() && !cg.checkEnum()) {
+			writeZul(cg);
 		}
 	}
 
@@ -140,15 +132,12 @@ public class EditorVMTransform extends Object implements ClassTransform {
 	 * @param clazz
 	 * @param sourceUnit
 	 */
-	public static void writeZul(ClassNode vm, ClassNode clazz, SourceUnit sourceUnit) {
-//		String vmName = getEditorName(clazz, sourceUnit);
-		String vmName = EditorVM.class.getName();
-		
+	protected void writeZul(GClass clazz/*ClassNode vm, ClassNode clazz, SourceUnit sourceUnit*/) {
 		String className = clazz.getNameWithoutPackage();
 		
 		FieldTransform fieldTransform = new FieldTransform();
 		
-		List<FieldNode> properties = getEditorProperties(clazz, sourceUnit);
+		List<GField> properties = getEditorProperties(clazz);
 		String varId = "editor";
 		
 		List<String> zul = new ArrayList<String>();
@@ -156,7 +145,7 @@ public class EditorVMTransform extends Object implements ClassTransform {
 		zul.add("<zk>");
 		zul.add("  <editor-window>");
 
-		for (FieldNode property : properties) {
+		for (GField property : properties) {
 			String widgetField = fieldTransform.writeZul(property, varId, "item", true);
 			zul.add("    " + widgetField + "");
 		}
@@ -173,7 +162,7 @@ public class EditorVMTransform extends Object implements ClassTransform {
 		
 		String zulName = clazz.getNameWithoutPackage().trim() + "_editor.zul";
 		String folder = clazz.getPackageName();
-		if (!ClassGen.ONE_PACKAGE) {
+		if (!GClass.ONE_PACKAGE) {
 			int idx = folder.lastIndexOf(".");
 			folder = (idx < 0 ? folder : folder.substring(0, idx));
 		}
@@ -187,121 +176,11 @@ public class EditorVMTransform extends Object implements ClassTransform {
 		} 
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * 
-	 * 
-<window title="Editor" width="600px" border="normal" apply="org.zkoss.bind.BindComposer" viewModel="@id('editor') @init('org.effortless.samples.basic.IconTagEditorViewModel')">
-	<grid>
-		<columns>
-			<column hflex="1" />
-			<column hflex="5" />
-		</columns>
-		<rows>
-			<row><label value="File:"/><textbox width="98%"/></row>
-		</rows>
-	</grid>
-
-	<hlayout>
-		<button label="OK" image="/org/effortless/samples/img/search.png" onClick="@command('save')" />
-		<button label="Cancel" image="/org/effortless/samples/img/search.png" onClick="@command('cancel')" />
-	</hlayout>
-</window>
-	 * 
-	 * 
-	 * 
-	 * @param vm
-	 * @param clazz
-	 * @param sourceUnit
-	 */
-	public static void writeZul_old(ClassNode vm, ClassNode clazz,
-			SourceUnit sourceUnit) {
-//		String vmName = getEditorName(clazz, sourceUnit);
-		String vmName = EditorVM.class.getName();
-		
-		String className = clazz.getNameWithoutPackage();
-		
-		FieldTransform fieldTransform = new FieldTransform();
-		
-		List<FieldNode> properties = getEditorProperties(clazz, sourceUnit);
-		String varId = "editor";
-		
-		List<String> zul = new ArrayList<String>();
-		
-		if (false) {
-		
-		zul.add("<window title=\"${i18n." + className + "_editorTitle}\" width=\"100%\" height=\"100%\" contentStyle=\"overflow:auto\" border=\"normal\" apply=\"org.zkoss.bind.BindComposer\" viewModel=\"@id('" + varId + "') @init('" + vmName + "')\">");
-
-		zul.add("	<grid>");
-		zul.add("		<columns>");
-		zul.add("			<column width=\"20%\" />");
-		zul.add("			<column width=\"80%\" />");
-		zul.add("		</columns>");
-		zul.add("		<rows>");
-		for (FieldNode property : properties) {
-			String pName = property.getName();
-			String lName = StringUtils.uncapFirst(pName);
-//			String label = StringUtils.capFirst(pName);
-//			String widgetField = "<textbox value=\"@bind(" + varId + ".item." + lName + ")\" readonly=\"@bind(" + varId + ".readonly)\" />";
-			String widgetField = fieldTransform.writeZul(property, varId, "item", true);
-			String tag = "";
-			if (false) {
-				tag = "<tag value=\"${i18n." + className + "_" + lName + "_label}\"/>";
-			}
-			zul.add("			<row>" + tag  + widgetField + "</row>");
-		}
-		zul.add("		</rows>");
-		zul.add("	</grid>");
-
-		zul.add("	<hlayout sclass=\"z-hlayout-right\">");
-		String appId = SessionManager.getDbId(clazz.getName());
-		ImageResources.copy(appId, "save", "save.png", 16);
-		ImageResources.copy(appId, "cancel", "cancel.png", 16);
-		ImageResources.copy(appId, "close", "close.png", 16);
-		zul.add("		<button onClick=\"@command('save')\" label=\"${i18n." + className + "_save_editorButtonLabel}\" image=\"${images}/save.png\" visible=\"@load(" + varId + ".mode ne 'read'" + ")\" />");
-		zul.add("		<button onClick=\"@command('cancel')\" label=\"${i18n." + className + "_cancel_editorButtonLabel}\" image=\"${images}/cancel.png\" visible=\"@load(" + varId + ".mode ne 'read'" + ")\" />");
-		zul.add("		<button onClick=\"@command('close')\" label=\"${i18n." + className + "_close_editorButtonLabel}\" image=\"${images}/close.png\" visible=\"@load(" + varId + ".mode eq 'read'" + ")\" />");
-		zul.add("	</hlayout>");
-	
-		zul.add("</window>");
-		}
-		else {
-			zul.add("<editor-window i18n=\"" + className + "\" apply=\"org.zkoss.bind.BindComposer\" viewModel=\"@id('" + varId + "') @init('" + vmName + "')\" value=\"@bind(" + varId + ".item)\">");
-			for (FieldNode property : properties) {
-				String widgetField = fieldTransform.writeZul(property, varId, "item", true);
-				zul.add("		" + widgetField + "");
-			}
-			zul.add("</editor-window>");
-		}
-		
-		String zulName = clazz.getNameWithoutPackage().trim() + "_editor.zul";
-		String folder = clazz.getPackageName();
-		if (!ClassGen.ONE_PACKAGE) {
-			int idx = folder.lastIndexOf(".");
-			folder = (idx < 0 ? folder : folder.substring(0, idx));
-		}
-		String filename = ServerContext.getRootContext() + folder + "/resources/" + zulName;
-		try {
-			File file = new File(filename);
-//			FileUtils.writeStringToFile(file, zul, "UTF-8", false);
-			FileUtils.writeLines(file, "UTF-8", zul, false);
-		} catch (IOException e) {
-			throw new ModelException(e);
-		} 
-	}
-
-	
-	public static List<FieldNode> getEditorProperties (ClassNode clazz, SourceUnit sourceUnit) {
-		List<FieldNode> result = null;
-		result = new ArrayList<FieldNode>();
-		List<FieldNode> fields = clazz.getFields();
-		for (FieldNode field : fields) {
+	protected List<GField> getEditorProperties (GClass clazz) {
+		List<GField> result = null;
+		result = new ArrayList<GField>();
+		List<GField> fields = clazz.getFields();
+		for (GField field : fields) {
 			if (!result.contains(field)) {
 				result.add(field);
 			}

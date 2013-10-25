@@ -27,6 +27,7 @@ import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
 import org.effortless.ann.Finder;
+import org.effortless.ann.NoTransform;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.DebugUtils;
 import org.effortless.core.StringUtils;
@@ -35,9 +36,9 @@ import org.effortless.gen.impl.FileEntityTransform;
 import org.effortless.model.SessionManager;
 import org.objectweb.asm.Opcodes;
 
-public class ClassGen extends Object {
+public class GClass extends Object {
 
-	protected ClassGen () {
+	protected GClass () {
 		super();
 		initiate();
 	}
@@ -46,19 +47,19 @@ public class ClassGen extends Object {
 		this.clazz = null;
 	}
 	
-	public ClassGen (String name, SourceUnit sourceUnit) {
+	public GClass (String name, SourceUnit sourceUnit) {
 		this();
 		this.clazz = new ClassNode(name, Opcodes.ACC_PUBLIC, ClassHelper.OBJECT_TYPE);
 		sourceUnit.getAST().addClass(this.clazz);
 		this.sourceUnit = sourceUnit;
 	}
 	
-	public ClassGen (ClassNode clazz) {
+	public GClass (ClassNode clazz) {
 		this();
 		this.clazz = clazz;
 	}
 	
-	public ClassGen (ClassNode clazz, SourceUnit sourceUnit) {
+	public GClass (ClassNode clazz, SourceUnit sourceUnit) {
 		this();
 		this.clazz = clazz;
 		this.sourceUnit = sourceUnit;
@@ -94,21 +95,21 @@ public class ClassGen extends Object {
 	
 	
 	
-	public ClassGen setPublic (boolean newValue) {
+	public GClass setPublic (boolean newValue) {
 		if (newValue) {
 			this.clazz.setModifiers(Opcodes.ACC_PUBLIC);
 		}
 		return this;
 	}
 	
-	public ClassGen setProtected (boolean newValue) {
+	public GClass setProtected (boolean newValue) {
 		if (newValue) {
 			this.clazz.setModifiers(Opcodes.ACC_PROTECTED);
 		}
 		return this;
 	}
 	
-	public ClassGen setPrivate (boolean newValue) {
+	public GClass setPrivate (boolean newValue) {
 		if (newValue) {
 			this.clazz.setModifiers(Opcodes.ACC_PRIVATE);
 		}
@@ -159,22 +160,22 @@ public class ClassGen extends Object {
 	
 	
 	
-	public ClassGen setSuperClass (Class<?> superClass) {
+	public GClass setSuperClass (Class<?> superClass) {
 		return setSuperClass(ClassNodeHelper.toClassNode(superClass));
 	}
 	
-	public ClassGen setSuperClass (ClassNode superClass) {
+	public GClass setSuperClass (ClassNode superClass) {
 		if (superClass != null) {
 			this.clazz.setSuperClass(superClass);
 		}
 		return this;
 	}
 
-	public ClassGen addInterface (Class<?> iface) {
+	public GClass addInterface (Class<?> iface) {
 		return addInterface(ClassNodeHelper.toClassNode(iface));
 	}
 	
-	public ClassGen addInterface (ClassNode iface) {
+	public GClass addInterface (ClassNode iface) {
 		if (iface != null) {
 			ClassNode[] interfaces = this.clazz.getInterfaces();
 			List<ClassNode> list = new ArrayList<ClassNode>();
@@ -190,11 +191,11 @@ public class ClassGen extends Object {
 		return this;
 	}
 
-	public ClassGen addInterfaces (Class<?>... ifaces) {
+	public GClass addInterfaces (Class<?>... ifaces) {
 		return addInterfaces(ClassNodeHelper.toClassNodes(ifaces));
 	}
 	
-	public ClassGen addInterfaces (ClassNode... ifaces) {
+	public GClass addInterfaces (ClassNode... ifaces) {
 		if (ifaces != null) {
 			ClassNode[] interfaces = this.clazz.getInterfaces();
 			List<ClassNode> list = new ArrayList<ClassNode>();
@@ -212,10 +213,10 @@ public class ClassGen extends Object {
 		return this;
 	}
 	
-	public ClassGen addInnerClass (String name) {
-		ClassGen result = null;
+	public GClass addInnerClass (String name) {
+		GClass result = null;
 		InnerClassNode inner = new InnerClassNode(this.clazz, name, Opcodes.ACC_PUBLIC, ClassNodeHelper.toClassNode(Object.class));
-		result = new ClassGen(inner, this.sourceUnit);
+		result = new GClass(inner, this.sourceUnit);
 		this.sourceUnit.getAST().addClass(inner);
 		return result;
 	}
@@ -250,12 +251,12 @@ public class ClassGen extends Object {
 //		return result;
 //	}
 //	
-	public MethodGen addSimpleGetter (String name) {
-		MethodGen result = null;
+	public GMethod addSimpleGetter (String name) {
+		GMethod result = null;
 		if (true) {
 			String getterName = BaseFields.getGetterName(name);
 			FieldNode field = this.clazz.getField(name);
-			MethodGen mg = this.addMethod(getterName).setReturnType(field.getType()).setPublic(true);
+			GMethod mg = this.addMethod(getterName).setReturnType(field.getType()).setPublic(true);
 			String fName = StringUtils.uncapFirst(name);
 			mg.gPrintln(mg.call("getClass"));
 			mg.gPrintln("printing get filter");
@@ -278,12 +279,12 @@ public class ClassGen extends Object {
 		return result;
 	}
 	
-	public ClassGen addSimpleSetter (String name) {
+	public GClass addSimpleSetter (String name) {
 		
 		if (true) {
 			FieldNode field = this.clazz.getField(name);
 			String setterName = BaseFields.getSetterName(name);
-			MethodGen mg = this.addMethod(setterName).setPublic(true).addParameter(field.getType(), "newValue");
+			GMethod mg = this.addMethod(setterName).setPublic(true).addParameter(field.getType(), "newValue");
 			mg.gPrintln(mg.var("newValue"));
 			mg.add(mg.assign(mg.field(name), mg.var("newValue")));
 		}
@@ -301,34 +302,34 @@ public class ClassGen extends Object {
 		return this;
 	}
 
-	public MethodGen addConstructor () {
-		MethodGen result = null;
+	public GMethod addConstructor () {
+		GMethod result = null;
 		ConstructorNode constructor = new ConstructorNode(Opcodes.ACC_PUBLIC, EmptyStatement.INSTANCE);
 		this.clazz.addConstructor(constructor);
-		result = new MethodGen(constructor, this);
+		result = new GMethod(constructor, this);
 		return result;
 	}
 	
-	public MethodGen addMethod (String name) {
-		MethodGen result = null;
-		result = new MethodGen(name, this);
+	public GMethod addMethod (String name) {
+		GMethod result = null;
+		result = new GMethod(name, this);
 		return result;
 	}
 
-	public MethodGen addSimpleProperty (Class<?> type, String name) {
+	public GMethod addSimpleProperty (Class<?> type, String name) {
 		return addSimpleProperty(ClassNodeHelper.toClassNode(type), name);
 	}
 	
-	public MethodGen addSimpleProperty (ClassNode type, String name) {
+	public GMethod addSimpleProperty (ClassNode type, String name) {
 		return addSimpleProperty(type, name, false);
 	}
 
-	public MethodGen addSimpleProperty (Class<?> type, String name, boolean readonly) {
+	public GMethod addSimpleProperty (Class<?> type, String name, boolean readonly) {
 		return addSimpleProperty(ClassNodeHelper.toClassNode(type), name, readonly);
 	}
 	
-	public MethodGen addSimpleProperty (ClassNode type, String name, boolean readonly) {
-		MethodGen result = null;
+	public GMethod addSimpleProperty (ClassNode type, String name, boolean readonly) {
+		GMethod result = null;
 		this.addField(type, name);
 		result = this.addSimpleGetter(name);
 		if (!readonly) {
@@ -378,40 +379,40 @@ public class ClassGen extends Object {
 		return result;
 	}
 
-	public ClassGen addAnnotation (Class<?> annotation) {
+	public GClass addAnnotation (Class<?> annotation) {
 		return addAnnotation(ClassNodeHelper.toClassNode(annotation));
 	}
 	
 	
-	public ClassGen addAnnotation (ClassNode annotation) {
+	public GClass addAnnotation (ClassNode annotation) {
 		AnnotationNode ann = new AnnotationNode(annotation);
 		this.clazz.addAnnotation(ann);
 		return this;
 	}
 
-	public ClassGen addAnnotation (Class<?> annotation, String value) {
+	public GClass addAnnotation (Class<?> annotation, String value) {
 		return addAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
 	}
 	
-	public ClassGen addAnnotation (ClassNode annotation, String value) {
+	public GClass addAnnotation (ClassNode annotation, String value) {
 		return addAnnotation(annotation, "value", value);
 	}
 
-	public ClassGen addAnnotation (Class<?> annotation, String property, String value) {
+	public GClass addAnnotation (Class<?> annotation, String property, String value) {
 		return addAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
 	}
 
-	public ClassGen addAnnotation (Class<?> annotation, String property, boolean value) {
+	public GClass addAnnotation (Class<?> annotation, String property, boolean value) {
 		return addAnnotation(ClassNodeHelper.toClassNode(annotation), property, (value ? ConstantExpression.PRIM_TRUE : ConstantExpression.PRIM_FALSE));
 	}
 
 	
 	
-	public ClassGen addAnnotation (ClassNode annotation, String property, String value) {
+	public GClass addAnnotation (ClassNode annotation, String property, String value) {
 		return addAnnotation(annotation, property, new ConstantExpression(value));
 	}
 
-	public ClassGen addAnnotation (ClassNode annotation, String property, Expression expr) {
+	public GClass addAnnotation (ClassNode annotation, String property, Expression expr) {
 		AnnotationNode ann = new AnnotationNode(annotation);
 		ann.setMember(property, expr);
 		this.clazz.addAnnotation(ann);
@@ -496,7 +497,7 @@ public class ClassGen extends Object {
 	
 	
 	
-	public ClassGen addCte(Class<?> type, String name, Object value) {
+	public GClass addCte(Class<?> type, String name, Object value) {
 		return addCte(ClassNodeHelper.toClassNode(type), name, value);
 	}
 	
@@ -507,7 +508,7 @@ public class ClassGen extends Object {
 
 
 	 */
-	public ClassGen addCte(ClassNode type, String name, Object value) {
+	public GClass addCte(ClassNode type, String name, Object value) {
 		FieldNode field = new FieldNode(name, Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC + Opcodes.ACC_FINAL, type, this.clazz, new ConstantExpression(value));
 		this.clazz.addField(field);
 		return this;
@@ -564,7 +565,7 @@ public class ClassGen extends Object {
 			sourceUnit.getAST().addClass(newClazz);
 			
 			FileEntityTransform transform = new FileEntityTransform();
-			transform.process(newClazz, sourceUnit);
+			transform.process(new GClass(newClazz, sourceUnit));
 //			addAnnotations(newClazz);
 //			addStaticMethods(newClazz, sourceUnit);
 //			
@@ -596,5 +597,59 @@ public class ClassGen extends Object {
 	}
 
 	public static final boolean ONE_PACKAGE = true;
+
+	
+	public boolean checkEntityValid () {
+		boolean result = false;
+		ClassNode clazz = getClassNode();
+		if (clazz != null) {
+			ClassNode superClass = clazz.getSuperClass();
+			String superClassName = (superClass != null ? superClass.getName() : null);
+			result = !"groovy.lang.Script".equals(superClassName);
+			if (result) {
+				List<AnnotationNode> annotations = clazz.getAnnotations(NO_ENTITY_CLAZZ);
+				result = (!(annotations != null && annotations.size() > 0));
+			}
+//			result = result && !"java.lang.Enum".equals(superClassName);
+		}
+		return result;
+	}
+
+	public static final ClassNode NO_ENTITY_CLAZZ = ClassNodeHelper.toClassNode(NoTransform.class);
+
+	public boolean checkEnum () {
+		boolean result = false;
+		ClassNode clazz = getClassNode();
+		if (clazz != null) {
+			ClassNode superClass = clazz.getSuperClass();
+			String superClassName = (superClass != null ? superClass.getName() : null);
+			result = "java.lang.Enum".equals(superClassName);
+		}
+		return result;
+	}
+
+	public String getNameWithoutPackage() {
+		return (this.clazz != null ? this.clazz.getNameWithoutPackage() : null);
+	}
+
+	public String getPackageName() {
+		return (this.clazz != null ? this.clazz.getPackageName() : null);
+	}
+
+	public String getName() {
+		return (this.clazz != null ? this.clazz.getName() : null);
+	}
+
+	public List<GField> getFields() {
+		List<GField> result = null;
+		List<FieldNode> nodes = (this.clazz != null ? this.clazz.getFields() : null);
+		if (nodes != null) {
+			result = new ArrayList<GField>();
+		}
+		for (FieldNode node : nodes) {
+			result.add(new GField(this, node));
+		}
+		return result;
+	}
 
 }

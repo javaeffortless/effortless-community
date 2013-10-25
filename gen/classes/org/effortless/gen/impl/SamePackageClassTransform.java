@@ -3,7 +3,7 @@ package org.effortless.gen.impl;
 import org.apache.commons.io.FilenameUtils;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.SourceUnit;
-import org.effortless.gen.ClassGen;
+import org.effortless.gen.GClass;
 import org.effortless.gen.ClassTransform;
 import org.effortless.gen.InfoClassNode;
 import org.effortless.server.ServerContext;
@@ -11,7 +11,9 @@ import org.effortless.server.ServerContext;
 public class SamePackageClassTransform extends Object implements ClassTransform {
 
 	@Override
-	public void process(ClassNode clazz, SourceUnit sourceUnit) {
+	public void process(GClass cg) {
+		ClassNode clazz = cg.getClassNode();
+		SourceUnit sourceUnit = cg.getSourceUnit();
 		if (clazz != null && (true || InfoClassNode.checkEntityValid(clazz, sourceUnit))) {
 			String packageName = clazz.getPackageName();
 			if (packageName == null) {
@@ -23,7 +25,7 @@ public class SamePackageClassTransform extends Object implements ClassTransform 
 					String suffix = sourceUnitName.substring(rootCtx.length());
 					if (suffix != null) {
 						String newPackageName = suffix.replaceAll("/", ".");// + ".";
-						if (ClassGen.ONE_PACKAGE) {//UN SOLO PAQUETE PARA TODOS LOS FICHEROS. HACE QUE NO SEA NECESARIO LOS IMPORTS
+						if (GClass.ONE_PACKAGE) {//UN SOLO PAQUETE PARA TODOS LOS FICHEROS. HACE QUE NO SEA NECESARIO LOS IMPORTS
 							int idx = (newPackageName != null ? newPackageName.lastIndexOf(".") : -1);
 							newPackageName = (idx < 0 ? newPackageName : newPackageName.substring(0, idx));
 						}

@@ -14,7 +14,7 @@ import org.codehaus.groovy.ast.stmt.ReturnStatement;
 import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.ann.NoLog;
 import org.effortless.core.ClassNodeHelper;
-import org.effortless.gen.ClassGen;
+import org.effortless.gen.GClass;
 import org.effortless.gen.ClassTransform;
 import org.effortless.gen.GenContext;
 import org.effortless.model.LogData;
@@ -25,18 +25,19 @@ public class EntityLogClassTransform extends Object implements ClassTransform {
 	public static final ClassNode NO_LOG_CLAZZ = ClassNodeHelper.toClassNode(NoLog.class);
 	
 	@Override
-	public void process(ClassNode clazz, SourceUnit sourceUnit) {
+	public void process(GClass cg) {
+		ClassNode clazz = cg.getClassNode();
 		List<AnnotationNode> annotationsNoLog = clazz.getAnnotations(NO_LOG_CLAZZ);
 		if (false && !(annotationsNoLog != null && annotationsNoLog.size() > 0)) {
 			String keyLogData = clazz.getName() + "." + LogData.KEY_CLASS_NEEDS;
 			GenContext.set(keyLogData, Boolean.TRUE);
-			ClassNode logClass = tryNeedsLogEntity(clazz, sourceUnit);
+			ClassNode logClass = tryNeedsLogEntity(clazz, cg.getSourceUnit());
 			if (logClass != null) {
-				addMethodNewLogData(clazz, sourceUnit, logClass);
+				addMethodNewLogData(clazz, cg.getSourceUnit(), logClass);
 			}
 		}
 		else {
-			disableLog(clazz, sourceUnit);
+			disableLog(clazz, cg.getSourceUnit());
 			System.out.println("NO LOG for " + clazz.getName());
 		}
 	}
@@ -57,7 +58,7 @@ public class EntityLogClassTransform extends Object implements ClassTransform {
 	}
 
 	public static ClassNode tryNeedsLogEntity(ClassNode clazz, SourceUnit sourceUnit) {
-		return ClassGen.tryNeedsNewExternalEntity(clazz, sourceUnit, LogData.class, LogData.KEY_CLASS_NEEDS, LogData.KEY_APP_NEEDS, null);
+		return GClass.tryNeedsNewExternalEntity(clazz, sourceUnit, LogData.class, LogData.KEY_CLASS_NEEDS, LogData.KEY_APP_NEEDS, null);
 	}
 
 		/*

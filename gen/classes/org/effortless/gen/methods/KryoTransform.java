@@ -1,10 +1,7 @@
 package org.effortless.gen.methods;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
@@ -12,39 +9,19 @@ import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.expr.ArgumentListExpression;
 import org.codehaus.groovy.ast.expr.BinaryExpression;
-import org.codehaus.groovy.ast.expr.BooleanExpression;
 import org.codehaus.groovy.ast.expr.ClassExpression;
-import org.codehaus.groovy.ast.expr.ConstantExpression;
-import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
-import org.codehaus.groovy.ast.expr.DeclarationExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.FieldExpression;
-import org.codehaus.groovy.ast.expr.ListExpression;
 import org.codehaus.groovy.ast.expr.MethodCallExpression;
-import org.codehaus.groovy.ast.expr.NotExpression;
-import org.codehaus.groovy.ast.expr.PropertyExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
-import org.codehaus.groovy.ast.stmt.CatchStatement;
-import org.codehaus.groovy.ast.stmt.EmptyStatement;
 import org.codehaus.groovy.ast.stmt.ExpressionStatement;
-import org.codehaus.groovy.ast.stmt.IfStatement;
-import org.codehaus.groovy.ast.stmt.ReturnStatement;
-import org.codehaus.groovy.ast.stmt.Statement;
-import org.codehaus.groovy.ast.stmt.ThrowStatement;
-import org.codehaus.groovy.ast.stmt.TryCatchStatement;
-import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
-import org.effortless.core.ModelException;
-import org.effortless.gen.fields.BaseFields;
-import org.effortless.gen.fields.Restrictions;
-import org.effortless.model.AbstractEntity;
+import org.effortless.core.ClassNodeHelper;
+import org.effortless.gen.ClassTransform;
+import org.effortless.gen.GClass;
 import org.objectweb.asm.Opcodes;
-
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
 
 /**
  *
@@ -69,16 +46,16 @@ import com.esotericsoftware.kryo.io.Output;
  * @author jesus
  *
  */
-public class KryoTransform {
+public class KryoTransform extends Object implements ClassTransform {
 
-	public static final ClassNode INPUT = new ClassNode(com.esotericsoftware.kryo.io.Input.class);
-	public static final ClassNode OUTPUT = new ClassNode(com.esotericsoftware.kryo.io.Output.class);
-	public static final ClassNode KRYO = new ClassNode(com.esotericsoftware.kryo.Kryo.class);
+	public static final ClassNode INPUT = ClassNodeHelper.toClassNode(com.esotericsoftware.kryo.io.Input.class);
+	public static final ClassNode OUTPUT = ClassNodeHelper.toClassNode(com.esotericsoftware.kryo.io.Output.class);
+	public static final ClassNode KRYO = ClassNodeHelper.toClassNode(com.esotericsoftware.kryo.Kryo.class);
 	
-	public static void processClass (ClassNode clazz, SourceUnit sourceUnit) {
-		if (clazz != null) {
-			addWrite(clazz, sourceUnit);
-			addRead(clazz, sourceUnit);
+	public void process (GClass cg) {
+		if (cg != null) {
+			addWrite(cg);
+			addRead(cg);
 		}
 	}
 
@@ -97,7 +74,8 @@ public class KryoTransform {
 	 * @param clazz
 	 * @param sourceUnit
 	 */
-	public static void addWrite(ClassNode clazz, SourceUnit sourceUnit) {
+	public static void addWrite(GClass cg) {
+		ClassNode clazz = cg.getClassNode();
 		if (clazz != null) {
 			List<FieldNode> fields = clazz.getFields();
 			if (fields != null && fields.size() > 0) {
@@ -138,7 +116,8 @@ public class KryoTransform {
 	 * @param clazz
 	 * @param sourceUnit
 	 */
-	public static void addRead(ClassNode clazz, SourceUnit sourceUnit) {
+	public static void addRead(GClass cg) {
+		ClassNode clazz = cg.getClassNode();
 		if (clazz != null) {
 			List<FieldNode> fields = clazz.getFields();
 			if (fields != null && fields.size() > 0) {

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Locale;
 
 //import org.codehaus.groovy.ast.ClassHelper;
-import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 //import org.codehaus.groovy.ast.MethodNode;
 //import org.codehaus.groovy.ast.Parameter;
@@ -18,12 +17,11 @@ import org.codehaus.groovy.ast.FieldNode;
 //import org.codehaus.groovy.ast.stmt.BlockStatement;
 //import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 //import org.codehaus.groovy.ast.stmt.ReturnStatement;
-import org.codehaus.groovy.control.SourceUnit;
 //import org.codehaus.groovy.syntax.Token;
 //import org.codehaus.groovy.syntax.Types;
-import org.effortless.gen.ClassGen;
+import org.effortless.gen.GClass;
 import org.effortless.gen.ClassTransform;
-import org.effortless.gen.MethodGen;
+import org.effortless.gen.GMethod;
 import org.effortless.gen.fields.BaseFields;
 import org.effortless.gen.fields.Restrictions;
 import org.effortless.model.Referenciable;
@@ -49,15 +47,14 @@ import org.effortless.model.Referenciable;
  */
 public class ReferenciableTransform extends Object implements ClassTransform {
 
-	public void process (ClassNode clazz, SourceUnit sourceUnit) {
-		if (clazz != null) {
-			ClassGen cg = new ClassGen(clazz);
+	public void process (GClass cg) {
+		if (cg != null) {
 			
-			List<FieldNode> fields = Restrictions.listNotNullUnique(clazz);
+			List<FieldNode> fields = Restrictions.listNotNullUnique(cg.getClassNode());
 			
 //			if (true) {
 				cg.addInterface(Referenciable.class);
-				MethodGen mg = null;
+				GMethod mg = null;
 				
 				//public String toLabel ();
 				mg = cg.addMethod("toLabel").setReturnType(String.class);

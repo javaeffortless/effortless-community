@@ -37,7 +37,7 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 
-public class ViewClassGen extends ClassGen {
+public class ViewClassGen extends GClass {
 
 	protected ViewClassGen () {
 		super();
@@ -88,8 +88,8 @@ public class ViewClassGen extends ClassGen {
 		}
 	}
 	
-	public ClassGen addEditorVM () {
-		ClassGen result = null;
+	public GClass addEditorVM () {
+		GClass result = null;
 		
 		if (true) {
 			String cName = getEditorName();
@@ -109,7 +109,7 @@ public class ViewClassGen extends ClassGen {
 			cg.addSimpleProperty(Boolean.class, "persist", false);
 			cg.addSimpleProperty(String.class, "mode", false);
 			
-			MethodGen mg = null;
+			GMethod mg = null;
 			
 			cg.addFieldsVM(this.clazz);
 
@@ -138,7 +138,7 @@ public class ViewClassGen extends ClassGen {
 //			}
 			mg = cg.addMethod("save").setPublic(true);
 			mg.addAnnotation(org.zkoss.bind.annotation.Command.class);
-			MethodGen nb = mg.newBlock();
+			GMethod nb = mg.newBlock();
 			nb.add(nb.call(nb.field("item"), "persist"));
 			mg.addIf(mg.and(mg.notNull(mg.field("persist")), mg.call(mg.field("persist"), "booleanValue")), nb);
 //			mg.add(mg.call(mg.field("item"), "persist"));
@@ -172,7 +172,7 @@ public class ViewClassGen extends ClassGen {
 			
 			this.addField(fType, fName);
 			
-			MethodGen mg = null;
+			GMethod mg = null;
 			
 			String initiateName = "initiate" + capfName;
 			mg = addMethod(initiateName).setProtected(true);
@@ -210,7 +210,7 @@ public class ViewClassGen extends ClassGen {
 			
 			this.addField(fType, fName);
 			
-			MethodGen mg = null;
+			GMethod mg = null;
 			
 			String initiateName = "initiate" + capfName;
 			mg = addMethod(initiateName).setProtected(true);
@@ -249,8 +249,8 @@ public class ViewClassGen extends ClassGen {
 				}
 			}
 			
-			MethodGen mg = null;
-			MethodGen nb = null;
+			GMethod mg = null;
+			GMethod nb = null;
 	
 	//		protected Class<?> doGetFilterClass () {
 	//			return Item.class;
@@ -325,7 +325,7 @@ public class ViewClassGen extends ClassGen {
 	
 	
 	
-	public void addFilterCondition(MethodGen mg, FieldNode field) {
+	public void addFilterCondition(GMethod mg, FieldNode field) {
 		if (mg != null && field != null) {
 			String fName = field.getName();
 			
@@ -374,12 +374,12 @@ public class ViewClassGen extends ClassGen {
 	
 	
 	
-	public ViewClassGen addFinderFilterVM (ClassGen finderFilter) {
+	public ViewClassGen addFinderFilterVM (GClass finderFilter) {
 		ViewClassGen result = null;
 		
 		String cName = this.clazz.getName() + "VM";
 		ViewClassGen cg = new ViewClassGen(cName, this.sourceUnit);
-		MethodGen mg = null;
+		GMethod mg = null;
 		if (true) {
 			cg.addAnnotation(org.zkoss.bind.annotation.Init.class, "superclass", true);
 			cg.setSuperClass(FinderFilterVM.class);
@@ -416,7 +416,7 @@ public class ViewClassGen extends ClassGen {
 		
 		cg.addSimpleProperty(this.clazz, "item", false);
 
-		MethodGen mg = null;
+		GMethod mg = null;
 		
 		mg = cg.addMethod("init").setPublic(true).addParameter(this.clazz, "item", cg.createAnnotation(org.zkoss.bind.annotation.ExecutionArgParam.class, "item"));
 		mg.addAnnotation(org.zkoss.bind.annotation.Init.class);
@@ -429,14 +429,14 @@ public class ViewClassGen extends ClassGen {
 		return result;
 	}
 	
-	public MethodGen addEnumFieldVM (String id, FieldNode field) {
-		MethodGen result = null;
+	public GMethod addEnumFieldVM (String id, FieldNode field) {
+		GMethod result = null;
 		ClassNode type = field.getType();
 		if (type != null && type.isEnum()) {
 			this.addField(java.util.List.class, id);
 			
 			result = this.addMethod("get" + StringUtils.capFirst(id)).setPublic(true).setReturnType(java.util.List.class);
-			MethodGen ifCode = result.newBlock();
+			GMethod ifCode = result.newBlock();
 			ifCode.add(ifCode.assign(ifCode.field(id), ifCode.callConstructor(java.util.ArrayList.class)));
 			List<FieldNode> values = type.getFields();
 			for (FieldNode value : values) {//MIN_VALUE, MAX_VALUE, $VALUES
@@ -452,15 +452,15 @@ public class ViewClassGen extends ClassGen {
 		return result;
 	}
 	
-	public MethodGen addProcessVM (ClassNode vm, String name, SourceUnit unit) {
-		MethodGen result = null;
+	public GMethod addProcessVM (ClassNode vm, String name, SourceUnit unit) {
+		GMethod result = null;
 		
-		MethodGen mg = null;
+		GMethod mg = null;
 		
 		name = (name != null ? name.trim() : "");
 		String newName = vm.getName() + "$" + name;
 		
-		ClassGen cg = new ClassGen(newName, unit).setPublic(true).addInterface(Runnable.class);
+		GClass cg = new GClass(newName, unit).setPublic(true).addInterface(Runnable.class);
 		
 		cg.addSimpleProperty(vm, "vm");
 //		cg.addField(vm, "vm");
@@ -475,16 +475,16 @@ public class ViewClassGen extends ClassGen {
 		return result;
 	}
 	
-	public ClassGen addFinderVM (ClassNode finderFilter) {
-		ClassGen result = null;
+	public GClass addFinderVM (ClassNode finderFilter) {
+		GClass result = null;
 
 		if (true) {
-			MethodGen mg = null;
-			MethodGen nb = null;
+			GMethod mg = null;
+			GMethod nb = null;
 			
 			String entityName = this.clazz.getNameWithoutPackage();
 			String cName = getFinderName();
-			ClassGen cg = new ClassGen(cName, this.sourceUnit).setSuperClass(FinderVM.class);
+			GClass cg = new GClass(cName, this.sourceUnit).setSuperClass(FinderVM.class);
 			cg.addAnnotation(org.zkoss.bind.annotation.Init.class, "superclass", true);
 			
 //			protected String createDefaultFinderFilterZul() {
@@ -536,12 +536,12 @@ public class ViewClassGen extends ClassGen {
 			result = cg;
 		}
 		else {
-			MethodGen mg = null;
-			MethodGen nb = null;
+			GMethod mg = null;
+			GMethod nb = null;
 			
 			String entityName = this.clazz.getNameWithoutPackage();
 			String cName = getFinderName();
-			ClassGen cg = new ClassGen(cName, this.sourceUnit);
+			GClass cg = new GClass(cName, this.sourceUnit);
 			//cg.addSimpleProperty(String.class, "keyword", false);
 			cg.addSimpleProperty(List.class, "list", true);
 			cg.addSimpleProperty(this.clazz, "selectedItem", false);
@@ -701,7 +701,7 @@ public class ViewClassGen extends ClassGen {
 			nb.gPrintln("begin delete");
 			nb.declVariable(Message.class, "msg", nb.callStatic(Message.class, "createDelete"));
 			
-			MethodGen processOk = this.addProcessVM(cg.getClassNode(), "DeleteItemOk", cg.getSourceUnit());
+			GMethod processOk = this.addProcessVM(cg.getClassNode(), "DeleteItemOk", cg.getSourceUnit());
 			processOk.gPrintln("run process ok from extern inner (begin)");
 			processOk.gPrintln(processOk.field("vm"));
 			processOk.gPrintln(processOk.property(processOk.field("vm"), "selectedItem"));
@@ -752,9 +752,9 @@ public class ViewClassGen extends ClassGen {
 		return result;
 	}
 	
-	protected void addCloneAction(ClassGen cg) {
-		MethodGen mg = null;
-		MethodGen nb = null;
+	protected void addCloneAction(GClass cg) {
+		GMethod mg = null;
+		GMethod nb = null;
 		
 		String entityName = this.clazz.getNameWithoutPackage();
 
@@ -822,7 +822,7 @@ public class ViewClassGen extends ClassGen {
 		addSimpleProperty(String.class, "content");
 		addSimpleProperty(String.class, "footerMsg");
 		
-		MethodGen mg = null;
+		GMethod mg = null;
 		
 		List<String> modules = getModules(appId);
 		for (String module : modules) {
@@ -852,7 +852,7 @@ public class ViewClassGen extends ClassGen {
 		mg = addMethod("selectModule").setProtected(true).addParameter(Boolean.class, "value").addParameter(String.class, "module");
 		mg.gPrintln(mg.var("value"));
 		Expression cond = mg.and(mg.notNull("value"), mg.call("value", "booleanValue"), mg.notNull("module"), mg.call("module", "equals", mg.field("selectedModule")));//String selectCode = "if (value != null && value.booleanValue() && module != null && module.equals(this.selectedModule)) {";
-		MethodGen nb = mg.newBlock();
+		GMethod nb = mg.newBlock();
 		nb.assign(mg.field("selectedModule"), "module");//selectCode += "this.selectedModule = module";
 		for (String module : modules) {
 			String valueNotify = "checked" + StringUtils.capFirst(module) + "";

@@ -122,10 +122,10 @@ public class FinderVMTransform extends Object implements ClassTransform {
 		return result;
 	}
 	
-	public void process (GClass clazz) {
-//		ClassNode clazz = cg.getClassNode();
-//		SourceUnit sourceUnit = cg.getSourceUnit();
-		if (clazz != null && clazz.checkEntityValid() && !clazz.checkEnum()) {
+	public void process (GClass cg) {
+		ClassNode clazz = cg.getClassNode();
+		SourceUnit sourceUnit = cg.getSourceUnit();
+		if (clazz != null && InfoClassNode.checkEntityValid(clazz, sourceUnit) && !InfoClassNode.checkEnum(clazz, sourceUnit)) {
 			
 			if (true) {
 				ViewClassGen cg = new ViewClassGen(clazz, sourceUnit);
@@ -135,12 +135,25 @@ if (finderFilter != null) {
 				ViewClassGen finderFilterVM = null;//finderFilter.addFinderFilterVM(finderFilter);
 				writeFinderFilterZul(finderFilter, finderFilterVM, clazz, sourceUnit);
 
+//				ViewClassGen moreInfoVM = cg.addMoreInfoVM();
+//				writeMoreInfoZul_old(moreInfoVM, cg, sourceUnit);
 				writeMoreInfoZul(null, cg, sourceUnit);
 				
 				
 				GClass vm = null;//cg.addFinderVM(finderFilter.getClassNode());
 				writeZul((vm != null ? vm.getClassNode() : null), clazz, sourceUnit);
 }
+			}
+			else {
+				ClassNode vm = new ClassNode(getFinderName(clazz, sourceUnit), Opcodes.ACC_PUBLIC, ClassHelper.OBJECT_TYPE);
+				sourceUnit.getAST().addClass(vm);
+					
+				addFilterProperty(vm, clazz, sourceUnit);
+				addListProperty(vm, clazz, sourceUnit);
+				addSelectionProperty(vm, clazz, sourceUnit);
+				addSearchButton(vm, clazz, sourceUnit);
+
+				writeZul(vm, clazz, sourceUnit);
 			}
 		}
 	}

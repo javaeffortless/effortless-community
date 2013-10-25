@@ -1,0 +1,42 @@
+http://isagoksu.com/2009/development/java/creating-custom-annotations-and-making-use-of-them/
+http://docs.oracle.com/javase/7/docs/api/java/lang/annotation/package-summary.html
+http://en.wikipedia.org/wiki/Java_annotation
+http://stackoverflow.com/questions/13569079/can-java-annotation-have-complex-return-type-like-hashmap
+
+
+@Target(ElementType.PACKAGE), package header
+@Target(ElementType.TYPE), class header
+@Target(ElementType.CONSTRUCTOR), constructor header
+@Target(ElementType.METHOD), method header
+@Target(ElementType.FIELD), for class fields only
+@Target(ElementType.PARAMATER), for method parameters only
+@Target(ElementType.LOCAL_VARIABLE), for local variables only
+
+@Target({ ElementType.PARAMETER, ElementType.LOCAL_VARIABLE })
+
+@Retention(RetentionPolicy.RUNTIME)
+
+
+
+
+
+
+
+public @interface TableMapping {
+  public String dbName();
+  public String tableName();
+}
+
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface column {
+    public TableMapping[] table();
+}
+
+
+@column(table={
+  @TableMapping(dbName="dbName", tableName="tableName"),
+  @TableMapping(dbName="db2", tableName="table2")
+})
+public String userId = "userid";

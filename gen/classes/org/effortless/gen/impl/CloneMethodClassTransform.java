@@ -6,19 +6,18 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.core.StringUtils;
-import org.effortless.gen.ClassGen;
+import org.effortless.gen.GClass;
 import org.effortless.gen.ClassTransform;
-import org.effortless.gen.MethodGen;
+import org.effortless.gen.GMethod;
 
 public class CloneMethodClassTransform extends Object implements ClassTransform {
 
 	@Override
-	public void process(ClassNode clazz, SourceUnit sourceUnit) {
-		ClassGen cg = new ClassGen(clazz, sourceUnit);
-		
+	public void process(GClass cg) {
+		ClassNode clazz = cg.getClassNode();
 		List<FieldNode> fields = clazz.getFields();
 		
-		MethodGen mg = cg.addMethod("createClone").setProtected(true).setReturnType(clazz);
+		GMethod mg = cg.addMethod("createClone").setProtected(true).setReturnType(clazz);
 		mg.declVariable(clazz, "result", mg.callConstructor(clazz));
 		for (FieldNode field : fields) {
 			String fName = field.getName();

@@ -24,7 +24,7 @@ import org.effortless.model.FileEntity;
 import org.effortless.model.FileEntityTuplizer;
 import org.objectweb.asm.Opcodes;
 
-public class EntityClassGen extends ClassGen {
+public class EntityClassGen extends GClass {
 
 	protected EntityClassGen () {
 		super();
@@ -39,76 +39,8 @@ public class EntityClassGen extends ClassGen {
 		this.sourceUnit = sourceUnit;
 	}
 	
-	public EntityClassGen addCreateClone () {
-		List<FieldNode> fields = this.clazz.getFields();
-		
-		MethodGen mg = addMethod("createClone").setProtected(true).setReturnType(this.clazz);
-		mg.declVariable(this.clazz, "result", mg.callConstructor(this.clazz));
-		for (FieldNode field : fields) {
-			String fName = field.getName();
-			String getter = "get" + StringUtils.capFirst(fName) + "";
-			mg.add(mg.assign(mg.property("result", fName), mg.call(getter)));
-		}
-		mg.addReturn("result");
-
-		return this;
-	}
-	
-	public EntityClassGen addDoCompare () {
-		List<FieldNode> fields = clazz.getFields();
-
-		MethodGen mg = addMethod("doCompare").setProtected(true).addParameter(org.apache.commons.lang3.builder.CompareToBuilder.class, "cpBuilder").addParameter(Object.class, "obj");
-		mg.add(mg.call(mg.cteSuper(), "doCompare", "cpBuilder", "obj"));
-		for (FieldNode field : fields) {
-			String fName = field.getName();
-			mg.add(mg.call("cpBuilder", "append", mg.field(fName), mg.property("obj", fName)));
-		}
-
-		return this;
-	}
-	
-	public EntityClassGen addDoEquals () {
-		List<FieldNode> fields = this.clazz.getFields();
-		
-		MethodGen mg = addMethod("doEquals").setProtected(true).addParameter(org.apache.commons.lang3.builder.EqualsBuilder.class, "eqBuilder").addParameter(Object.class, "obj");
-		mg.add(mg.call(mg.cteSuper(), "doEquals", "eqBuilder", "obj"));
-		for (FieldNode field : fields) {
-			String fName = field.getName();
-			mg.add(mg.call("eqBuilder", "append", mg.field(fName), mg.property("obj", fName)));
-		}
-		
-		return this;
-	}
-	
-	public EntityClassGen addDoHashCode () {
-		List<FieldNode> fields = Restrictions.listNotNullUnique(this.clazz);
-		
-		MethodGen mg = addMethod("doHashCode").setProtected(true).addParameter(org.apache.commons.lang3.builder.HashCodeBuilder.class, "hcBuilder");
-		mg.add(mg.call(mg.cteSuper(), "doHashCode", "hcBuilder"));
-		for (FieldNode field : fields) {
-			String fName = field.getName();
-			mg.add(mg.call("hcBuilder", "append", mg.cte(fName)));
-			mg.add(mg.call("hcBuilder", "append", mg.field(fName)));
-		}
-		
-		return this;
-	}
-	
-	public EntityClassGen addDoToString () {
-		List<FieldNode> fields = Restrictions.listNotNullUnique(this.clazz);
-		
-		MethodGen mg = addMethod("doToString").setProtected(true).addParameter(org.apache.commons.lang3.builder.ToStringBuilder.class, "toStringBuilder");
-		mg.add(mg.call(mg.cteSuper(), "doToString", "toStringBuilder"));
-		for (FieldNode field : fields) {
-			String fName = field.getName();
-			mg.add(mg.call("toStringBuilder", "append", mg.cte(fName), mg.field(fName)));
-		}
-		
-		return this;
-	}
-
 	public EntityClassGen addToLabel () {
-		MethodGen mg = addMethod("toLabel").setPublic(true).setReturnType(String.class).addParameter(java.util.Locale.class, "locale");
+		GMethod mg = addMethod("toLabel").setPublic(true).setReturnType(String.class).addParameter(java.util.Locale.class, "locale");
 		mg.declVariable(String.class, "result");
 		mg.declVariable(org.effortless.util.ToLabel.class, "toLabel", mg.callConstructor(org.effortless.util.ToLabel.class));
 		List<FieldNode> fields = this.clazz.getFields();
@@ -129,7 +61,7 @@ public class EntityClassGen extends ClassGen {
 
 	public EntityClassGen addInitiate (FieldNode field) {
 		String methodName = getInitiateName(field);
-		MethodGen mg = this.addMethod(methodName).setProtected(true);
+		GMethod mg = this.addMethod(methodName).setProtected(true);
 		mg.add(mg.assign(mg.field(field.getName()), mg.cteNull()));
 		
 		return this;
@@ -140,7 +72,7 @@ public class EntityClassGen extends ClassGen {
 	public EntityClassGen addInitiateDefaultBoolean (FieldNode field) {
 		String methodName = getInitiateName(field);
 		
-		MethodGen mg = this.addMethod(methodName).setProtected(true);
+		GMethod mg = this.addMethod(methodName).setProtected(true);
 		boolean defaultValue = loadDefaultBooleanValue(field);
 		Expression defaultExpression = (defaultValue ? mg.cteTRUE() : mg.cteFALSE());
 		mg.add(mg.assign(mg.field(field.getName()), defaultExpression));
@@ -164,7 +96,7 @@ public class EntityClassGen extends ClassGen {
 	public EntityClassGen addInitiateDefaultDate (FieldNode field) {
 		String methodName = getInitiateName(field);
 		
-		MethodGen mg = this.addMethod(methodName).setProtected(true);
+		GMethod mg = this.addMethod(methodName).setProtected(true);
 		boolean defaultValue = loadDefaultDateValue(field);
 		Expression defaultExpression = (defaultValue ? mg.callConstructor(java.util.Date.class) : mg.cteNull());
 		mg.add(mg.assign(mg.field(field.getName()), defaultExpression));
@@ -188,18 +120,18 @@ public class EntityClassGen extends ClassGen {
 	public EntityClassGen addInitiateDefaultNumber (FieldNode field) {
 		String methodName = getInitiateName(field);
 		
-		MethodGen mg = this.addMethod(methodName).setProtected(true);
+		GMethod mg = this.addMethod(methodName).setProtected(true);
 		Expression defaultExpression = mg.callStatic(Double.class, "valueOf", mg.cte(0.0));
 		mg.add(mg.assign(mg.field(field.getName()), defaultExpression));
 		
 		return this;
 	}
 	
-	public MethodGen addEntityGetter (FieldNode field, boolean includeAnnotation) {
-		MethodGen result = null;
+	public GMethod addEntityGetter (FieldNode field, boolean includeAnnotation) {
+		GMethod result = null;
 		String methodName = getGetterName(field);
 		
-		MethodGen mg = this.addMethod(methodName).setPublic(true).setReturnType(field.getType());
+		GMethod mg = this.addMethod(methodName).setPublic(true).setReturnType(field.getType());
 		mg.addReturn(mg.field(field));
 		
 		if (includeAnnotation) {
@@ -230,7 +162,7 @@ public class EntityClassGen extends ClassGen {
 	public void addEntitySetter (FieldNode field) {
 		String setterName = getSetterName(field);
 		String fName = field.getName();
-		MethodGen mg = addMethod(setterName).setPublic(true).addParameter(field.getType(), "newValue");
+		GMethod mg = addMethod(setterName).setPublic(true).addParameter(field.getType(), "newValue");
 		//String setterName = "set" + MetaClassHelper.capitalize(field.getName())
 		if (true) {
 			mg.add(mg.call("_setProperty", mg.cte(fName), mg.field(field), mg.assign(mg.field(field), "newValue")));//this._setProperty('text', this.text, this.text = newValue);
@@ -239,9 +171,9 @@ public class EntityClassGen extends ClassGen {
 			String getterName = getGetterName(field);
 			mg.declVariable(ClassHelper.boolean_TYPE, "_loaded", mg.call("checkLoaded", mg.cte(fName), mg.cteTrue()));//boolean _loaded = checkLoaded("text", true);
 			mg.declVariable(field.getType(), "oldValue", mg.triple("_loaded", mg.call(getterName), mg.cteNull()));//String oldValue = (_loaded ? this.getText() : null);
-			MethodGen ifCode = mg.newBlock();
+			GMethod ifCode = mg.newBlock();
 			ifCode.add(ifCode.assign(ifCode.field(field), "newValue"));//this.text = newValue;
-			MethodGen cp = ifCode.newBlock();
+			GMethod cp = ifCode.newBlock();
 			cp.add(cp.call("doChange" + StringUtils.capFirst(fName), "oldValue", "newValue"));//doChangeText(oldValue, newValue);
 			cp.add(cp.call("firePropertyChange", mg.cte(fName), mg.var("oldValue"), mg.var("newValue")));//firePropertyChange("text", oldValue, newValue);
 			ifCode.addIf(ifCode.var("_loaded"), cp);//if (_loaded) {
@@ -446,7 +378,7 @@ public class EntityClassGen extends ClassGen {
 	protected void dateProcessField (FieldNode field) {
 		this.protectField(field);
 		this.addInitiateDefaultDate(field);
-		MethodGen getter = this.addEntityGetter(field, true);
+		GMethod getter = this.addEntityGetter(field, true);
 		this.addEntitySetter(field);
 		
 		//@Temporal(TemporalType.TIMESTAMP)
@@ -500,7 +432,7 @@ public class EntityClassGen extends ClassGen {
 	protected void enumProcessField (FieldNode field) {
 		this.protectField(field);
 		this.addInitiate(field);
-		MethodGen getter = this.addEntityGetter(field, false);
+		GMethod getter = this.addEntityGetter(field, false);
 		this.addEntitySetter(field);
 
 		getter.addAnnotation(javax.persistence.Enumerated.class, "value", getter.enumValue(javax.persistence.EnumType.class, "STRING"));//@javax.persistence.Enumerated(javax.persistence.EnumType.STRING)
@@ -512,7 +444,7 @@ public class EntityClassGen extends ClassGen {
 		String setterName = getSetterName(field);
 		String keyFileEntity = this.clazz.getName() + "." + FileEntity.KEY_CLASS_NEEDS;
 		GenContext.set(keyFileEntity, Boolean.TRUE);
-		ClassNode fileClazz = ClassGen.tryNeedsNewExternalEntity(this.clazz, this.sourceUnit, FileEntity.class, FileEntity.KEY_CLASS_NEEDS, FileEntity.KEY_APP_NEEDS, FileEntityTuplizer.class);
+		ClassNode fileClazz = GClass.tryNeedsNewExternalEntity(this.clazz, this.sourceUnit, FileEntity.class, FileEntity.KEY_CLASS_NEEDS, FileEntity.KEY_APP_NEEDS, FileEntityTuplizer.class);
 
 		
 		//	protected FileEntity fichero;
@@ -526,7 +458,7 @@ public class EntityClassGen extends ClassGen {
 		
 		
 		
-		MethodGen getter = addEntityGetter(field, false);
+		GMethod getter = addEntityGetter(field, false);
 		AnnotationNode ann = getter.addAnnotation(javax.persistence.ManyToOne.class);//@javax.persistence.ManyToOne(cascade = {javax.persistence.CascadeType.ALL})
 		ann.addMember("cascade", getter.enumValue(javax.persistence.CascadeType.class, "ALL"));
 		ann.addMember("targetEntity", getter.cteClass(field.getType()));
@@ -542,7 +474,7 @@ public class EntityClassGen extends ClassGen {
 //			FileEntity fichero = getFicheroEntity();
 //			return (fichero != null ? fichero.getContent() : null);
 //		}
-		MethodGen mg = this.addMethod(getterName + "File").setPublic(true).setReturnType(java.io.File.class);
+		GMethod mg = this.addMethod(getterName + "File").setPublic(true).setReturnType(java.io.File.class);
 		mg.addAnnotation(javax.persistence.Transient.class);
 		mg.declVariable(fileClazz, "varFile", mg.call(getterName));
 		mg.addReturn(mg.triple(mg.notNull("varFile"), mg.call("varFile", "getContent"), mg.cteNull()));
@@ -572,12 +504,12 @@ public class EntityClassGen extends ClassGen {
 //			}
 //		}
 		mg = this.addMethod(setterName).setPublic(true).addParameter(java.io.File.class, "newValue");
-		MethodGen ifCode = mg.newBlock();
+		GMethod ifCode = mg.newBlock();
 		ifCode.declVariable(fileClazz, "entity", ifCode.call(getterName));
 		ifCode.add(ifCode.assign(ifCode.var("entity"), ifCode.triple(ifCode.notNull("entity"), ifCode.var("entity"), ifCode.callConstructor(fileClazz))));
 		ifCode.add(ifCode.call("entity", "setContent", ifCode.var("newValue")));
 		ifCode.add(ifCode.call(setterName, ifCode.var("entity")));
-		MethodGen elseCode = mg.newBlock();
+		GMethod elseCode = mg.newBlock();
 		elseCode.add(elseCode.call(setterName, elseCode.cast(fileClazz, elseCode.cteNull())));
 		mg.addIf(mg.notNull("newValue"), ifCode, elseCode);
 		
@@ -627,7 +559,7 @@ public class EntityClassGen extends ClassGen {
 	protected void refProcessField (FieldNode field) {
 		this.protectField(field);
 		this.addInitiate(field);
-		MethodGen getter = this.addEntityGetter(field, false);
+		GMethod getter = this.addEntityGetter(field, false);
 		
 		
 		
@@ -768,10 +700,10 @@ public class EntityClassGen extends ClassGen {
 	 * 
 	 */
 
-	protected MethodGen modifyAction(MethodNode method) {
-		MethodGen result = null;
+	protected GMethod modifyAction(MethodNode method) {
+		GMethod result = null;
 		
-		MethodGen mg = new MethodGen(method);
+		GMethod mg = new GMethod(method);
 		result = mg;
 
 		int statementsLength = mg.getPreviousCodeLength();
@@ -794,32 +726,32 @@ public class EntityClassGen extends ClassGen {
 		mg.declVariable(objectArrayType, "__paramValues", mg.arrayParameters(parameters));
 				
 
-		MethodGen ifCode = mg.newBlock();
+		GMethod ifCode = mg.newBlock();
 		ifCode.add(ifCode.call("__startExecutionTime"));//__startExecutionTime();
 		ifCode.declVariable(ClassHelper.boolean_TYPE, "__stopExecutionTime", ifCode.cteFalse());//boolean __stopExecutionTime = false;
 		ifCode.declVariable(Long.class, "__executionTime", ifCode.cteNull());//Long __executionTime = null;
 		ifCode.declVariable(ClassHelper.boolean_TYPE, "__saveLog", ifCode.cteTrue());//boolean __saveLog = true;
 		ifCode.declVariable(objectArrayType, "__paramNamesValues", ifCode.arrayNameValue(parameters));//Object[] __paramNamesValues = ["text", text, "ammount", ammount];
 		ifCode.add(ifCode.assign("__commentLog", ifCode.call("_toCommentLog", "__paramNamesValues")));//String __commentLog = _toCommentLog(__paramNamesValues);
-		MethodGen tryBlock = ifCode.newBlock();
+		GMethod tryBlock = ifCode.newBlock();
 		tryBlock.addPreviousCode();//oldCode
 		tryBlock.add(tryBlock.assign("__executionTime", tryBlock.call("__stopExecutionTime")));//__executionTime = __stopExecutionTime();
 		tryBlock.add(tryBlock.assign("__stopExecutionTime", tryBlock.cteTrue()));//__stopExecutionTime = true;
-		MethodGen blockSaveLog = tryBlock.newBlock();
+		GMethod blockSaveLog = tryBlock.newBlock();
 		blockSaveLog.add(blockSaveLog.call("trySaveActionLog", blockSaveLog.cte(methodName), blockSaveLog.var("__commentLog"), blockSaveLog.var("__executionTime")));//this.trySaveActionLog("doAction", __commentLog, __executionTime);
 		tryBlock.addIf(tryBlock.var("__saveLog"), blockSaveLog);//if (__saveLog) {
 		
-		MethodGen catchModel = ifCode.newBlock();
+		GMethod catchModel = ifCode.newBlock();
 		catchModel.newVariable(ModelException.class, "e1");
-		MethodGen ifCodeCatch = catchModel.newBlock();
+		GMethod ifCodeCatch = catchModel.newBlock();
 		ifCodeCatch.add(ifCodeCatch.assign(ifCodeCatch.var("__executionTime"), ifCodeCatch.call("__stopExecutionTime")));//__executionTime = __stopExecutionTime();
 		catchModel.addIf(catchModel.not(catchModel.var("__stopExecutionTime")), ifCodeCatch);//if (!__stopExecutionTime) {
 		catchModel.add(catchModel.call("trySaveLogException", catchModel.var("e1"), catchModel.plus(catchModel.cte(AbstractEntity.ERROR), catchModel.cte(methodName)), catchModel.var("__executionTime")));//this.trySaveLogException(e, ERROR + "methodName", __executionTime);
 		catchModel.throwException("e1");
 		
-		MethodGen catchGeneral = ifCode.newBlock();
+		GMethod catchGeneral = ifCode.newBlock();
 		catchGeneral.newVariable(Exception.class, "e2");
-		MethodGen ifCodeCatch2 = catchGeneral.newBlock();
+		GMethod ifCodeCatch2 = catchGeneral.newBlock();
 		ifCodeCatch2.add(ifCodeCatch2.assign(ifCodeCatch2.var("__executionTime"), ifCodeCatch2.call("__stopExecutionTime")));//__executionTime = __stopExecutionTime();
 		catchGeneral.addIf(catchGeneral.not(catchGeneral.var("__stopExecutionTime")), ifCodeCatch2);//if (!__stopExecutionTime) {
 		catchGeneral.add(catchGeneral.call("trySaveLogException", catchGeneral.var("e2"), catchGeneral.plus(catchGeneral.cte(AbstractEntity.ERROR), catchGeneral.cte(methodName)), catchGeneral.var("__executionTime")));//this.trySaveLogException(e, ERROR + "methodName", __executionTime);
@@ -857,7 +789,7 @@ public class EntityClassGen extends ClassGen {
 	public void addInitiate() {
 		List<FieldNode> fields = this.clazz.getFields();
 		if (fields != null && fields.size() > 0) {
-			MethodGen mg = new MethodGen("initiate", this).setProtected(true);
+			GMethod mg = new GMethod("initiate", this).setProtected(true);
 			
 			for (FieldNode field : fields) {
 				String methodName = "initiate" + StringUtils.capFirst(field.getName());

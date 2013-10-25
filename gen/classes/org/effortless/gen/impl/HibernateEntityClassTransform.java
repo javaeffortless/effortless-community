@@ -16,6 +16,7 @@ import org.codehaus.groovy.ast.stmt.ReturnStatement;
 import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.gen.ClassTransform;
 import org.effortless.gen.EntityClassGen;
+import org.effortless.gen.GClass;
 import org.effortless.gen.GenContext;
 import org.effortless.gen.InfoClassNode;
 import org.effortless.gen.classes.ReferenciableTransform;
@@ -32,38 +33,38 @@ import org.objectweb.asm.Opcodes;
 public class HibernateEntityClassTransform extends Object implements ClassTransform {
 
 	@Override
-	public void process(ClassNode clazz, SourceUnit sourceUnit) {
-		if (InfoClassNode.checkEntityValid(clazz, sourceUnit) && !InfoClassNode.checkEnum(clazz, sourceUnit)) {
-			EntityClassGen ecg = new EntityClassGen(clazz, sourceUnit);
-			new AlterActionsClassTransform().process(clazz, sourceUnit);
+	public void process(GClass cg) {
+		if (cg != null && cg.checkEntityValid() && !cg.checkEnum()) {
+			new AlterActionsClassTransform().process(cg);
 //			ecg.alterActions();
 //				ActionsTransform.processClass(clazz, sourceUnit);
 				
-			new SetupEntityParentClassTransform().process(clazz, sourceUnit);
-			new EntityTableClassTransform().process(clazz, sourceUnit);
+			new SetupEntityParentClassTransform().process(cg);
+			new EntityTableClassTransform().process(cg);
 		
+			EntityClassGen ecg = new EntityClassGen(clazz, sourceUnit);
 			List<FieldNode> fields = clazz.getFields();
 			for (FieldNode field : fields) {
 				ecg.processField(field);
 			}
 				
 			if (false) {
-				new FinalFieldsTransform().process(clazz, sourceUnit);
+				new FinalFieldsTransform().process(cg);
 			}
 				
-			new ReferenciableTransform().process(clazz, sourceUnit);
-			new SavePropertiesTransform().process(clazz, sourceUnit);
+			new ReferenciableTransform().process(cg);
+			new SavePropertiesTransform().process(cg);
 			
-			new EntityStaticMethodsClassTransform().process(clazz, sourceUnit);
+			new EntityStaticMethodsClassTransform().process(cg);
 				
-			new InitiateMethodClassTransform().process(clazz, sourceUnit);//ecg.addInitiate();
-			new HashCodeMethodClassTransform().process(clazz, sourceUnit);//ecg.addDoHashCode();//HashCodeTransform.processClass(clazz, sourceUnit);
-			new EqualsMethodClassTransform().process(clazz, sourceUnit);//ecg.addDoEquals();//EqualsTransform.processClass(clazz, sourceUnit);
-			new CompareMethodClassTransform().process(clazz, sourceUnit);//ecg.addDoCompare();//CompareToTransform.processClass(clazz, sourceUnit);
-			new ToStringMethodClassTransform().process(clazz, sourceUnit);//ecg.addDoToString();//ToStringTransform.processClass(clazz, sourceUnit);
+			new InitiateMethodClassTransform().process(cg);//ecg.addInitiate();
+			new HashCodeMethodClassTransform().process(cg);//ecg.addDoHashCode();//HashCodeTransform.processClass(clazz, sourceUnit);
+			new EqualsMethodClassTransform().process(cg);//ecg.addDoEquals();//EqualsTransform.processClass(clazz, sourceUnit);
+			new CompareMethodClassTransform().process(cg);//ecg.addDoCompare();//CompareToTransform.processClass(clazz, sourceUnit);
+			new ToStringMethodClassTransform().process(cg);//ecg.addDoToString();//ToStringTransform.processClass(clazz, sourceUnit);
 
-			KryoTransform.processClass(clazz, sourceUnit);
-			new CloneMethodClassTransform().process(clazz, sourceUnit);
+			new KryoTransform().process(cg);
+			new CloneMethodClassTransform().process(cg);
 //			ecg.addCreateClone();//CloneTransform.processClass(clazz, sourceUnit);
 				
 	//			addPrimitiveFields(clazz);

@@ -4,19 +4,20 @@ import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.expr.ClassExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
-import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.gen.ClassTransform;
+import org.effortless.gen.GClass;
 
 public class EntityTableClassTransform extends Object implements ClassTransform {
 
 	@Override
-	public void process(ClassNode clazz, SourceUnit sourceUnit) {
+	public void process(GClass clazz) {
 		addAnnotations(clazz);
 	}
 	
 	//@Entity
 	//@Table(name="TABLE")
-	protected void addAnnotations (ClassNode clazz) {
+	protected void addAnnotations (GClass cg) {
+		ClassNode clazz = cg.getClassNode();
 		String tableName = clazz.getNameWithoutPackage().toUpperCase();
 
 		AnnotationNode annEntity = new AnnotationNode(new ClassNode(javax.persistence.Entity.class));
