@@ -1,4 +1,4 @@
-package org.effortless.gen.methods;
+package org.effortless.gen.impl;
 
 import java.util.List;
 

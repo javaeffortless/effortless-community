@@ -42,6 +42,7 @@ import org.codehaus.groovy.ast.stmt.Statement;
 import org.codehaus.groovy.ast.stmt.ThrowStatement;
 import org.codehaus.groovy.ast.stmt.TryCatchStatement;
 import org.codehaus.groovy.control.CompilePhase;
+import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
 import org.effortless.core.ClassNodeHelper;
@@ -1337,5 +1338,114 @@ public class GMethod extends Object {
 	}
 	
 	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public boolean checkSingleAction () {
+		boolean result = false;
+//			if (("imprimir".equals(method.getName()) || "descargar".equals(method.getName()))) {
+		result = true;
+		result = result && checkOnlyPublic();
+		result = result && checkReturnVoid();
+		result = result && checkNoParams();
+		result = result && checkSameClass();
+//			if (!result && ("imprimir".equals(method.getName()) || "descargar".equals(method.getName()))) {
+//				result = true;
+//			}
+//			}
+		return result;
+	}
+	
+	public boolean checkPublic() {
+		boolean result = false;
+		MethodNode method = this.methodNode;
+		int modifiers = (method != null ? method.getModifiers() : null);
+		int op = ClassNode.ACC_PUBLIC | modifiers;
+		result = (op == modifiers);
+		return result;
+	}
+
+	public boolean checkOnlyPublic() {
+		boolean result = false;
+		MethodNode method = this.methodNode;
+		int modifiers = (method != null ? method.getModifiers() : null);
+		result = modifiers == ClassNode.ACC_PUBLIC;
+		return result;
+	}
+
+	public boolean checkSameClass() {
+		boolean result = false;
+		ClassNode clazz = this.classGen.getClassNode();
+		MethodNode method = this.methodNode;
+		ClassNode methodClass = (method != null ? method.getDeclaringClass() : null);
+		String clazzName = (clazz != null ? clazz.getName() : null);
+		String methodClassName = (methodClass != null ? methodClass.getName() : null);
+		result = clazzName.equals(methodClassName);
+		return result;
+	}
+
+	public boolean checkReturnVoid () {
+		boolean result = false;
+		MethodNode method = this.methodNode;
+		ClassNode returnType = (method != null ? method.getReturnType() : null);
+		result = result || ClassHelper.void_WRAPPER_TYPE.equals(returnType);
+		result = result || ClassHelper.VOID_TYPE.equals(returnType);
+		return result;
+	}
+	
+	public boolean checkNoParams () {
+		boolean result = false;
+		MethodNode method = this.methodNode;
+		Parameter[] parameters = (method != null ? method.getParameters() : null);
+		result = (parameters == null || parameters.length <= 0);
+		return result;
+	}
+
+	public String getName() {
+		return (this.methodNode != null ? this.methodNode.getName() : null);
+	}
+	
+	protected static final String[] EXCLUSION_LIST = {"wait", "toString", "notify", "getClass", "notifyAll", "finalize", "registerNatives", "equals", "clone", "hashCode"};
+	
+	public boolean checkBaseMethod() {
+		boolean result = false;
+		String methodName = getName();
+		if (methodName != null) {
+			for (String exclude : EXCLUSION_LIST) {
+				if (methodName.equals(exclude)) {
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;
+	}
 	
 }

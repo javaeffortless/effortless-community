@@ -31,28 +31,25 @@ import org.codehaus.groovy.ast.stmt.TryCatchStatement;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
-import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.ModelException;
-import org.effortless.gen.ClassTransform;
 import org.effortless.gen.GClass;
-import org.effortless.gen.GMethod;
 import org.effortless.model.AbstractEntity;
 
-public class ActionsTransform extends Object implements ClassTransform {
+public class ActionsTransform {
 
-	public void process (GClass clazz) {
+	public static void processClass (ClassNode clazz, SourceUnit sourceUnit) {
 		if (clazz != null) {
-			List<GMethod> methods = clazz.getAllDeclaredMethods();
-			for (GMethod method : methods) {
-				if (!method.checkBaseMethod() && method.checkPublic()) {
-					modifyMethod(method);
+			List<MethodNode> methods = clazz.getAllDeclaredMethods();
+			for (MethodNode method : methods) {
+				if (checkValidMethod(method, clazz, sourceUnit)) {
+					modifyMethod(method, clazz, sourceUnit);
 				}
 			}
 		}
 	}
 	
-	protected static final ClassNode MODEL_EXCEPTION_CLAZZ = ClassNodeHelper.toClassNode(ModelException.class);
-	protected static final ClassNode EXCEPTION_CLAZZ = ClassNodeHelper.toClassNode(Exception.class);
+	protected static final ClassNode MODEL_EXCEPTION_CLAZZ = new ClassNode(ModelException.class);
+	protected static final ClassNode EXCEPTION_CLAZZ = new ClassNode(Exception.class);
 	
 	
 	/*
@@ -100,8 +97,7 @@ public class ActionsTransform extends Object implements ClassTransform {
 	 * 
 	 */
 
-	protected void modifyMethod(GMethod _method) {
-		MethodNode method = _method.getMethodNode();
+	protected static void modifyMethod(MethodNode method, ClassNode clazz, SourceUnit sourceUnit) {
 		Statement oldCode = method.getCode();
 		BlockStatement oldBlock = null;
 		try {
@@ -254,10 +250,10 @@ public class ActionsTransform extends Object implements ClassTransform {
 				}
 				
 				//catch (ModelException e) {
-				tcs.addCatch(gCatchException(method, _method.getClassGen().getClassNode(), _method.getClassGen().getSourceUnit(), MODEL_EXCEPTION_CLAZZ, varStopExecutionTime, varExecutionTime, null));
+				tcs.addCatch(gCatchException(method, clazz, sourceUnit, MODEL_EXCEPTION_CLAZZ, varStopExecutionTime, varExecutionTime, null));
 				
 				//catch (Exception e) {
-				tcs.addCatch(gCatchException(method, _method.getClassGen().getClassNode(), _method.getClassGen().getSourceUnit(), EXCEPTION_CLAZZ, varStopExecutionTime, varExecutionTime, MODEL_EXCEPTION_CLAZZ));
+				tcs.addCatch(gCatchException(method, clazz, sourceUnit, EXCEPTION_CLAZZ, varStopExecutionTime, varExecutionTime, MODEL_EXCEPTION_CLAZZ));
 				
 //				BlockStatement block = new BlockStatement();
 				if (lastStatement != null) {
@@ -346,5 +342,118 @@ public class ActionsTransform extends Object implements ClassTransform {
 		
 		return result;
 	}
+	
+	protected static final String[] EXCLUSION_LIST = {"wait", "toString", "notify", "getClass", "notifyAll", "finalize", "registerNatives", "equals", "clone", "hashCode"};
+	
+	protected static boolean checkValidMethod(MethodNode method, ClassNode clazz,
+			SourceUnit sourceUnit) {
+		boolean result = true;
+		String methodName = method.getName();
+		if (methodName != null) {
+			for (String exclude : EXCLUSION_LIST) {
+				if (methodName.equals(exclude)) {
+					result = false;
+					break;
+				}
+			}
+		}
+		if (result && !method.isPublic()) {
+			result = false;
+		}
+		return result;
+	}
+
+	public static boolean checkAnyValidCustomAction(ClassNode clazz, SourceUnit sourceUnit) {
+		boolean result = false;
+		String[] names = getActionCustomNames(clazz, sourceUnit);
+		result = (names != null && names.length > 0);
+		return result;
+	}
+
+	public static String[] getActionCustomNames(GClass clazz) {
+		String[] result = null;
+		if (clazz != null) {
+			List<String> list = new ArrayList<String>();
+//			List<MethodNode> methods = clazz.getAllDeclaredMethods();
+			List<MethodNode> methods = clazz.getMethods();
+			for (MethodNode method : methods) {
+				if (checkValidActionCustom(method, clazz)) {
+					list.add(method.getName());
+				}
+			}
+			result = list.toArray(new String[0]);
+		}
+		return result;
+	}
+
+	public static boolean checkValidActionCustom(MethodNode method, GClass clazz) {
+		boolean result = false;
+		if (method != null) {
+//			if (("imprimir".equals(method.getName()) || "descargar".equals(method.getName()))) {
+			result = true;
+			result = result && checkOnlyPublic(method);
+			result = result && checkReturnVoid(method);
+			result = result && checkNoParams(method);
+			result = result && checkSameClass(method, clazz);
+//			if (!result && ("imprimir".equals(method.getName()) || "descargar".equals(method.getName()))) {
+//				result = true;
+//			}
+//			}
+		}
+		return result;
+	}
+	
+	public static boolean checkPublic(MethodNode method) {
+		boolean result = false;
+		if (method != null) {
+			int modifiers = method.getModifiers();
+			int op = ClassNode.ACC_PUBLIC | modifiers;
+			result = (op == modifiers);
+		}
+		return result;
+	}
+
+	public static boolean checkOnlyPublic(MethodNode method) {
+		boolean result = false;
+		if (method != null) {
+			int modifiers = method.getModifiers();
+			result = modifiers == ClassNode.ACC_PUBLIC;
+		}
+		return result;
+	}
+
+	public static boolean checkSameClass(MethodNode method, ClassNode clazz) {
+		boolean result = false;
+		if (clazz != null && method != null) {
+			ClassNode methodClass = method.getDeclaringClass();
+			String clazzName = clazz.getName();
+			String methodClassName = (methodClass != null ? methodClass.getName() : null);
+			result = clazzName.equals(methodClassName);
+		}
+		return result;
+	}
+
+	public static boolean checkReturnVoid (MethodNode method) {
+		boolean result = false;
+		if (method != null) {
+			ClassNode returnType = method.getReturnType();
+			result = result || ClassHelper.void_WRAPPER_TYPE.equals(returnType);
+			result = result || ClassHelper.VOID_TYPE.equals(returnType);
+		}
+		return result;
+	}
+	
+	public static boolean checkNoParams (MethodNode method) {
+		boolean result = false;
+		Parameter[] parameters = (method != null ? method.getParameters() : null);
+		result = (parameters == null || parameters.length <= 0);
+		return result;
+	}
+	
+	
+//si return type => se considera de consulta => NOLOG
+//si NO return type => se considera de modificacion => LOG
+	
+	
 	
 }

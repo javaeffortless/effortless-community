@@ -2,6 +2,7 @@ package org.effortless.gen;
 
 import java.io.File;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -143,6 +144,31 @@ public class GField extends Object {
 
 	public ClassNode getType () {
 		return (this.field != null ? this.field.getType() : null);
+	}
+
+	public void setModifiers(int modifiers) {
+		if (this.field != null) {
+			this.field.setModifiers(modifiers);
+		}
+	}
+
+	public void setType(ClassNode type) {
+		if (type != null && this.field != null) {
+			this.field.setType(type);
+		}
+	}
+	
+	public void setType(GClass type) {
+		if (type != null) {
+			setType(type.getClassNode());
+		}
+	}
+
+	public GMethod getGetterMethod() {
+		GMethod result = null;
+		String methodName = getGetterName();
+		result = (this.clazz != null ? this.clazz.getMethod(methodName) : null);
+		return result;
 	}
 	
 }

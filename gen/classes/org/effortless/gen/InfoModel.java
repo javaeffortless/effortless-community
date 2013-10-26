@@ -1,15 +1,13 @@
-package org.effortless.gen.fields;
+package org.effortless.gen;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 import org.effortless.core.Collections;
-import org.effortless.gen.GClass;
-import org.effortless.gen.GField;
 
-public class Restrictions {
+public class InfoModel extends Object {
 
+	
 	public static final String[] ARRAY_SINGLE_UNIQUE = {"code", "codigo", "cif", "nif", "dni", "passport"};
 	public static final Object[][] ARRAY_SINGLE_UNIQUE_DEPENDS = {{"name", new String[] {"surname"}}, {"nombre", new String[] {"apellido"}}};
 	
@@ -119,4 +117,50 @@ public class Restrictions {
 		return result;
 	}
 
+	public static boolean isSingleUnique(GField field) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public static boolean isNotNull(GField field) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public static boolean checkCommentField(String fieldName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	public static boolean checkAnyValidCustomAction(GClass clazz) {
+		boolean result = false;
+		String[] names = getActionCustomNames(clazz);
+		result = (names != null && names.length > 0);
+		return result;
+	}
+	
+	public static String[] getActionCustomNames(GClass clazz) {
+		String[] result = null;
+		if (clazz != null) {
+			List<String> list = new ArrayList<String>();
+//			List<MethodNode> methods = clazz.getAllDeclaredMethods();
+			List<GMethod> methods = clazz.getMethods();
+			for (GMethod method : methods) {
+				if (method.checkSingleAction()) {
+					list.add(method.getName());
+				}
+			}
+			result = list.toArray(new String[0]);
+		}
+		return result;
+	}
+
+	public static List<GField> getFinderProperties(GClass clazz) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+//si return type => se considera de consulta => NOLOG
+//si NO return type => se considera de modificacion => LOG
+	
 }

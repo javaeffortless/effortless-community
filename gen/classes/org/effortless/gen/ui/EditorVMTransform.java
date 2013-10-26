@@ -146,7 +146,7 @@ public class EditorVMTransform extends Object implements ClassTransform {
 		zul.add("  <editor-window>");
 
 		for (GField property : properties) {
-			String widgetField = fieldTransform.writeZul(property, varId, "item", true);
+			String widgetField = fieldTransform.writeZul(property);
 			zul.add("    " + widgetField + "");
 		}
 		

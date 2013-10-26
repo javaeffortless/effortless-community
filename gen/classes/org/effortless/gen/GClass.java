@@ -65,6 +65,23 @@ public class GClass extends Object {
 		this.sourceUnit = sourceUnit;
 	}
 	
+	protected GApplication application;
+	
+	protected void initiateApplication () {
+		this.application = null;
+	}
+	
+	public GApplication getApplication () {
+		return this.application;
+	}
+	
+	public void setApplication (GApplication newValue) {
+		if (newValue != null) {
+			newValue.addClass(this);
+		}
+		this.application = newValue;
+	}
+	
 	protected SourceUnit sourceUnit;
 	
 	public SourceUnit getSourceUnit () {
@@ -652,4 +669,84 @@ public class GClass extends Object {
 		return result;
 	}
 
+	public boolean hasAnnotation (Class clazz) {
+		boolean result = false;
+		if (clazz != null) {
+			ClassNode cNode = ClassNodeHelper.toClassNode(clazz);
+			result = hasAnnotation(cNode);
+		}
+		return result;
+	}
+
+	public boolean hasAnnotation (ClassNode clazz) {
+		boolean result = false;
+		if (clazz != null) {
+			List<AnnotationNode> annotations = (this.clazz != null ? this.clazz.getAnnotations(clazz) : null);
+			result = !(annotations != null && annotations.size() > 0);
+		}
+		return result;
+	}
+
+	public GField getProperty (String name) {
+		GField result = null;
+		name = (name != null ? name.trim() : "");
+		if (name.length() > 0) {
+			FieldNode field = this.clazz.getField(name);
+			result = new GField(this, field);
+		}
+		return result;
+	}
+	
+	public List<GField> getProperties(String[] names) {
+		List<GField> result = null;
+		
+		if (names != null && names.length > 0) {
+			result = new ArrayList<GField>();
+			for (String name : names) {
+				GField property = getProperty(name);
+				if (property != null) {
+					result.add(property);
+				}
+			}
+		}
+		
+		return result;
+	}
+
+	public GAnnotation getAnnotation (Class<?> clazz) {
+		GAnnotation result = null;
+		List<AnnotationNode> annotations = this.clazz.getAnnotations(ClassNodeHelper.toClassNode(Finder.class));
+		if (annotations != null && annotations.size() == 1) {
+			AnnotationNode ann = annotations.get(0);
+			result = new GAnnotation(ann);
+		}
+		return result;
+	}
+
+	public GMethod getMethod (String name) {
+		GMethod result = null;
+		List<MethodNode> methods = (this.clazz != null ? this.clazz.getMethods(name) : null);
+		if (methods != null && methods.size() == 1) {
+			MethodNode method = methods.get(0);
+			result = new GMethod(method, this);
+		}
+		return result;
+	}
+
+	public List<GMethod> getAllDeclaredMethods() {
+		List<GMethod> result = null;
+		List<MethodNode> methods = (this.clazz != null ? this.clazz.getAllDeclaredMethods() : null);
+		// TODO Auto-generated method stub
+		return result;
+	}
+
+	public List<GMethod> getMethods() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	protected List<GMethod> toMethods (List<MethodNode> methods) {
+		List<GMethod> result 0 
+	}
+	
 }

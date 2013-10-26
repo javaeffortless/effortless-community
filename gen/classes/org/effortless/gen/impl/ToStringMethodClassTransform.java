@@ -2,9 +2,9 @@ package org.effortless.gen.impl;
 
 import java.util.List;
 
+
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
-import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.gen.GClass;
 import org.effortless.gen.ClassTransform;
 import org.effortless.gen.GMethod;

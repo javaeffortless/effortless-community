@@ -14,48 +14,48 @@ public class FieldTransform {
 		
 	}
 	
-	public String writeZul (GField field, String parentId, String itemId, boolean checkReadonly) {
+	public String writeZul (GField field) {
 		String result = null;
 		
 		if (field.isString()) {
-			result = textField(field, parentId, itemId, checkReadonly);
+			result = textField(field);
 		}
 		else if (field.isTime()) {
-			result = timeField(field, parentId, itemId, checkReadonly);
+			result = timeField(field);
 		}
 		else if (field.isTimestamp()) {
-			result = timestampField(field, parentId, itemId, checkReadonly);
+			result = timestampField(field);
 		}
 		else if (field.isDate()) {
-			result = dateField(field, parentId, itemId, checkReadonly);
+			result = dateField(field);
 		}
 		else if (field.isBoolean()) {
-			result = boolField(field, parentId, itemId, checkReadonly);
+			result = boolField(field);
 		}
 		else if (field.isInteger()) {
-			result = intField(field, parentId, itemId, checkReadonly);
+			result = intField(field);
 		}
 		else if (field.isDouble()) {
-			result = numberField(field, parentId, itemId, checkReadonly);
+			result = numberField(field);
 		}
 		else if (field.isEnum()) {
-			result = enumField(field, parentId, itemId, checkReadonly);
+			result = enumField(field);
 		}
 		else if (field.isFile() || field.isType(org.effortless.model.FileEntity.class)) {
-			result = fileField(field, parentId, itemId, checkReadonly);
+			result = fileField(field);
 		}
 		else if (field.isCollection() || field.isList()) {
-			result = listField(field, parentId, itemId, checkReadonly);
+			result = listField(field);
 		}
 		else {
-			result = refField(field, parentId, itemId, checkReadonly);
+			result = refField(field);
 		}
 		
 		return result;
 	}
 
 	
-	public String textField (GField field, String parentId, String itemId, boolean checkReadonly) {
+	public String textField (GField field) {
 		String result = null;
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);
@@ -89,7 +89,7 @@ public class FieldTransform {
 		return result;
 	}
 	
-	public String intField (GField field, String parentId, String itemId, boolean checkReadonly) {
+	public String intField (GField field) {
 		String result = null;
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);
@@ -99,7 +99,7 @@ public class FieldTransform {
 		return result;
 	}
 	
-	public String dateField (GField field, String parentId, String itemId, boolean checkReadonly) {
+	public String dateField (GField field) {
 		String result = null;
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);
@@ -109,7 +109,7 @@ public class FieldTransform {
 		return result;
 	}
 	
-	public String timeField (GField field, String parentId, String itemId, boolean checkReadonly) {
+	public String timeField (GField field) {
 		String result = null;
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);
@@ -118,7 +118,7 @@ public class FieldTransform {
 		return result;
 	}
 	
-	public String timestampField (GField field, String parentId, String itemId, boolean checkReadonly) {
+	public String timestampField (GField field) {
 		String result = null;
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);
@@ -127,7 +127,7 @@ public class FieldTransform {
 		return result;
 	}
 	
-	public String boolField (GField field, String parentId, String itemId, boolean checkReadonly) {
+	public String boolField (GField field) {
 		String result = null;
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);
@@ -136,7 +136,7 @@ public class FieldTransform {
 		return result;
 	}
 	
-	public String numberField (GField field, String parentId, String itemId, boolean checkReadonly) {
+	public String numberField (GField field) {
 		String result = null;
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);
@@ -146,7 +146,7 @@ public class FieldTransform {
 	
 	
 	
-	public String enumField (GField field, String parentId, String itemId, boolean checkReadonly) {
+	public String enumField (GField field) {
 		String result = null;
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);
@@ -157,7 +157,7 @@ public class FieldTransform {
 		return result;
 	}
 	
-	public String fileField (GField field, String parentId, String itemId, boolean checkReadonly) {
+	public String fileField (GField field) {
 		String result = null;
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);
@@ -180,7 +180,7 @@ public class FieldTransform {
 		return checkKeywords(field, new String[] {"photo", "image", "foto", "icon"});
 	}
 	
-	public String listField (GField field, String parentId, String itemId, boolean checkReadonly) {
+	public String listField (GField field) {
 		String result = null;
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);
@@ -193,7 +193,7 @@ public class FieldTransform {
 		return result;
 	}
 	
-	public String refField (GField field, String parentId, String itemId, boolean checkReadonly) {
+	public String refField (GField field) {
 		String result = null;
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);

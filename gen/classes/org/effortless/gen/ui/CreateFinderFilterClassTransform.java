@@ -1,32 +1,45 @@
 package org.effortless.gen.ui;
 
-import java.io.File;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
-import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
-import org.codehaus.groovy.ast.FieldNode;
 import org.effortless.core.ClassNodeHelper;
-import org.effortless.core.StringUtils;
 import org.effortless.gen.ClassTransform;
 import org.effortless.gen.GClass;
 import org.effortless.gen.GField;
 import org.effortless.gen.GMethod;
-import org.effortless.gen.ViewClassGen;
-import org.effortless.gen.fields.Restrictions;
+import org.effortless.gen.InfoModel;
 import org.effortless.model.CriteriaFilter;
 
 public class CreateFinderFilterClassTransform extends Object implements ClassTransform {
 
+	public CreateFinderFilterClassTransform () {
+		super();
+		initiate();
+	}
+	
+	protected void initiate () {
+		initiateResult();
+	}
+	
+	protected GClass result;
+	
+	protected void initiateResult () {
+		this.result = null;
+	}
+	
+	public GClass getResult () {
+		return this.result;
+	}
+	
+	protected void setResult (GClass newValue) {
+		this.result = newValue;
+	}
+	
 	@Override
 	public void process(GClass clazz) {
-		List<AnnotationNode> annotations = (this.clazz != null ? this.clazz.getAnnotations(FILTER_ANN) : null);
-		if (!(annotations != null && annotations.size() > 0)) {
+		if (!clazz.hasAnnotation(FILTER_ANN)) {
 			String cName = getFinderFilterName(clazz);
 			GClass cg = new GClass(cName, clazz.getSourceUnit());
 			cg.setSuperClass(cg.createGenericType(CriteriaFilter.class, clazz.getClassNode()));
@@ -40,7 +53,6 @@ public class CreateFinderFilterClassTransform extends Object implements ClassTra
 			}
 			
 			GMethod mg = null;
-			GMethod nb = null;
 	
 	//		protected Class<?> doGetFilterClass () {
 	//			return Item.class;
@@ -65,6 +77,8 @@ public class CreateFinderFilterClassTransform extends Object implements ClassTra
 				}
 			}
 			mg.add(mg.call(mg.cteSuper(), "setupConditions"));
+			
+			setResult(cg);
 		}
 	}
 	
@@ -78,7 +92,7 @@ public class CreateFinderFilterClassTransform extends Object implements ClassTra
 	
 	public List<GField> getFinderProperties (GClass clazz) {
 		List<GField> result = null;
-		result = Restrictions.listNotNullUnique(clazz);
+		result = InfoModel.listNotNullUnique(clazz);
 		result = (result != null ? result : new ArrayList<GField>());
 		int length = (result != null ? result.size() : 0);
 		if (length < 5) {
@@ -97,8 +111,6 @@ public class CreateFinderFilterClassTransform extends Object implements ClassTra
 	
 	public void addFilterProperty(GClass filter, GField field) {
 		if (field != null) {
-			String fName = field.getName();
-			
 			if (field.isString()) {
 				addFilterPropertySimple(filter, field);
 			}
