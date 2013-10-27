@@ -1,39 +1,20 @@
 package org.effortless.gen.classes;
 
-import java.io.IOException;
 import java.util.List;
-
-import nu.xom.ParsingException;
 
 import org.apache.commons.io.FilenameUtils;
 import org.codehaus.groovy.transform.*;
 
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.control.*;
-import org.codehaus.groovy.ast.stmt.*;
-import org.codehaus.groovy.ast.expr.*;
-import org.codehaus.groovy.syntax.*;
-import org.codehaus.groovy.ast.builder.*;
 import org.objectweb.asm.Opcodes;
 
-import org.effortless.core.ModelException;
-import org.effortless.gen.AppTransform;
-import org.effortless.gen.ClassTransform;
+import org.effortless.gen.GModule;
+import org.effortless.gen.Transform;
+import org.effortless.gen.GApplication;
 import org.effortless.gen.GClass;
 import org.effortless.gen.GenContext;
-import org.effortless.gen.ModuleTransform;
-import org.effortless.gen.fields.DeletedField;
-import org.effortless.gen.fields.PkField;
-import org.effortless.gen.fields.UserFields;
-import org.effortless.gen.fields.VersionField;
-import org.effortless.gen.methods.*;
-import org.effortless.model.CustomEntityTuplizer;
-import org.effortless.model.FieldChangeSupportGenerator;
-import org.effortless.model.FileEntity;
-import org.effortless.model.LogData;
 import org.effortless.model.SessionManager;
-import org.effortless.model.StartupDb;
-//import org.effortless.model.properties.*;
 import org.effortless.server.ServerContext;
 
 
@@ -50,29 +31,32 @@ public class EntityASTTransformation implements ASTTransformation, Opcodes {
 //			processClass(clazz)
 //		}
 		
-		String appId = GenContext.loadAppId(sourceUnit);
+		String appId = loadAppId(sourceUnit);
 		if (appId != null) {
-			AppTransform appTransform = GenContext.getAppTransform(appId, true);
-			
-			if (!appTransform.containsUnit(sourceUnit)) {
-				List<ModuleTransform> moduleTransforms = GenContext.getModuleTransforms();
+			GApplication app = GenContext.getApplication(appId, true);
+			GModule module = new GModule(sourceUnit);
+			if (!app.containsUnit(sourceUnit)) {
+				
+				List<Transform<GModule>> moduleTransforms = GenContext.getModuleTransforms();
 				if (moduleTransforms != null) {
-					for (ModuleTransform transform : moduleTransforms) {
-						transform.process(sourceUnit);
+					for (Transform<GModule> transform : moduleTransforms) {
+						transform.process(module);
 					}
 				}
 //				if (EntityClassTransformation.ONE_PACKAGE) {
 //					setupPackage(sourceUnit);
 //				}
-				List<ClassTransform> classTransforms = GenContext.getClassTransforms();
+				List<Transform> classTransforms = GenContext.getClassTransforms();
 				if (classTransforms != null) {
 					if (nodes == null) {
 						List<ClassNode> classes = sourceUnit.getAST().getClasses();
 						int size = (classes != null ? classes.size() : 0);
 						for (int i = 0; i < size; i++) {
 							ClassNode clazz = classes.get(i);
+							
 							GClass gClazz = new GClass(clazz, sourceUnit);
-							for (ClassTransform transform : classTransforms) {
+							app.addClass(gClazz);
+							for (Transform transform : classTransforms) {
 								transform.process(gClazz);
 							}
 	//						EntityClassTransformation.processClass(clazz, sourceUnit);
@@ -83,7 +67,8 @@ public class EntityASTTransformation implements ASTTransformation, Opcodes {
 		//					nodes.each { ASTNode node ->
 								if (node instanceof ClassNode) {
 									GClass gClazz = new GClass((ClassNode)node, sourceUnit);
-									for (ClassTransform transform : classTransforms) {
+									app.addClass(gClazz);
+									for (Transform transform : classTransforms) {
 										transform.process(gClazz);
 									}
 	//								EntityClassTransformation.processClass((ClassNode)node, sourceUnit);
@@ -91,9 +76,51 @@ public class EntityASTTransformation implements ASTTransformation, Opcodes {
 							}
 					}
 				}
-				appTransform.addItem(nodes, sourceUnit);
+//				appTransform.addItem(nodes, sourceUnit);
 			}
 		}
+	}
+
+	protected String loadAppId (SourceUnit sourceUnit) {
+		String result = null;
+		String pkgName = getPackage(sourceUnit);
+		result = (pkgName != null ? SessionManager.getDbId(pkgName) : null);
+		return result;
+	}
+
+	protected String getPackage (SourceUnit sourceUnit) {
+		String result = null;
+		if (sourceUnit != null) {
+			ModuleNode module = sourceUnit.getAST();
+			result = module.getPackageName();
+			if (result == null) {
+				String rootCtx = ServerContext.getRootContext();
+				String sourceUnitName = sourceUnit.getName();
+				if (sourceUnitName.startsWith(rootCtx)) {
+					if (GClass.ONE_PACKAGE) {
+						String fileName = FilenameUtils.getName(sourceUnitName);
+						sourceUnitName = (fileName != null ? sourceUnitName.substring(0, sourceUnitName.length() - (fileName.length() + 1)) : sourceUnitName);
+						if (rootCtx.length() <= sourceUnitName.length()) {
+							String suffix = sourceUnitName.substring(rootCtx.length());
+							if (suffix != null) {
+								result = suffix.replaceAll("/", ".");
+							}
+						}
+					}
+					else {
+						String extension = FilenameUtils.getExtension(sourceUnitName);
+						sourceUnitName = (extension != null ? sourceUnitName.substring(0, sourceUnitName.length() - (extension.length() + 1)) : sourceUnitName);
+						if (rootCtx.length() <= sourceUnitName.length()) {
+							String suffix = sourceUnitName.substring(rootCtx.length());
+							if (suffix != null) {
+								result = suffix.replaceAll("/", ".");
+							}
+						}
+					}
+				}
+			}
+		}
+		return result;
 	}
 	
 }

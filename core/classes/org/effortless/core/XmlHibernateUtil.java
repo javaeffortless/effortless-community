@@ -24,12 +24,13 @@ public class XmlHibernateUtil {
 			Elements mappings = (sf != null ? sf.getChildElements("mapping") : null);
 			int size = (mappings != null ? mappings.size() : 0);
 			List<Element> toRemove = new ArrayList<Element>();
+			Class<?> clazz = null;
 			for (int i = 0; i < size; i++) {
 				Element mapping = mappings.get(i);
 				String entity = mapping.getAttributeValue("class");
 				if (entity != null) {
 					try {
-						cl.loadClass(entity);
+						clazz = cl.loadClass(entity);
 					}
 					catch (Throwable t) {
 						toRemove.add(mapping);

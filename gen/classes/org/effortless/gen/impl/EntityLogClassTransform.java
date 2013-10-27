@@ -14,30 +14,35 @@ import org.codehaus.groovy.ast.stmt.ReturnStatement;
 import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.ann.NoLog;
 import org.effortless.core.ClassNodeHelper;
+import org.effortless.gen.GApplication;
 import org.effortless.gen.GClass;
-import org.effortless.gen.ClassTransform;
+import org.effortless.gen.Transform;
+import org.effortless.gen.GMethod;
 import org.effortless.gen.GenContext;
 import org.effortless.model.LogData;
 import org.objectweb.asm.Opcodes;
 
-public class EntityLogClassTransform extends Object implements ClassTransform {
+public class EntityLogClassTransform extends Object implements Transform<GClass> {
 
 	public static final ClassNode NO_LOG_CLAZZ = ClassNodeHelper.toClassNode(NoLog.class);
 	
 	@Override
-	public void process(GClass cg) {
-		ClassNode clazz = cg.getClassNode();
-		List<AnnotationNode> annotationsNoLog = clazz.getAnnotations(NO_LOG_CLAZZ);
-		if (false && !(annotationsNoLog != null && annotationsNoLog.size() > 0)) {
-			String keyLogData = clazz.getName() + "." + LogData.KEY_CLASS_NEEDS;
-			GenContext.set(keyLogData, Boolean.TRUE);
-			ClassNode logClass = tryNeedsLogEntity(clazz, cg.getSourceUnit());
+	public void process(GClass clazz) {
+		if (false && !clazz.hasAnnotation(NO_LOG_CLAZZ)) {
+			GApplication app = clazz.getApplication();
+			GClass logClass = app.getLogClass();
+			if (logClass == null) {
+				CreateLogEntityTransform creator = new CreateLogEntityTransform();
+				creator.process(clazz);
+				logClass = creator.getResult();
+				app.setLogClass(logClass);
+			}
 			if (logClass != null) {
-				addMethodNewLogData(clazz, cg.getSourceUnit(), logClass);
+				addMethodNewLogData(clazz, logClass);
 			}
 		}
 		else {
-			disableLog(clazz, cg.getSourceUnit());
+			disableLog(clazz);
 			System.out.println("NO LOG for " + clazz.getName());
 		}
 	}
@@ -49,34 +54,28 @@ public class EntityLogClassTransform extends Object implements ClassTransform {
 		return false;
 	}
 	 */
-	protected static MethodNode disableLog(ClassNode clazz, SourceUnit sourceUnit) {
-		MethodNode result = null;
-		ReturnStatement code = new ReturnStatement(ConstantExpression.PRIM_FALSE);
-		result = new MethodNode("doCheckLog", Opcodes.ACC_PUBLIC, ClassHelper.boolean_TYPE, Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, code);
-		clazz.addMethod(result);
+	protected GMethod disableLog(GClass clazz) {
+		GMethod result = null;
+//		MethodNode result = null;
+//		ReturnStatement code = new ReturnStatement(ConstantExpression.PRIM_FALSE);
+//		result = new MethodNode("doCheckLog", Opcodes.ACC_PUBLIC, ClassHelper.boolean_TYPE, Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, code);
+//		clazz.addMethod(result);
+		
+		result = clazz.addMethod("doCheckLog").setPublic(true).setReturnType(ClassHelper.boolean_TYPE);
+		result.addReturn(result.cteFalse());
+		
 		return result;
 	}
 
-	public static ClassNode tryNeedsLogEntity(ClassNode clazz, SourceUnit sourceUnit) {
-		return GClass.tryNeedsNewExternalEntity(clazz, sourceUnit, LogData.class, LogData.KEY_CLASS_NEEDS, LogData.KEY_APP_NEEDS, null);
+	/*
+	protected LogData _newInstanceLogData () {
+		return new LogData();
 	}
-
-		/*
-		protected LogData _newInstanceLogData () {
-			return new LogData();
-		}
-	* 
-	*/
-	protected static MethodNode addMethodNewLogData(ClassNode clazz,
-		SourceUnit sourceUnit, ClassNode logClazz) {
-		MethodNode result = null;
-		
-		ConstructorCallExpression newInstance = new ConstructorCallExpression(logClazz, new ArgumentListExpression());
-		ReturnStatement code = new ReturnStatement(newInstance);
-		ClassNode logClassNode = new ClassNode(LogData.class);
-		
-		result = new MethodNode("_newInstanceLogData", Opcodes.ACC_PROTECTED, logClassNode, Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, code);
-		clazz.addMethod(result);
+	 */
+	protected GMethod addMethodNewLogData(GClass clazz, GClass logClazz) {
+		GMethod result = null;
+		result = clazz.addMethod("_newInstanceLogData").setProtected(true).setReturnType(LogData.class);
+		result.addReturn(result.callConstructor(logClazz.getClassNode()));
 		return result;
 	}
 

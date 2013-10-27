@@ -1,6 +1,11 @@
 package org.effortless.gen.impl;
 
-import org.effortless.gen.ClassTransform;
+import java.util.List;
+
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.effortless.gen.GField;
+import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
 import org.effortless.gen.classes.ReferenciableTransform;
 import org.effortless.gen.classes.SavePropertiesTransform;
@@ -8,7 +13,7 @@ import org.effortless.gen.fields.FinalFieldsTransform;
 import org.effortless.gen.fields.MappingPropertiesClassTransform;
 import org.effortless.gen.fields.PropertiesClassTransform;
 
-public class HibernateEntityClassTransform extends Object implements ClassTransform {
+public class HibernateEntityClassTransform extends Object implements Transform<GClass> {
 
 	@Override
 	public void process(GClass cg) {
@@ -20,8 +25,13 @@ public class HibernateEntityClassTransform extends Object implements ClassTransf
 			new SetupEntityParentClassTransform().process(cg);
 			new EntityTableClassTransform().process(cg);
 		
-			new PropertiesClassTransform().process(cg);
-			new MappingPropertiesClassTransform().process(cg);
+			PropertiesClassTransform pT = new PropertiesClassTransform();
+			MappingPropertiesClassTransform mT = new MappingPropertiesClassTransform();
+			List<GField> fields = cg.getFields();
+			for (GField field : fields) {
+				pT.process(field);
+				mT.process(field);
+			}
 				
 			if (false) {
 				new FinalFieldsTransform().process(cg);

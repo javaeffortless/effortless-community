@@ -1,30 +1,14 @@
 package org.effortless.gen.fields;
 
-import java.util.List;
-
-import org.codehaus.groovy.ast.ClassNode;
-import org.codehaus.groovy.ast.FieldNode;
-import org.codehaus.groovy.ast.expr.Expression;
-import org.effortless.core.Collections;
-import org.effortless.gen.ClassTransform;
-import org.effortless.gen.GClass;
+import org.effortless.gen.Transform;
 import org.effortless.gen.GField;
-import org.effortless.gen.GMethod;
-import org.effortless.gen.GenContext;
-import org.effortless.gen.impl.CreateFileEntityTransform;
 import org.effortless.model.FileEntity;
-import org.objectweb.asm.Opcodes;
 
-public abstract class AbstractPropertiesClassTransform extends Object implements ClassTransform {
+public abstract class AbstractPropertiesClassTransform extends Object implements Transform<GField> {
 
 	@Override
-	public void process(GClass cg) {
-		ClassNode clazz = cg.getClassNode();
-		List<FieldNode> fields = clazz.getFields();
-		for (FieldNode field : fields) {
-			GField gField = new GField(cg, field);
-			processField(gField);
-		}
+	public void process(GField gField) {
+		processField(gField);
 	}
 
 	public void processField (GField field) {
@@ -46,7 +30,7 @@ public abstract class AbstractPropertiesClassTransform extends Object implements
 		else if (field.isEnum()) {
 			enumProcessField(field);
 		}
-		else if (field.isFile()) {
+		else if (field.isFile() || field.isType(FileEntity.class)) {
 			fileProcessField(field);
 		}
 		else if (field.isCollection()) {

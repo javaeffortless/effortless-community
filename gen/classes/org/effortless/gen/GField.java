@@ -12,7 +12,7 @@ import org.codehaus.groovy.ast.FieldNode;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.model.Entity;
 
-public class GField extends Object {
+public class GField extends Object implements GNode {
 
 	public GField () {
 		super();
@@ -169,6 +169,14 @@ public class GField extends Object {
 		String methodName = getGetterName();
 		result = (this.clazz != null ? this.clazz.getMethod(methodName) : null);
 		return result;
+	}
+
+	public GApplication getApplication () {
+		return (this.clazz != null ? this.clazz.getApplication() : null);
+	}
+
+	public String toString () {
+		return this.getClazz() + "->" + getName() + ":" + getType().getName();
 	}
 	
 }

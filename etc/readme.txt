@@ -2,6 +2,15 @@
 iron speed
 double guardarlo en db como long y definir previamente nº decimales, de esta manera evitamos problemas de redondeo
 
+Idea muy buena. Generar plantilla para generar 100% la parte visual de una aplicación 100% asistente wizard. ¿Qué quiere hacer? Siguiente ¿Cómo quiere hacerlo? Siguiente Introduzca los siguientes campos Siguiente Confirme la operación.
+
+DynamicFinders
+//Emplear la técnica descrita en:
+//http://groovy.codehaus.org/Using+methodMissing+and+propertyMissing
+//http://groovy.codehaus.org/ExpandoMetaClass
+//http://groovy.codehaus.org/ExpandoMetaClass+-+Dynamic+Method+Names
+
+
 
 List-Field, Text-Field, Bool-Field -> FUSIONAR EN UN COMPONENTE ÚNICO con el atributo type como en HTML pasa con input: <field type="text" . Pero el campo type será opcional.
 MVVM No se usará mediante @bind, sino mediante @nombre, ejemplo: <field value="@nombre" />

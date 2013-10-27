@@ -1,12 +1,10 @@
 package org.effortless.gen;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
@@ -41,16 +39,13 @@ import org.codehaus.groovy.ast.stmt.ReturnStatement;
 import org.codehaus.groovy.ast.stmt.Statement;
 import org.codehaus.groovy.ast.stmt.ThrowStatement;
 import org.codehaus.groovy.ast.stmt.TryCatchStatement;
-import org.codehaus.groovy.control.CompilePhase;
-import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.Collections;
-import org.effortless.model.AbstractEntity;
 import org.objectweb.asm.Opcodes;
 
-public class GMethod extends Object {
+public class GMethod extends Object implements GNode {
 
 	protected GMethod () {
 		super();
@@ -182,6 +177,11 @@ public class GMethod extends Object {
 
 	public AnnotationNode addAnnotation (Class<?> annotation) {
 		return addAnnotation(ClassNodeHelper.toClassNode(annotation));
+	}
+	
+	public GMethod addAnnotation (AnnotationNode annotation) {
+		this.methodNode.addAnnotation(annotation);
+		return this;
 	}
 	
 	public AnnotationNode addAnnotation (ClassNode annotation) {

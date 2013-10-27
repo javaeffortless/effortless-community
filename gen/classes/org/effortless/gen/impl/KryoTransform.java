@@ -19,7 +19,7 @@ import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
 import org.effortless.core.ClassNodeHelper;
-import org.effortless.gen.ClassTransform;
+import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
 import org.objectweb.asm.Opcodes;
 
@@ -46,7 +46,7 @@ import org.objectweb.asm.Opcodes;
  * @author jesus
  *
  */
-public class KryoTransform extends Object implements ClassTransform {
+public class KryoTransform extends Object implements Transform<GClass> {
 
 	public static final ClassNode INPUT = ClassNodeHelper.toClassNode(com.esotericsoftware.kryo.io.Input.class);
 	public static final ClassNode OUTPUT = ClassNodeHelper.toClassNode(com.esotericsoftware.kryo.io.Output.class);

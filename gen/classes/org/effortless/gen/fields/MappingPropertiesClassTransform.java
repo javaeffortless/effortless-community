@@ -1,13 +1,12 @@
 package org.effortless.gen.fields;
 
 import org.codehaus.groovy.ast.AnnotationNode;
-import org.effortless.gen.ClassTransform;
 import org.effortless.gen.GField;
 import org.effortless.gen.GMethod;
 import org.effortless.gen.InfoModel;
 import org.objectweb.asm.Opcodes;
 
-public class MappingPropertiesClassTransform extends AbstractPropertiesClassTransform implements ClassTransform {
+public class MappingPropertiesClassTransform extends AbstractPropertiesClassTransform {
 
 	protected void textProcessField (GField field) {
 		GMethod m = field.getGetterMethod();
@@ -76,6 +75,7 @@ public class MappingPropertiesClassTransform extends AbstractPropertiesClassTran
 		ann.addMember("cascade", getter.enumValue(javax.persistence.CascadeType.class, "ALL"));
 		ann.addMember("targetEntity", getter.cteClass(field.getType()));
 		ann.addMember("fetch", getter.enumValue(javax.persistence.FetchType.class, "LAZY"));
+		getter.addAnnotation(ann);
 		getter.addAnnotation(javax.persistence.JoinColumn.class, "name", columnName);//@javax.persistence.JoinColumn(name="FICHERO")
 
 		//@javax.persistence.Basic(fetch = javax.persistence.FetchType.EAGER)

@@ -1,24 +1,27 @@
 package org.effortless.gen.impl;
 
-import org.codehaus.groovy.ast.ClassNode;
+import org.effortless.core.ClassNodeHelper;
 import org.effortless.gen.GClass;
 import org.effortless.gen.GField;
 import org.effortless.model.FileEntity;
 import org.effortless.model.FileEntityTuplizer;
 
-public class CreateFileEntityTransform extends Object  {
+public class CreateFileEntityTransform extends AbstractCreateClassTransform<GField>  {
 
-	public void process (GField field) {
-		
-		
-		ClassNode fileClazz = GClass.tryNeedsNewExternalEntity(field.getClazz(), field.getClazz().getSourceUnit(), FileEntity.class, FileEntity.KEY_CLASS_NEEDS, FileEntity.KEY_APP_NEEDS, FileEntityTuplizer.class);
-		
-		
-	}
-
-	public GClass getResult() {
-		// TODO Auto-generated method stub
-		return null;
+	public CreateFileEntityTransform () {
+		super();
 	}
 	
+	public void process (GField field) {
+		GClass result = null;
+		
+		result = tryNeedsNewExternalEntity(field.getClazz(), ClassNodeHelper.toClassNode(FileEntity.class), FileEntityTuplizer.class);
+
+		FileEntityTransform transform = new FileEntityTransform();
+		transform.process(result);
+
+		
+		setResult(result);
+	}
+
 }

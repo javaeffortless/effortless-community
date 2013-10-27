@@ -5,14 +5,14 @@ import java.util.List;
 
 import org.codehaus.groovy.ast.ClassNode;
 import org.effortless.core.ClassNodeHelper;
-import org.effortless.gen.ClassTransform;
+import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
 import org.effortless.gen.GField;
 import org.effortless.gen.GMethod;
 import org.effortless.gen.InfoModel;
 import org.effortless.model.CriteriaFilter;
 
-public class CreateFinderFilterClassTransform extends Object implements ClassTransform {
+public class CreateFinderFilterClassTransform extends Object implements Transform<GClass> {
 
 	public CreateFinderFilterClassTransform () {
 		super();

@@ -8,9 +8,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.io.FilenameUtils;
-import org.codehaus.groovy.ast.ModuleNode;
-import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.core.GlobalContext;
 import org.effortless.gen.impl.HibernateEntityClassTransform;
 import org.effortless.gen.impl.SamePackageClassTransform;
@@ -18,7 +15,6 @@ import org.effortless.gen.impl.SamePackageModuleTransform;
 import org.effortless.gen.impl.UpdateDbClassTransform;
 import org.effortless.gen.ui.EditorVMTransform;
 import org.effortless.gen.ui.FinderVMTransform;
-import org.effortless.model.SessionManager;
 import org.effortless.server.ServerContext;
 
 public class GenContext {
@@ -73,20 +69,20 @@ public class GenContext {
 		GlobalContext.set(RESOURCES_CONTEXT, newValue);
 	}
 
-	public static AppTransform getAppTransform (String appId) {
-		return getAppTransform(appId, true);
+	public static GApplication getApplication (String appId) {
+		return getApplication(appId, true);
 	}
 
-	public static AppTransform getAppTransform (String appId, boolean create) {
-		AppTransform result = null;
+	public static GApplication getApplication (String appId, boolean create) {
+		GApplication result = null;
 		if (appId != null) {
 			ServletContext servletContext = ServerContext.getServletContext();
-			Map<String, AppTransform> apps = (servletContext != null ? (Map)servletContext.getAttribute("apps") : null);
+			Map<String, GApplication> apps = (servletContext != null ? (Map)servletContext.getAttribute("apps") : null);
 			result = (apps != null ? apps.get(appId) : null);
 			if (result == null && create) {
-				result = new AppTransform(appId);
+				result = new GApplication(appId);
 				if (apps == null) {
-					apps = new HashMap<String, AppTransform>();
+					apps = new HashMap<String, GApplication>();
 					servletContext.setAttribute("apps", apps);
 				}
 				apps.put(appId, result);
@@ -111,11 +107,11 @@ public class GenContext {
 
 	public static final String MODULE_TRANSFORMS = "MODULE_TRANSFORMS";
 
-	public static List<ModuleTransform> getModuleTransforms () {
-		List<ModuleTransform> result = null;
-		result = (List<ModuleTransform>)GlobalContext.get(MODULE_TRANSFORMS);
+	public static List<Transform<GModule>> getModuleTransforms () {
+		List<Transform<GModule>> result = null;
+		result = (List<Transform<GModule>>)GlobalContext.get(MODULE_TRANSFORMS);
 		if (result == null) {
-			result = new ArrayList<ModuleTransform>();
+			result = new ArrayList<Transform<GModule>>();
 			result.add(new SamePackageModuleTransform());
 			GlobalContext.set(MODULE_TRANSFORMS, result);
 		}
@@ -124,11 +120,11 @@ public class GenContext {
 	
 	public static final String CLASS_TRANSFORMS = "CLASS_TRANSFORMS";
 	
-	public static List<ClassTransform> getClassTransforms () {
-		List<ClassTransform> result = null;
-		result = (List<ClassTransform>)GlobalContext.get(CLASS_TRANSFORMS);
+	public static List<Transform> getClassTransforms () {
+		List<Transform> result = null;
+		result = (List<Transform>)GlobalContext.get(CLASS_TRANSFORMS);
 		if (result == null) {
-			result = new ArrayList<ClassTransform>();
+			result = new ArrayList<Transform>();
 			result.add(new SamePackageClassTransform());
 			result.add(new HibernateEntityClassTransform());
 			result.add(new FinderVMTransform());
@@ -139,48 +135,4 @@ public class GenContext {
 		return result;
 	}
 
-	public static String loadAppId (SourceUnit sourceUnit) {
-		String result = null;
-		String pkgName = getPackage(sourceUnit);
-		result = (pkgName != null ? SessionManager.getDbId(pkgName) : null);
-		return result;
-	}
-
-	public static String getPackage (SourceUnit sourceUnit) {
-		String result = null;
-		if (sourceUnit != null) {
-			ModuleNode module = sourceUnit.getAST();
-			result = module.getPackageName();
-			if (result == null) {
-				String rootCtx = ServerContext.getRootContext();
-				String sourceUnitName = sourceUnit.getName();
-				if (sourceUnitName.startsWith(rootCtx)) {
-					if (GClass.ONE_PACKAGE) {
-						String fileName = FilenameUtils.getName(sourceUnitName);
-						sourceUnitName = (fileName != null ? sourceUnitName.substring(0, sourceUnitName.length() - (fileName.length() + 1)) : sourceUnitName);
-						if (rootCtx.length() <= sourceUnitName.length()) {
-							String suffix = sourceUnitName.substring(rootCtx.length());
-							if (suffix != null) {
-								result = suffix.replaceAll("/", ".");
-							}
-						}
-					}
-					else {
-						String extension = FilenameUtils.getExtension(sourceUnitName);
-						sourceUnitName = (extension != null ? sourceUnitName.substring(0, sourceUnitName.length() - (extension.length() + 1)) : sourceUnitName);
-						if (rootCtx.length() <= sourceUnitName.length()) {
-							String suffix = sourceUnitName.substring(rootCtx.length());
-							if (suffix != null) {
-								result = suffix.replaceAll("/", ".");
-							}
-						}
-					}
-				}
-			}
-		}
-		return result;
-	}
-	
-	
-	
 }

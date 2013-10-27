@@ -3,7 +3,7 @@ package org.effortless.gen.ui;
 import org.effortless.core.StringUtils;
 import org.effortless.gen.GField;
 
-public class FieldTransform {
+public class FieldTransform extends Object/* implements Transform<GField>*/ {
 
 	public FieldTransform () {
 		super();

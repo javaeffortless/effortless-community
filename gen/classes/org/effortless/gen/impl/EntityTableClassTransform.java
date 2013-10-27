@@ -4,10 +4,10 @@ import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.expr.ClassExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
-import org.effortless.gen.ClassTransform;
+import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
 
-public class EntityTableClassTransform extends Object implements ClassTransform {
+public class EntityTableClassTransform extends Object implements Transform<GClass> {
 
 	@Override
 	public void process(GClass clazz) {

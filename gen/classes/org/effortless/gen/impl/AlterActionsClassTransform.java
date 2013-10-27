@@ -7,12 +7,12 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.Parameter;
 import org.effortless.core.ModelException;
-import org.effortless.gen.ClassTransform;
+import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
 import org.effortless.gen.GMethod;
 import org.effortless.model.AbstractEntity;
 
-public class AlterActionsClassTransform extends Object implements ClassTransform {
+public class AlterActionsClassTransform extends Object implements Transform<GClass> {
 
 	@Override
 	public void process(GClass clazz) {

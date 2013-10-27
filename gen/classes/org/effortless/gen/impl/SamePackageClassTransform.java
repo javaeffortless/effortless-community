@@ -4,17 +4,16 @@ import org.apache.commons.io.FilenameUtils;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.gen.GClass;
-import org.effortless.gen.ClassTransform;
-import org.effortless.gen.InfoClassNode;
+import org.effortless.gen.Transform;
 import org.effortless.server.ServerContext;
 
-public class SamePackageClassTransform extends Object implements ClassTransform {
+public class SamePackageClassTransform extends Object implements Transform<GClass> {
 
 	@Override
 	public void process(GClass cg) {
 		ClassNode clazz = cg.getClassNode();
 		SourceUnit sourceUnit = cg.getSourceUnit();
-		if (clazz != null && (true || InfoClassNode.checkEntityValid(clazz, sourceUnit))) {
+		if (clazz != null && (true || cg.checkEntityValid())) {
 			String packageName = clazz.getPackageName();
 			if (packageName == null) {
 				String rootCtx = ServerContext.getRootContext();

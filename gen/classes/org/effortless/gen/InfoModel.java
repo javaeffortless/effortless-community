@@ -160,6 +160,11 @@ public class InfoModel extends Object {
 		return null;
 	}
 
+	public static List<GField> listFileFields(GClass cg) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 //si return type => se considera de consulta => NOLOG
 //si NO return type => se considera de modificacion => LOG
 	

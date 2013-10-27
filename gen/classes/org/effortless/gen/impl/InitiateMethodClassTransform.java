@@ -6,10 +6,10 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 import org.effortless.core.StringUtils;
 import org.effortless.gen.GClass;
-import org.effortless.gen.ClassTransform;
+import org.effortless.gen.Transform;
 import org.effortless.gen.GMethod;
 
-public class InitiateMethodClassTransform extends Object implements ClassTransform {
+public class InitiateMethodClassTransform extends Object implements Transform<GClass> {
 
 	@Override
 	public void process(GClass cg) {

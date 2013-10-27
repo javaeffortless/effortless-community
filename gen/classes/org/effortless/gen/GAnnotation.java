@@ -3,7 +3,7 @@ package org.effortless.gen;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.expr.Expression;
 
-public class GAnnotation extends Object {
+public class GAnnotation extends Object implements GNode {
 
 	public GAnnotation () {
 		super();

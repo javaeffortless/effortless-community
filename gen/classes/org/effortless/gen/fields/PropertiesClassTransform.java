@@ -1,21 +1,14 @@
 package org.effortless.gen.fields;
 
-import java.util.List;
-
-import org.codehaus.groovy.ast.ClassNode;
-import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.effortless.core.Collections;
-import org.effortless.gen.ClassTransform;
 import org.effortless.gen.GClass;
 import org.effortless.gen.GField;
 import org.effortless.gen.GMethod;
-import org.effortless.gen.GenContext;
 import org.effortless.gen.impl.CreateFileEntityTransform;
-import org.effortless.model.FileEntity;
 import org.objectweb.asm.Opcodes;
 
-public class PropertiesClassTransform extends AbstractPropertiesClassTransform implements ClassTransform {
+public class PropertiesClassTransform extends AbstractPropertiesClassTransform {
 
 	protected void textProcessField (GField field) {
 		protectField(field);
@@ -60,12 +53,13 @@ public class PropertiesClassTransform extends AbstractPropertiesClassTransform i
 	}
 
 	protected void fileProcessField (GField field) {
-		String keyFileEntity = field.getClazz().getName() + "." + FileEntity.KEY_CLASS_NEEDS;
-		GenContext.set(keyFileEntity, Boolean.TRUE);
-		
-		CreateFileEntityTransform feT = new CreateFileEntityTransform();
-		feT.process(field);
-		GClass fileClazz = feT.getResult();
+		GClass fileClazz = field.getApplication().getFileClass();
+		if (fileClazz == null) {
+			CreateFileEntityTransform feT = new CreateFileEntityTransform();
+			feT.process(field);
+			fileClazz = feT.getResult();
+			field.getApplication().setFileClass(fileClazz);
+		}
 
 		//	protected FileEntity fichero;
 		field.setModifiers(Opcodes.ACC_PROTECTED);

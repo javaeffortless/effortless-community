@@ -5,10 +5,10 @@ import java.util.List;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 import org.effortless.gen.GClass;
-import org.effortless.gen.ClassTransform;
+import org.effortless.gen.Transform;
 import org.effortless.gen.GMethod;
 
-public class EqualsMethodClassTransform extends Object implements ClassTransform {
+public class EqualsMethodClassTransform extends Object implements Transform<GClass> {
 
 	@Override
 	public void process(GClass cg) {

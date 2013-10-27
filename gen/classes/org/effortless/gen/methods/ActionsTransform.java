@@ -33,12 +33,12 @@ import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.ModelException;
-import org.effortless.gen.ClassTransform;
+import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
 import org.effortless.gen.GMethod;
 import org.effortless.model.AbstractEntity;
 
-public class ActionsTransform extends Object implements ClassTransform {
+public class ActionsTransform extends Object implements Transform<GClass> {
 
 	public void process (GClass clazz) {
 		if (clazz != null) {

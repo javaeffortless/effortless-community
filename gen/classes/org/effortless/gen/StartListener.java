@@ -19,7 +19,7 @@ public class StartListener extends StartupListener {
 	protected void runFirstStart (String root, ServletContext ctx) {
 //	println "BEGIN PRECOMPILE EFFORTLESS"
 //	effortless.util.Compiler.precompile(root + "/effortless")
-//		ppTransform appTransform = GenContext.getAppTransform(appId);
+//		ppTransform appTransform = GenContext.getApplication(appId);
 	org.effortless.server.Compiler.precompile(root);
 //	println "END PRECOMPILE EFFORTLESS"
 	

@@ -9,8 +9,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.effortless.core.ModelException;
 import org.effortless.core.StringUtils;
-import org.effortless.gen.AppTransform;
-import org.effortless.gen.GenContext;
+import org.effortless.gen.GApplication;
 import org.effortless.server.ServerContext;
 import org.effortless.ui.resources.ImageResources;
 
@@ -55,7 +54,8 @@ public class MainVMTransform {
 	 * 
 	 * 
 	 */
-	public static void writeMainZul (String appId) {
+	public static void writeMainZul (GApplication app) {
+		String appId = app.getName();
 		List<String> zul = new ArrayList<String>();
 		
 		String logo = "main/main_logo.png";
@@ -64,7 +64,7 @@ public class MainVMTransform {
 		zul.add("<zk>");
 		zul.add("  <main-window fulfill=\"onLoginSuccess\">");
 			
-		List<String> modules = getModules(appId);
+		List<String> modules = app.getModules();
 		int index = 0;
 		for (String module : modules) {
 			index += 1;
@@ -74,7 +74,7 @@ public class MainVMTransform {
 			String moduleAttr = (index == 1 ? "selected=\"true\"" : "fulfill=\"onSelect\"");
 			zul.add("    <menu link=\"" + StringUtils.capFirst(module) + "\" " + moduleAttr + ">");
 				
-			List<String> options = getOpciones(appId, module);
+			List<String> options = app.getOptions(module);
 			for (String option : options) {
 				String lowerOption = StringUtils.uncapFirst(option);
 				String imgOption = "main/" + lowerOption + ".png";
@@ -97,33 +97,4 @@ public class MainVMTransform {
 		} 
 	}
 
-	public static List<String> getModules (String appId) {
-		List<String> result = null;
-		if (appId != null) {
-			AppTransform appTransform = GenContext.getAppTransform(appId, false);
-			if (appTransform != null) {
-				result = appTransform.getUnitNames();
-			}
-//			else {
-//				result = new ArrayList<String>();
-//				result.add("sorteos");
-//				result.add("configuracion");
-//			}
-		}
-		return result;
-	}
-
-	public static List<String> getOpciones (String app, String module) {
-		List<String> result = null;
-		AppTransform appTransform = GenContext.getAppTransform(app, false);
-		if (appTransform != null) {
-//			resulappTransform.getClassesByUnit(module);
-			result = appTransform.getEntitiesByUnit(module);
-		}
-//		result = new ArrayList<String>();
-//		result.add("basic");
-		return result;
-	}
-	
-	
 }

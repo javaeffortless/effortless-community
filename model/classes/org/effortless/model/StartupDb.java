@@ -82,6 +82,8 @@ public class StartupDb {
 	}
 
 	public static void startDs (String fileName) {
+		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+
 		String baseName = FilenameUtils.getBaseName(fileName);
 		int lastIndexOf = baseName.lastIndexOf("-ds");
 		baseName = (lastIndexOf != -1 ? baseName.substring(0, lastIndexOf) : baseName);

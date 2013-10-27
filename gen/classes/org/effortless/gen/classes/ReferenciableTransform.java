@@ -3,29 +3,12 @@ package org.effortless.gen.classes;
 import java.util.List;
 import java.util.Locale;
 
-//import org.codehaus.groovy.ast.ClassHelper;
-import org.codehaus.groovy.ast.FieldNode;
-//import org.codehaus.groovy.ast.MethodNode;
-//import org.codehaus.groovy.ast.Parameter;
-//import org.codehaus.groovy.ast.expr.ArgumentListExpression;
-//import org.codehaus.groovy.ast.expr.BinaryExpression;
-//import org.codehaus.groovy.ast.expr.ConstantExpression;
-//import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
-//import org.codehaus.groovy.ast.expr.DeclarationExpression;
-//import org.codehaus.groovy.ast.expr.MethodCallExpression;
-//import org.codehaus.groovy.ast.expr.VariableExpression;
-//import org.codehaus.groovy.ast.stmt.BlockStatement;
-//import org.codehaus.groovy.ast.stmt.ExpressionStatement;
-//import org.codehaus.groovy.ast.stmt.ReturnStatement;
-//import org.codehaus.groovy.syntax.Token;
-//import org.codehaus.groovy.syntax.Types;
 import org.effortless.gen.GClass;
-import org.effortless.gen.ClassTransform;
+import org.effortless.gen.GField;
+import org.effortless.gen.InfoModel;
+import org.effortless.gen.Transform;
 import org.effortless.gen.GMethod;
-import org.effortless.gen.fields.BaseFields;
-import org.effortless.gen.fields.Restrictions;
 import org.effortless.model.Referenciable;
-//import org.objectweb.asm.Opcodes;
 
 /**
  *
@@ -45,12 +28,12 @@ import org.effortless.model.Referenciable;
  * @author jesus
  *
  */
-public class ReferenciableTransform extends Object implements ClassTransform {
+public class ReferenciableTransform extends Object implements Transform<GClass> {
 
 	public void process (GClass cg) {
 		if (cg != null) {
 			
-			List<FieldNode> fields = Restrictions.listNotNullUnique(cg.getClassNode());
+			List<GField> fields = InfoModel.listNotNullUnique(cg);
 			
 //			if (true) {
 				cg.addInterface(Referenciable.class);
@@ -61,8 +44,8 @@ public class ReferenciableTransform extends Object implements ClassTransform {
 				mg.declVariable(String.class, "result");//String result = null
 				//org.effortless.util.ToLabel toLabel = new org.effortless.util.ToLabel()
 				mg.declVariable(org.effortless.util.ToLabel.class, "toLabel", mg.callConstructor(org.effortless.util.ToLabel.class));
-				for (FieldNode field : fields) {
-					String getterName = BaseFields.getGetterName(field);
+				for (GField field : fields) {
+					String getterName = field.getGetterName();
 					mg.add(mg.call(mg.var("toLabel"), "add", mg.call(getterName)));//toLabel.add(getName())
 				}
 				mg.add(mg.assign(mg.var("result"), mg.call(mg.var("toLabel"), "getText")));//result = toLabel.getText()

@@ -9,13 +9,13 @@ import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
 import org.codehaus.groovy.ast.stmt.ReturnStatement;
 import org.codehaus.groovy.control.SourceUnit;
-import org.effortless.gen.ClassTransform;
+import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
 import org.effortless.model.AbstractIdEntity;
 import org.effortless.model.Filter;
 import org.objectweb.asm.Opcodes;
 
-public class EntityStaticMethodsClassTransform extends Object implements ClassTransform {
+public class EntityStaticMethodsClassTransform extends Object implements Transform<GClass> {
 
 	/**
 	 * 

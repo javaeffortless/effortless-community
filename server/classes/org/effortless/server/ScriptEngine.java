@@ -107,6 +107,22 @@ public class ScriptEngine implements ResourceConnector {
             setResLoader();
         }
 
+//        public Class<?> loadClass (String name) throws ClassNotFoundException {
+//        	return super.loadClass(name);
+//        }
+//        
+//        public Class<?> loadClass (String name, boolean resolve) throws ClassNotFoundException {
+//        	return super.loadClass(name, resolve);
+//        }
+//        
+//        public Class<?> loadClass (String name, boolean lookupScriptFiles, boolean preferClassOverScript) throws ClassNotFoundException {
+//        	return super.loadClass(name, lookupScriptFiles, preferClassOverScript);
+//        }
+//        
+//        public Class<?> loadClass (String name, boolean flag1, boolean flag2, boolean flag3) throws ClassNotFoundException {
+//        	return super.loadClass(name, flag1, flag2, flag3);
+//        }
+        
         public ScriptClassLoader(ClassLoader loader) {
             super(loader);
             setResLoader();

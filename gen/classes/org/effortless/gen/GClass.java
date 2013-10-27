@@ -1,6 +1,7 @@
 package org.effortless.gen;
 
 import java.util.ArrayList;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,7 +15,6 @@ import org.codehaus.groovy.ast.InnerClassNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.expr.BinaryExpression;
-import org.codehaus.groovy.ast.expr.ClassExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.FieldExpression;
@@ -22,7 +22,6 @@ import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.groovy.ast.stmt.EmptyStatement;
 import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 import org.codehaus.groovy.ast.stmt.ReturnStatement;
-import org.codehaus.groovy.ast.tools.GenericsUtils;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
@@ -31,12 +30,9 @@ import org.effortless.ann.NoTransform;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.DebugUtils;
 import org.effortless.core.StringUtils;
-import org.effortless.gen.fields.BaseFields;
-import org.effortless.gen.impl.FileEntityTransform;
-import org.effortless.model.SessionManager;
 import org.objectweb.asm.Opcodes;
 
-public class GClass extends Object {
+public class GClass extends Object implements GNode {
 
 	protected GClass () {
 		super();
@@ -76,9 +72,9 @@ public class GClass extends Object {
 	}
 	
 	public void setApplication (GApplication newValue) {
-		if (newValue != null) {
-			newValue.addClass(this);
-		}
+//		if (newValue != null) {
+//			newValue.addClass(this);
+//		}
 		this.application = newValue;
 	}
 	
@@ -268,56 +264,56 @@ public class GClass extends Object {
 //		return result;
 //	}
 //	
-	public GMethod addSimpleGetter (String name) {
-		GMethod result = null;
-		if (true) {
-			String getterName = BaseFields.getGetterName(name);
-			FieldNode field = this.clazz.getField(name);
-			GMethod mg = this.addMethod(getterName).setReturnType(field.getType()).setPublic(true);
-			String fName = StringUtils.uncapFirst(name);
-			mg.gPrintln(mg.call("getClass"));
-			mg.gPrintln("printing get filter");
-			mg.gPrintln(mg.field(fName));
-			mg.add(mg.callStatic(DebugUtils.class, "inspect", mg.field(fName)));
-			mg.addReturn(mg.field(fName));
-			
-			result = mg;
-		}
-		else {
-			FieldNode field = this.clazz.getField(name);
-			FieldExpression fieldExpression = new FieldExpression(field);
-
-			ReturnStatement getterCode = new ReturnStatement(fieldExpression);
-			String getterName = BaseFields.getGetterName(field);
-			MethodNode getter = new MethodNode(getterName, Opcodes.ACC_PUBLIC, field.getType(), Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, getterCode);
-			this.clazz.addMethod(getter);
-		}
-		
-		return result;
-	}
-	
-	public GClass addSimpleSetter (String name) {
-		
-		if (true) {
-			FieldNode field = this.clazz.getField(name);
-			String setterName = BaseFields.getSetterName(name);
-			GMethod mg = this.addMethod(setterName).setPublic(true).addParameter(field.getType(), "newValue");
-			mg.gPrintln(mg.var("newValue"));
-			mg.add(mg.assign(mg.field(name), mg.var("newValue")));
-		}
-		else {
-			FieldNode field = this.clazz.getField(name);
-			FieldExpression fieldExpression = new FieldExpression(field);
-	
-			VariableExpression varNewValue = new VariableExpression("newValue", field.getType());
-			ExpressionStatement setterCode = new ExpressionStatement(new BinaryExpression(fieldExpression, Token.newSymbol(Types.ASSIGN, -1, -1), varNewValue));
-			String setterName = BaseFields.getSetterName(field);
-			MethodNode setter = new MethodNode(setterName, Opcodes.ACC_PUBLIC, ClassHelper.VOID_TYPE, new Parameter[] {new Parameter(field.getType(), "newValue")}, ClassNode.EMPTY_ARRAY, setterCode);
-			this.clazz.addMethod(setter);
-		}
-		
-		return this;
-	}
+//	public GMethod addSimpleGetter (String name) {
+//		GMethod result = null;
+//		if (true) {
+//			String getterName = BaseFields.getGetterName(name);
+//			FieldNode field = this.clazz.getField(name);
+//			GMethod mg = this.addMethod(getterName).setReturnType(field.getType()).setPublic(true);
+//			String fName = StringUtils.uncapFirst(name);
+//			mg.gPrintln(mg.call("getClass"));
+//			mg.gPrintln("printing get filter");
+//			mg.gPrintln(mg.field(fName));
+//			mg.add(mg.callStatic(DebugUtils.class, "inspect", mg.field(fName)));
+//			mg.addReturn(mg.field(fName));
+//			
+//			result = mg;
+//		}
+//		else {
+//			FieldNode field = this.clazz.getField(name);
+//			FieldExpression fieldExpression = new FieldExpression(field);
+//
+//			ReturnStatement getterCode = new ReturnStatement(fieldExpression);
+//			String getterName = BaseFields.getGetterName(field);
+//			MethodNode getter = new MethodNode(getterName, Opcodes.ACC_PUBLIC, field.getType(), Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, getterCode);
+//			this.clazz.addMethod(getter);
+//		}
+//		
+//		return result;
+//	}
+//	
+//	public GClass addSimpleSetter (String name) {
+//		
+//		if (true) {
+//			FieldNode field = this.clazz.getField(name);
+//			String setterName = BaseFields.getSetterName(name);
+//			GMethod mg = this.addMethod(setterName).setPublic(true).addParameter(field.getType(), "newValue");
+//			mg.gPrintln(mg.var("newValue"));
+//			mg.add(mg.assign(mg.field(name), mg.var("newValue")));
+//		}
+//		else {
+//			FieldNode field = this.clazz.getField(name);
+//			FieldExpression fieldExpression = new FieldExpression(field);
+//	
+//			VariableExpression varNewValue = new VariableExpression("newValue", field.getType());
+//			ExpressionStatement setterCode = new ExpressionStatement(new BinaryExpression(fieldExpression, Token.newSymbol(Types.ASSIGN, -1, -1), varNewValue));
+//			String setterName = BaseFields.getSetterName(field);
+//			MethodNode setter = new MethodNode(setterName, Opcodes.ACC_PUBLIC, ClassHelper.VOID_TYPE, new Parameter[] {new Parameter(field.getType(), "newValue")}, ClassNode.EMPTY_ARRAY, setterCode);
+//			this.clazz.addMethod(setter);
+//		}
+//		
+//		return this;
+//	}
 
 	public GMethod addConstructor () {
 		GMethod result = null;
@@ -333,27 +329,27 @@ public class GClass extends Object {
 		return result;
 	}
 
-	public GMethod addSimpleProperty (Class<?> type, String name) {
-		return addSimpleProperty(ClassNodeHelper.toClassNode(type), name);
-	}
+//	public GMethod addSimpleProperty (Class<?> type, String name) {
+//		return addSimpleProperty(ClassNodeHelper.toClassNode(type), name);
+//	}
+//	
+//	public GMethod addSimpleProperty (ClassNode type, String name) {
+//		return addSimpleProperty(type, name, false);
+//	}
+//
+//	public GMethod addSimpleProperty (Class<?> type, String name, boolean readonly) {
+//		return addSimpleProperty(ClassNodeHelper.toClassNode(type), name, readonly);
+//	}
 	
-	public GMethod addSimpleProperty (ClassNode type, String name) {
-		return addSimpleProperty(type, name, false);
-	}
-
-	public GMethod addSimpleProperty (Class<?> type, String name, boolean readonly) {
-		return addSimpleProperty(ClassNodeHelper.toClassNode(type), name, readonly);
-	}
-	
-	public GMethod addSimpleProperty (ClassNode type, String name, boolean readonly) {
-		GMethod result = null;
-		this.addField(type, name);
-		result = this.addSimpleGetter(name);
-		if (!readonly) {
-			this.addSimpleSetter(name);
-		}
-		return result;
-	}
+//	public GMethod addSimpleProperty (ClassNode type, String name, boolean readonly) {
+//		GMethod result = null;
+//		this.addField(type, name);
+//		result = this.addSimpleGetter(name);
+//		if (!readonly) {
+//			this.addSimpleSetter(name);
+//		}
+//		return result;
+//	}
 
 
 	public String queryAnnotation(Class<?> annotation, String member) {
@@ -404,6 +400,11 @@ public class GClass extends Object {
 	public GClass addAnnotation (ClassNode annotation) {
 		AnnotationNode ann = new AnnotationNode(annotation);
 		this.clazz.addAnnotation(ann);
+		return this;
+	}
+
+	public GClass addAnnotation (AnnotationNode annotation) {
+		this.clazz.addAnnotation(annotation);
 		return this;
 	}
 
@@ -545,74 +546,6 @@ public class GClass extends Object {
 	
 	
 	
-	public static ClassNode tryNeedsNewExternalEntity(ClassNode clazz, SourceUnit sourceUnit, Class externalEntity, String suffixClass, String suffixApp, Class tuplizer) {
-		ClassNode result = null;
-		String className = clazz.getName();
-		String key = className + "." + suffixClass;
-		Boolean needs = (Boolean)GenContext.get(key);
-		if (needs != null && needs.booleanValue()) {
-			String dbId = SessionManager.getDbId(className);
-			key = dbId + "." + suffixApp;
-			needs = (Boolean)GenContext.get(key);
-			if (needs == null || needs.booleanValue() == false) {
-				result = addNewExternalClass(clazz, sourceUnit, externalEntity, true);
-				GenContext.set(key, Boolean.TRUE);
-			}
-			else {
-				result = addNewExternalClass(clazz, sourceUnit, externalEntity, false);
-			}
-			if (result != null && tuplizer != null && false) {
-				AnnotationNode annTuplizer = new AnnotationNode(new ClassNode(org.hibernate.annotations.Tuplizer.class));
-				annTuplizer.setMember("impl", new ClassExpression(ClassNodeHelper.toClassNode(tuplizer)));
-				clazz.addAnnotation(annTuplizer);
-			}
-		}
-		return result;
-	}
-
-	public static ClassNode addNewExternalClass (ClassNode clazz, SourceUnit sourceUnit, Class externalClass, boolean add) {
-		ClassNode result = null;
-		ClassNode externClazz = new ClassNode(externalClass);
-		ClassNode newClazz = new ClassNode(externClazz.getNameWithoutPackage(), externClazz.getModifiers(), externClazz);
-		String newName = newNameExternalClass(clazz, sourceUnit, externClazz);
-		newClazz.setName(newName);
-		
-		//IMPLEMENT ME!!!
-		if (add) {
-			sourceUnit.getAST().addClass(newClazz);
-			
-			FileEntityTransform transform = new FileEntityTransform();
-			transform.process(new GClass(newClazz, sourceUnit));
-//			addAnnotations(newClazz);
-//			addStaticMethods(newClazz, sourceUnit);
-//			
-//			updateDb(newClazz, sourceUnit);
-		}
-		
-		result = newClazz;
-		return result;
-	}
-	
-	public static String newNameExternalClass (ClassNode clazz, SourceUnit sourceUnit, ClassNode externClazz) {
-		String result = null;
-		String packageName = clazz.getPackageName();
-		if (!ONE_PACKAGE) {
-			int lastIdx = (packageName != null ? packageName.lastIndexOf(".") : -1);
-			packageName = (lastIdx > -1 ? packageName.substring(0, lastIdx) : "");
-		}
-
-		int lastIdx = (packageName != null ? packageName.lastIndexOf(".") : -1);
-		String appName = (lastIdx > -1 ? packageName.substring(lastIdx + 1) : "");
-		
-		String className = externClazz.getNameWithoutPackage();
-		if (appName != null && appName.length() > 0) {
-			className = appName.substring(0, 1).toUpperCase() + appName.substring(1) + className.substring(0, 1).toUpperCase() + className.substring(1);
-		}
-		packageName += (packageName != null && packageName.length() > 0 ? "." : "");
-		result = packageName + className;
-		return result;
-	}
-
 	public static final boolean ONE_PACKAGE = true;
 
 	
@@ -669,7 +602,7 @@ public class GClass extends Object {
 		return result;
 	}
 
-	public boolean hasAnnotation (Class clazz) {
+	public boolean hasAnnotation (Class<?> clazz) {
 		boolean result = false;
 		if (clazz != null) {
 			ClassNode cNode = ClassNodeHelper.toClassNode(clazz);
@@ -728,7 +661,7 @@ public class GClass extends Object {
 		List<MethodNode> methods = (this.clazz != null ? this.clazz.getMethods(name) : null);
 		if (methods != null && methods.size() == 1) {
 			MethodNode method = methods.get(0);
-			result = new GMethod(method, this);
+			result = toGMethod(method);
 		}
 		return result;
 	}
@@ -736,17 +669,37 @@ public class GClass extends Object {
 	public List<GMethod> getAllDeclaredMethods() {
 		List<GMethod> result = null;
 		List<MethodNode> methods = (this.clazz != null ? this.clazz.getAllDeclaredMethods() : null);
-		// TODO Auto-generated method stub
+		result = toMethods(methods);
 		return result;
 	}
 
 	public List<GMethod> getMethods() {
-		// TODO Auto-generated method stub
-		return null;
+		List<GMethod> result = null;
+		List<MethodNode> methods = (this.clazz != null ? this.clazz.getMethods() : null);
+		result = toMethods(methods);
+		return result;
+	}
+	
+	protected GMethod toGMethod (MethodNode node) {
+		GMethod result = null;
+		result = new GMethod(node, this);
+		return result;
 	}
 	
 	protected List<GMethod> toMethods (List<MethodNode> methods) {
-		List<GMethod> result 0 
+		List<GMethod> result = null;
+		if (methods != null) {
+			result = new ArrayList<GMethod>();
+			for (MethodNode node : methods) {
+				GMethod newItem = toGMethod(node);
+				result.add(newItem);
+			}
+		}
+		return result;
+	}
+
+	public String toString () {
+		return getName();
 	}
 	
 }
