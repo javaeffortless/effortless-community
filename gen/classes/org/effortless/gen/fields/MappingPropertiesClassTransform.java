@@ -75,7 +75,7 @@ public class MappingPropertiesClassTransform extends AbstractPropertiesClassTran
 		ann.addMember("cascade", getter.enumValue(javax.persistence.CascadeType.class, "ALL"));
 		ann.addMember("targetEntity", getter.cteClass(field.getType()));
 		ann.addMember("fetch", getter.enumValue(javax.persistence.FetchType.class, "LAZY"));
-		getter.addAnnotation(ann);
+//		getter.addAnnotation(ann);
 		getter.addAnnotation(javax.persistence.JoinColumn.class, "name", columnName);//@javax.persistence.JoinColumn(name="FICHERO")
 
 		//@javax.persistence.Basic(fetch = javax.persistence.FetchType.EAGER)

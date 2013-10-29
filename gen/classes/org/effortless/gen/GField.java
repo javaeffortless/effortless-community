@@ -178,5 +178,15 @@ public class GField extends Object implements GNode {
 	public String toString () {
 		return this.getClazz() + "->" + getName() + ":" + getType().getName();
 	}
+
+	public boolean equals (Object o) {
+		boolean result = false;
+		GField obj = null;
+		try { obj = (GField)o; } catch (ClassCastException e) {}
+		if (obj != null && this.field != null) {
+			result = this.field.equals(obj.field);
+		}
+		return result;
+	}
 	
 }

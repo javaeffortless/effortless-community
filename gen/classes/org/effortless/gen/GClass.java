@@ -90,20 +90,26 @@ public class GClass extends Object implements GNode {
 		return this.clazz;
 	}
 	
-	public FieldNode addField (Class<?> type, String name) {
+	public GField addField (Class<?> type, String name) {
 		return addField(ClassNodeHelper.toClassNode(type), name);
 	}
 	
-	public FieldNode addField (ClassNode type, String name) {
-		FieldNode result = null;
-		result = new FieldNode(name, Opcodes.ACC_PROTECTED, type, this.clazz, ConstantExpression.NULL);
-		this.clazz.addField(result);
+	public GField addField (ClassNode type, String name) {
+		GField result = null;
+		FieldNode node = new FieldNode(name, Opcodes.ACC_PROTECTED, type, this.clazz, ConstantExpression.NULL);
+		this.clazz.addField(node);
+		result = new GField(this, node);
 //		FieldExpression fieldExpression = new FieldExpression(field);
 		return result;
 	}
 
 	public void removeField (String name) {
-		this.clazz.removeField(name);
+		if (this.clazz != null) {
+			FieldNode field = this.clazz.getField(name);
+			if (field != null) {
+				this.clazz.removeField(name);
+			}
+		}
 	}
 	
 	
@@ -615,7 +621,7 @@ public class GClass extends Object implements GNode {
 		boolean result = false;
 		if (clazz != null) {
 			List<AnnotationNode> annotations = (this.clazz != null ? this.clazz.getAnnotations(clazz) : null);
-			result = !(annotations != null && annotations.size() > 0);
+			result = (annotations != null && annotations.size() > 0);
 		}
 		return result;
 	}
@@ -701,5 +707,16 @@ public class GClass extends Object implements GNode {
 	public String toString () {
 		return getName();
 	}
+
+	public boolean equals (Object o) {
+		boolean result = false;
+		GClass obj = null;
+		try { obj = (GClass)o; } catch (ClassCastException e) {}
+		if (obj != null && this.clazz != null) {
+			result = this.clazz.equals(obj.clazz);
+		}
+		return result;
+	}
+	
 	
 }

@@ -3,7 +3,9 @@ package org.effortless.gen.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
@@ -43,9 +45,8 @@ public class CreateFinderFilterClassTransform extends Object implements Transfor
 			String cName = getFinderFilterName(clazz);
 			GClass cg = new GClass(cName, clazz.getSourceUnit());
 			cg.setSuperClass(cg.createGenericType(CriteriaFilter.class, clazz.getClassNode()));
-			cg.addAnnotation(FILTER_ANN);
 			
-			List<GField> fields = this.getFinderProperties(clazz);
+			List<GField> fields = InfoModel.getFinderProperties(clazz);
 			if (fields != null) {
 				for (GField field : fields) {
 					addFilterProperty(cg, field);
@@ -77,7 +78,8 @@ public class CreateFinderFilterClassTransform extends Object implements Transfor
 				}
 			}
 			mg.add(mg.call(mg.cteSuper(), "setupConditions"));
-			
+
+			clazz.addAnnotation(FILTER_ANN);
 			setResult(cg);
 		}
 	}
@@ -87,25 +89,6 @@ public class CreateFinderFilterClassTransform extends Object implements Transfor
 	public String getFinderFilterName (GClass clazz) {
 		String result = null;
 		result = clazz.getName() + "FinderFilter";
-		return result;
-	}
-	
-	public List<GField> getFinderProperties (GClass clazz) {
-		List<GField> result = null;
-		result = InfoModel.listNotNullUnique(clazz);
-		result = (result != null ? result : new ArrayList<GField>());
-		int length = (result != null ? result.size() : 0);
-		if (length < 5) {
-			List<GField> fields = clazz.getFields();
-			for (GField field : fields) {
-				if (!result.contains(field)) {
-					result.add(field);
-					if (result.size() >= 50) {
-						break;
-					}
-				}
-			}
-		}
 		return result;
 	}
 	
@@ -161,29 +144,30 @@ public class CreateFinderFilterClassTransform extends Object implements Transfor
 	
 	protected void addFilterPropertySimple (GClass filter, GField field, String name) {
 		if (field != null && name != null) {
-			filter.removeField(field.getName());
+			String fName = name;
+
+			filter.removeField(fName);
 //			field = this.addField(field.getType(), name);
 			
 			ClassNode fType = field.getType();
-			String fName = name;
 //			String capfName = StringUtils.capFirst(fName);
 			
-			filter.addField(fType, fName);
+			GField filterField = filter.addField(fType, fName);
 			
 			GMethod mg = null;
 			
-			String initiateName = field.getInitiateName();//"initiate" + capfName;
+			String initiateName = filterField.getInitiateName();//"initiate" + capfName;
 			mg = filter.addMethod(initiateName).setProtected(true);
 			mg.add(mg.assign(mg.field(fName), mg.cteNull()));
 			
-			String getterName = field.getGetterName();//"get" + capfName;
+			String getterName = filterField.getGetterName();//"get" + capfName;
 			mg = filter.addMethod(getterName).setPublic(true).setReturnType(fType);
 //			mg.gPrintln("getting filter property (begin)");
 //			mg.gPrintln(mg.field(fName));
 //			mg.gPrintln("getting filter property (end)");
 			mg.addReturn(mg.field(fName));
 			
-			String setterName = field.getSetterName();//"set" + capfName;
+			String setterName = filterField.getSetterName();//"set" + capfName;
 			mg = filter.addMethod(setterName).setPublic(true).addParameter(fType, "newValue");
 			mg.add(mg.call("_setProperty", mg.cte(fName), mg.field(fName), mg.assign(mg.field(fName), mg.var("newValue"))));
 		}
@@ -195,38 +179,38 @@ public class CreateFinderFilterClassTransform extends Object implements Transfor
 			String fName = field.getName();
 			
 			if (field.isString()) {
-				mg.add(mg.call("ilk", mg.cte(fName), mg.field(field)));
+				mg.add(mg.call("ilk", mg.cte(fName), mg.field(fName)));
 			}
 			else if (field.isTime()) {
-				mg.add(mg.call("eq", mg.cte(fName), mg.field(field)));
+				mg.add(mg.call("eq", mg.cte(fName), mg.field(fName)));
 			}
 			else if (field.isTimestamp()) {
-				mg.add(mg.call("eq", mg.cte(fName), mg.field(field)));
+				mg.add(mg.call("eq", mg.cte(fName), mg.field(fName)));
 			}
 			else if (field.isDate()) {
-				mg.add(mg.call("eq", mg.cte(fName), mg.field(field)));
+				mg.add(mg.call("eq", mg.cte(fName), mg.field(fName)));
 			}
 			else if (field.isBoolean()) {
 //				mg.add(mg.call("eq", mg.cte(fName), mg.field(fName)));
 				mg.add(mg.call("eqBooleanDouble", mg.cte(fName), mg.field(fName + "True"), mg.field(fName + "False")));
 			}
 			else if (field.isInteger()) {
-				mg.add(mg.call("eq", mg.cte(fName), mg.field(field)));
+				mg.add(mg.call("eq", mg.cte(fName), mg.field(fName)));
 			}
 			else if (field.isDouble()) {
-				mg.add(mg.call("eq", mg.cte(fName), mg.field(field)));
+				mg.add(mg.call("eq", mg.cte(fName), mg.field(fName)));
 			}
 			else if (field.isEnum()) {
-				mg.add(mg.call("eq", mg.cte(fName), mg.field(field)));
+				mg.add(mg.call("eq", mg.cte(fName), mg.field(fName)));
 			}
 			else if (field.isFile() || field.isType(org.effortless.model.FileEntity.class)) {
-				mg.add(mg.call("eqFile", mg.cte(fName), mg.field(field)));
+				mg.add(mg.call("eqFile", mg.cte(fName), mg.field(fName)));
 			}
 			else if (field.isCollection() || field.isList()) {
-				mg.add(mg.call("in", mg.cte(fName), mg.field(field)));
+				mg.add(mg.call("in", mg.cte(fName), mg.field(fName)));
 			}
 			else {//REF
-				mg.add(mg.call("eq", mg.cte(fName), mg.field(field)));
+				mg.add(mg.call("eq", mg.cte(fName), mg.field(fName)));
 			}
 		}
 	}

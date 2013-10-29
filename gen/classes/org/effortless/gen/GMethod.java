@@ -1447,5 +1447,22 @@ public class GMethod extends Object implements GNode {
 		}
 		return result;
 	}
+
+	public String toString () {
+		String result = null;
+		result = (this.methodNode != null ? this.methodNode.toString() : null);
+		return result;
+	}
+
+	public boolean equals (Object o) {
+		boolean result = false;
+		GMethod obj = null;
+		try { obj = (GMethod)o; } catch (ClassCastException e) {}
+		if (obj != null && this.methodNode != null) {
+			result = this.methodNode.equals(obj.methodNode);
+		}
+		return result;
+	}
+	
 	
 }

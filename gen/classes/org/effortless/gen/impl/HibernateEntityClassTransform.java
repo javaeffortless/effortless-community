@@ -15,6 +15,10 @@ import org.effortless.gen.fields.PropertiesClassTransform;
 
 public class HibernateEntityClassTransform extends Object implements Transform<GClass> {
 
+	protected void setupEntityParent (GClass clazz) {
+		new SetupEntityParentClassTransform().process(clazz);
+	}
+	
 	@Override
 	public void process(GClass cg) {
 		if (cg != null && cg.checkEntityValid() && !cg.checkEnum()) {
@@ -22,7 +26,7 @@ public class HibernateEntityClassTransform extends Object implements Transform<G
 //			ecg.alterActions();
 //				ActionsTransform.processClass(clazz, sourceUnit);
 				
-			new SetupEntityParentClassTransform().process(cg);
+			setupEntityParent(cg);
 			new EntityTableClassTransform().process(cg);
 		
 			PropertiesClassTransform pT = new PropertiesClassTransform();

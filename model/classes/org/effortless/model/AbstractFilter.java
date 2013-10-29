@@ -1,7 +1,8 @@
 package org.effortless.model;
 
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+
+//import java.beans.PropertyChangeSupport;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;

@@ -57,7 +57,7 @@ public abstract class AbstractCreateClassTransform<T extends GNode> extends Obje
 		newClazz.setName(newName);
 		clazz.getSourceUnit().getAST().addClass(newClazz);
 
-		result = new GClass(newClazz);
+		result = new GClass(newClazz, clazz.getSourceUnit());
 		clazz.getApplication().addClass(result);
 		
 		return result;

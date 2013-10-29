@@ -372,7 +372,8 @@ public class FileField extends AbstractField<FileEntity> {
 	@ComponentAnnotation("@ZKBIND(ACCESS=load, SAVE_EVENT=onChange)")
 	public String getUpload () {
 //		return (!isEmpty() ? "false" : "true,maxsize=-1,native");
-		return (!isEmpty() ? "false" : "true");
+//		return (!isEmpty() ? "false" : "true");
+		return (!isEmpty() ? "false" : "true,native");
 	}
 
     @Listen("onClick = #wDownload")

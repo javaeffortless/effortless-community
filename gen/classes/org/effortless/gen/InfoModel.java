@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.effortless.core.Collections;
+import org.effortless.model.FileEntity;
 
 public class InfoModel extends Object {
 
@@ -118,18 +119,62 @@ public class InfoModel extends Object {
 	}
 
 	public static boolean isSingleUnique(GField field) {
-		// TODO Auto-generated method stub
-		return false;
+        boolean result = false;
+        if (field != null) {
+        	String fieldName = field.getName().toLowerCase();
+                for (String it : ARRAY_SINGLE_UNIQUE) {
+                        if (fieldName.contains(it)) {
+                                result = true;
+//                                println "UNIQUE " + effortless.MySession.getRootContext()
+//                                println "$fieldName is unique on class ${clazz.name}"
+                                break;
+                        }
+                }
+                if (!result) {
+                        for (Object[] it : ARRAY_SINGLE_UNIQUE_DEPENDS) {
+                                if (fieldName.contains((String)it[0])) {
+                                        result = !containsAnyField(field.getClazz(), (String[])it[1]);
+                                        if (result) {
+//                                                println "UNIQUE " + effortless.MySession.getRootContext()
+//                                                println "$fieldName is unique on class ${clazz.name}"
+                                                break;
+                                        }
+                                }
+                        }
+                }
+        }
+        return result;		
 	}
 
 	public static boolean isNotNull(GField field) {
-		// TODO Auto-generated method stub
-		return false;
+        boolean result = false;
+        if (field != null) {
+                String fieldName = field.getName().toLowerCase();
+                for (String it : ARRAY_NOT_NULL) {
+                        if (fieldName.contains(it)) {
+                                result = true;
+//                                println "$fieldName is not null on class ${clazz.name}"
+                                break;
+                        }
+                }
+        }
+        return result;
 	}
 
+    protected static final String[] COMMENT_NAMES = {"comment", "comentario", "remark", "observacion", "annotation", "anotacion"};
+    	
 	public static boolean checkCommentField(String fieldName) {
-		// TODO Auto-generated method stub
-		return false;
+        boolean result = false;
+        if (fieldName != null) {
+                fieldName = fieldName.trim().toLowerCase();
+                for (String name : COMMENT_NAMES) {
+                        if (name != null && name.trim().toLowerCase().contains(fieldName)) {
+                                result = true;
+                                break;
+                        }
+                }
+        }
+        return result;
 	}
 	
 	public static boolean checkAnyValidCustomAction(GClass clazz) {
@@ -156,13 +201,34 @@ public class InfoModel extends Object {
 	}
 
 	public static List<GField> getFinderProperties(GClass clazz) {
-		// TODO Auto-generated method stub
-		return null;
+        List<GField> result = null;
+        result = listNotNullUnique(clazz);
+        result = (result != null ? result : new ArrayList<GField>());
+        int length = (result != null ? result.size() : 0);
+        if (length < 5) {
+                List<GField> fields = clazz.getFields();
+                for (GField field : fields) {
+                        if (!result.contains(field)) {
+                                result.add(field);
+                                if (result.size() >= 50) {
+                                        break;
+                                }
+                        }
+                }
+        }
+        return result;		
 	}
 
-	public static List<GField> listFileFields(GClass cg) {
-		// TODO Auto-generated method stub
-		return null;
+	public static List<GField> listFileFields(GClass clazz) {
+		List<GField> result = null;
+		List<GField> fields = clazz.getFields();
+		result = new ArrayList<GField>();
+		for (GField field : fields) {
+			if (field.isType(FileEntity.class)) {
+				result.add(field);
+			}
+		}
+		return result;
 	}
 
 //si return type => se considera de consulta => NOLOG
