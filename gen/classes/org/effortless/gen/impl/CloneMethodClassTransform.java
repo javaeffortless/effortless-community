@@ -6,21 +6,21 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 import org.effortless.core.StringUtils;
 import org.effortless.gen.GClass;
+import org.effortless.gen.GField;
 import org.effortless.gen.Transform;
 import org.effortless.gen.GMethod;
 
 public class CloneMethodClassTransform extends Object implements Transform<GClass> {
 
 	@Override
-	public void process(GClass cg) {
-		ClassNode clazz = cg.getClassNode();
-		List<FieldNode> fields = clazz.getFields();
+	public void process(GClass clazz) {
+		List<GField> fields = clazz.getFields();
 		
-		GMethod mg = cg.addMethod("createClone").setProtected(true).setReturnType(clazz);
+		GMethod mg = clazz.addMethod("createClone").setProtected(true).setReturnType(clazz);
 		mg.declVariable(clazz, "result", mg.callConstructor(clazz));
-		for (FieldNode field : fields) {
+		for (GField field : fields) {
 			String fName = field.getName();
-			String getter = "get" + StringUtils.capFirst(fName) + "";
+			String getter = field.getGetterName();//"get" + StringUtils.capFirst(fName) + "";
 			mg.add(mg.assign(mg.property("result", fName), mg.call(getter)));
 		}
 		mg.addReturn("result");

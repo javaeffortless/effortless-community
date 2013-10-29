@@ -116,6 +116,10 @@ public class GMethod extends Object implements GNode {
 		return setReturnType(ClassNodeHelper.toClassNode(type));
 	}
 
+	public GMethod setReturnType (GClass type) {
+		return setReturnType((type != null ? type.getClassNode() : null));
+	}
+
 	public GMethod setReturnType (ClassNode type) {
 		this.methodNode.setReturnType(type);
 		return this;
@@ -445,6 +449,10 @@ public class GMethod extends Object implements GNode {
 
 
 	
+	
+	public Expression callConstructor (GClass type) {
+		return callConstructor((type != null ? type.getClassNode() : null));
+	}
 	
 	public Expression callConstructor (Class<?> type) {
 		return callConstructor(ClassNodeHelper.toClassNode(type), (Expression[])null);
@@ -1462,6 +1470,14 @@ public class GMethod extends Object implements GNode {
 			result = this.methodNode.equals(obj.methodNode);
 		}
 		return result;
+	}
+
+	public GMethod declVariable(GClass clazz, String name, Expression expr) {
+		return declVariable((clazz != null ? clazz.getClassNode() : null), name, expr);
+	}
+	
+	public GMethod declVariable(GClass clazz, String name) {
+		return declVariable((clazz != null ? clazz.getClassNode() : null), name);
 	}
 	
 	
