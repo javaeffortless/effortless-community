@@ -10,27 +10,27 @@ import org.effortless.gen.GClass;
 import org.effortless.gen.classes.ReferenciableTransform;
 import org.effortless.gen.classes.SavePropertiesTransform;
 import org.effortless.gen.fields.FinalFieldsTransform;
-import org.effortless.gen.fields.MappingPropertiesClassTransform;
-import org.effortless.gen.fields.PropertiesClassTransform;
+import org.effortless.gen.fields.MappingPropertiesTransform;
+import org.effortless.gen.fields.PropertiesTransform;
 
-public class HibernateEntityClassTransform extends Object implements Transform<GClass> {
+public class HibernateEntityTransform extends Object implements Transform<GClass> {
 
 	protected void setupEntityParent (GClass clazz) {
-		new SetupEntityParentClassTransform().process(clazz);
+		new SetupEntityParentTransform().process(clazz);
 	}
 	
 	@Override
 	public void process(GClass cg) {
 		if (cg != null && cg.checkEntityValid() && !cg.checkEnum()) {
-			new AlterActionsClassTransform().process(cg);
+			new AlterActionsTransform().process(cg);
 //			ecg.alterActions();
 //				ActionsTransform.processClass(clazz, sourceUnit);
 				
 			setupEntityParent(cg);
-			new EntityTableClassTransform().process(cg);
+			new EntityTableTransform().process(cg);
 		
-			PropertiesClassTransform pT = new PropertiesClassTransform();
-			MappingPropertiesClassTransform mT = new MappingPropertiesClassTransform();
+			PropertiesTransform pT = new PropertiesTransform();
+			MappingPropertiesTransform mT = new MappingPropertiesTransform();
 			List<GField> fields = cg.getFields();
 			for (GField field : fields) {
 				pT.process(field);
@@ -44,16 +44,16 @@ public class HibernateEntityClassTransform extends Object implements Transform<G
 			new ReferenciableTransform().process(cg);
 			new SavePropertiesTransform().process(cg);
 			
-			new EntityStaticMethodsClassTransform().process(cg);
+			new EntityStaticMethodsTransform().process(cg);
 				
-			new InitiateMethodClassTransform().process(cg);//ecg.addInitiate();
-			new HashCodeMethodClassTransform().process(cg);//ecg.addDoHashCode();//HashCodeTransform.processClass(clazz, sourceUnit);
-			new EqualsMethodClassTransform().process(cg);//ecg.addDoEquals();//EqualsTransform.processClass(clazz, sourceUnit);
-			new CompareMethodClassTransform().process(cg);//ecg.addDoCompare();//CompareToTransform.processClass(clazz, sourceUnit);
-			new ToStringMethodClassTransform().process(cg);//ecg.addDoToString();//ToStringTransform.processClass(clazz, sourceUnit);
+			new InitiateMethodTransform().process(cg);//ecg.addInitiate();
+			new HashCodeMethodTransform().process(cg);//ecg.addDoHashCode();//HashCodeTransform.processClass(clazz, sourceUnit);
+			new EqualsMethodTransform().process(cg);//ecg.addDoEquals();//EqualsTransform.processClass(clazz, sourceUnit);
+			new CompareMethodTransform().process(cg);//ecg.addDoCompare();//CompareToTransform.processClass(clazz, sourceUnit);
+			new ToStringMethodTransform().process(cg);//ecg.addDoToString();//ToStringTransform.processClass(clazz, sourceUnit);
 
 			new KryoTransform().process(cg);
-			new CloneMethodClassTransform().process(cg);
+			new CloneMethodTransform().process(cg);
 //			ecg.addCreateClone();//CloneTransform.processClass(clazz, sourceUnit);
 				
 	//			addPrimitiveFields(clazz);
@@ -61,11 +61,13 @@ public class HibernateEntityClassTransform extends Object implements Transform<G
 	//			FieldChangeSupportGenerator.generate(clazz);
 	//					println ">>>>>>>>>>>>>> PERIICOOOOOOOOOOOOOOOOOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 			//ñ
-				
-				
-				
+			applyEntityLog(cg);
 //				tryNeedsFileEntity(clazz, sourceUnit);
 		}
+	}
+
+	protected void applyEntityLog(GClass clazz) {
+		new EntityLogTransform().process(clazz);
 	}
 
 }

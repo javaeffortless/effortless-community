@@ -11,6 +11,7 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.model.Entity;
+import org.objectweb.asm.Opcodes;
 
 public class GField extends Object implements GNode {
 
@@ -167,7 +168,35 @@ public class GField extends Object implements GNode {
 	public GMethod getGetterMethod() {
 		GMethod result = null;
 		String methodName = getGetterName();
-		result = (this.clazz != null ? this.clazz.getMethod(methodName) : null);
+		List<GMethod> methods = (this.clazz != null ? this.clazz.getListMethods(methodName) : null);
+		int methodsSize = (methods != null ? methods.size() : 0);
+		if (methodsSize > 0) {
+			ClassNode type = this.getType();
+			for (GMethod method : methods) {
+				if (method.isReturnType(type) && method.getNumParameters() <= 0) {
+					result = method;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	public GMethod getSetterMethod() {
+		GMethod result = null;
+		String methodName = getSetterName();
+		List<GMethod> methods = (this.clazz != null ? this.clazz.getListMethods(methodName) : null);
+		int methodsSize = (methods != null ? methods.size() : 0);
+		if (methodsSize > 0) {
+			ClassNode type = this.getType();
+			for (GMethod method : methods) {
+				if (method.isVoid() && method.getNumParameters() == 1 && method.checkParameterType(0, type)) {
+					result = method;
+					break;
+				}
+			}
+		}
+//		result = (this.clazz != null ? this.clazz.getMethod(methodName) : null);
 		return result;
 	}
 
@@ -186,6 +215,33 @@ public class GField extends Object implements GNode {
 		if (obj != null && this.field != null) {
 			result = this.field.equals(obj.field);
 		}
+		return result;
+	}
+
+	protected boolean _isModifier (int modifier) {
+		boolean result = false;
+		if (this.field != null) {
+			int modifiers = this.field.getModifiers();
+			result = (modifiers & modifier) != 0;
+		}
+		return result;
+	}
+	
+	public boolean isStatic() {
+		return _isModifier(Opcodes.ACC_STATIC);
+	}
+
+	public boolean isFinal() {
+		return _isModifier(Opcodes.ACC_FINAL);
+	}
+
+	public boolean isProperty() {
+		boolean result = false;
+		result = true;
+		GMethod setter = (result ? getSetterMethod() : null);
+		result = result && (setter != null && setter.isPublic());
+		GMethod getter = (result ? getGetterMethod() : null);
+		result = result && (getter != null && getter.isPublic());
 		return result;
 	}
 	

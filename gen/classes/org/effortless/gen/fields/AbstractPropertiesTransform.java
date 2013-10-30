@@ -4,7 +4,7 @@ import org.effortless.gen.Transform;
 import org.effortless.gen.GField;
 import org.effortless.model.FileEntity;
 
-public abstract class AbstractPropertiesClassTransform extends Object implements Transform<GField> {
+public abstract class AbstractPropertiesTransform extends Object implements Transform<GField> {
 
 	@Override
 	public void process(GField gField) {

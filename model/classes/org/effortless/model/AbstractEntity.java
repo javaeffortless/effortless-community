@@ -3,9 +3,7 @@ package org.effortless.model;
 import java.beans.PropertyChangeEvent;
 
 import java.beans.PropertyChangeListener;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -28,7 +26,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.effortless.core.ModelException;
 import org.effortless.core.ObjectUtils;
 import org.effortless.core.PropertyUtils;
-import org.effortless.model.log.ListPropertyChanges;
 import org.effortless.model.log.LogChanges;
 import org.effortless.model.restrictions.Restriction;
 import org.effortless.security.Resource;
@@ -614,7 +611,7 @@ public abstract class AbstractEntity<Type extends AbstractEntity<Type>> extends 
 	}
 
 	public void saveLogException(Throwable e, String actionName, Long time) {// throws ModelException {
-		if (this.doCheckLogCreate()) {
+		if (this.doCheckLog() && this.doCheckLogCreate()) {
 			String comment = (e != null ? e.getMessage() : null);
 			_saveLog(actionName, comment, time);
 		}
@@ -637,7 +634,7 @@ public abstract class AbstractEntity<Type extends AbstractEntity<Type>> extends 
 
 	@Override
 	public void saveActionLog(String actionName, String comment, Long time) {// throws ModelException {
-		if (this.doCheckLogCreate()) {
+		if (this.doCheckLog() && this.doCheckLogCreate()) {
 			_saveLog(actionName, comment, time);
 		}
 	}
@@ -651,21 +648,21 @@ public abstract class AbstractEntity<Type extends AbstractEntity<Type>> extends 
 	
 //	@Override
 	protected void saveCreateLog (Long time) {// throws ModelException {
-		if (this.doCheckLogCreate()) {
+		if (this.doCheckLog() && this.doCheckLogCreate()) {
 			_saveLog(ACTION_CREATE_LOG, null, time);
 		}
 	}
 
 //	@Override
 	protected void saveReadLog(Long time) {// throws ModelException {
-		if (this.doCheckLogRead()) {
+		if (this.doCheckLog() && this.doCheckLogRead()) {
 			_saveLog(ACTION_READ_LOG, null, time);
 		}
 	}
 
 //	@Override
 	protected void saveUpdateLog(Long time) {// throws ModelException {
-		if (this.doCheckLogUpdate()) {
+		if (this.doCheckLog() && this.doCheckLogUpdate()) {
 			String comment = (this._changes != null ? this._changes.toText() : null);
 			_saveLog(ACTION_UPDATE_LOG, comment, time);
 			this._changes = null;
@@ -688,21 +685,21 @@ public abstract class AbstractEntity<Type extends AbstractEntity<Type>> extends 
 
 //	@Override
 	protected void saveDeleteLog(Long time) {// throws ModelException {
-		if (this.doCheckLogDelete()) {
+		if (this.doCheckLog() && this.doCheckLogDelete()) {
 			_saveLog(ACTION_DELETE_LOG, null, time);
 		}
 	}
 
 //	@Override
 	protected void saveUndeleteLog(Long time) {// throws ModelException {
-		if (this.doCheckLogUndelete()) {
+		if (this.doCheckLog() && this.doCheckLogUndelete()) {
 			_saveLog(ACTION_UNDELETE_LOG, null, time);
 		}
 	}
 
 //	@Override
 	protected void saveEraseLog(Long time) {// throws ModelException {
-		if (this.doCheckLogErase()) {
+		if (this.doCheckLog() && this.doCheckLogErase()) {
 			_saveLog(ACTION_ERASE_LOG, null, time);
 		}
 	}

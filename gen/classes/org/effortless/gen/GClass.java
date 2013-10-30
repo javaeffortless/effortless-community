@@ -13,23 +13,15 @@ import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.groovy.ast.GenericsType;
 import org.codehaus.groovy.ast.InnerClassNode;
 import org.codehaus.groovy.ast.MethodNode;
-import org.codehaus.groovy.ast.Parameter;
-import org.codehaus.groovy.ast.expr.BinaryExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
-import org.codehaus.groovy.ast.expr.FieldExpression;
-import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.groovy.ast.stmt.EmptyStatement;
-import org.codehaus.groovy.ast.stmt.ExpressionStatement;
-import org.codehaus.groovy.ast.stmt.ReturnStatement;
 import org.codehaus.groovy.control.SourceUnit;
-import org.codehaus.groovy.syntax.Token;
-import org.codehaus.groovy.syntax.Types;
 import org.effortless.ann.Finder;
 import org.effortless.ann.NoTransform;
 import org.effortless.core.ClassNodeHelper;
-import org.effortless.core.DebugUtils;
-import org.effortless.core.StringUtils;
+import org.effortless.core.Collections;
+import org.effortless.model.Entity;
 import org.objectweb.asm.Opcodes;
 
 public class GClass extends Object implements GNode {
@@ -596,15 +588,36 @@ public class GClass extends Object implements GNode {
 		return (this.clazz != null ? this.clazz.getName() : null);
 	}
 
-	public List<GField> getFields() {
+	public List<GField> getAllFields() {
 		List<GField> result = null;
-		List<FieldNode> nodes = (this.clazz != null ? this.clazz.getFields() : null);
+		result = new ArrayList<GField>();
+		ClassNode node = this.clazz;
+		do {
+			List<GField> fields = getFields(node);
+			Collections.addAll(result, fields);
+			node = (node != null ? node.getSuperClass() : null);
+		} while (node != null);
+		return result;
+	}
+
+	protected List<GField> getFields (ClassNode clazz) {
+		List<GField> result = null;
+		List<FieldNode> nodes = (clazz != null ? clazz.getFields() : null);
 		if (nodes != null) {
 			result = new ArrayList<GField>();
+			for (FieldNode node : nodes) {
+				GField gField = new GField(this, node);
+				if (gField != null && !gField.isStatic() && !gField.isFinal()) {
+					result.add(gField);
+				}
+			}
 		}
-		for (FieldNode node : nodes) {
-			result.add(new GField(this, node));
-		}
+		return result;
+	}
+	
+	public List<GField> getFields() {
+		List<GField> result = null;
+		result = getFields(this.clazz);
 		return result;
 	}
 
@@ -672,6 +685,44 @@ public class GClass extends Object implements GNode {
 		return result;
 	}
 
+	public List<GMethod> getListMethods (String name) {
+		List<GMethod> result = null;
+		result = new ArrayList<GMethod>();
+		List<MethodNode> methods = _listMethods(name);
+		if (methods != null && methods.size() > 0) {
+			for (MethodNode method : methods) {
+				GMethod gMethod = toGMethod(method);
+				if (gMethod != null) {
+					result.add(gMethod);
+				}
+			}
+		}
+		return result;
+	}
+	
+	protected List<MethodNode> _listMethods (String name) {
+		List<MethodNode> result = null;
+		result = new ArrayList<MethodNode>();
+		ClassNode node = this.clazz;
+		if (name != null && node != null) {
+			do {
+				List<MethodNode> methods = (node != null ? node.getMethods(name) : null);
+				Collections.addAll(result, methods);
+				node = (node != null ? node.getSuperClass() : null);
+			} while (node != null);
+//			List<MethodNode> methods = (this.clazz != null ? this.clazz.getMethods(name) : null);
+			List<MethodNode> methods = (this.clazz != null ? this.clazz.getAllDeclaredMethods() : null);
+			if (methods != null && methods.size() > 0) {
+				for (MethodNode method : methods) {
+					if (method != null && name.equals(method.getName())) {
+						result.add(method);
+					}
+				}
+			}
+		}
+		return result;
+	}
+	
 	public List<GMethod> getAllDeclaredMethods() {
 		List<GMethod> result = null;
 		List<MethodNode> methods = (this.clazz != null ? this.clazz.getAllDeclaredMethods() : null);
@@ -718,5 +769,37 @@ public class GClass extends Object implements GNode {
 		return result;
 	}
 	
+	public List<GField> listRefFields() {
+		return listFields(Entity.class);
+	}
+	
+	public List<GField> listFields (Class<?> type) {
+		List<GField> result = null;
+		result = new ArrayList<GField>();
+		if (type != null) {
+			List<GField> fields = getAllFields();
+			for (GField field : fields) {
+				if (field != null && field.isType(type)) {
+					result.add(field);
+				}
+			}
+		}
+		
+		return result;
+	}
+
+	public List<GField> getProperties() {
+		List<GField> result = null;
+		List<GField> fields = getAllFields();
+		result = new ArrayList<GField>();
+		if (fields != null && fields.size() > 0) {
+			for (GField field : fields) {
+				if (field.isProperty()) {
+					result.add(field);
+				}
+			}
+		}
+		return result;
+	}
 	
 }

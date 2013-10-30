@@ -15,8 +15,8 @@ public class CreateLogEntityTransform extends AbstractCreateClassTransform<GClas
 		
 		result = tryNeedsNewExternalEntity(clazz, ClassNodeHelper.toClassNode(LogData.class), null);
 
-//		FileEntityTransform transform = new FileEntityTransform();
-//		transform.process(result);
+		AdaptLogEntityTransform transform = new AdaptLogEntityTransform();
+		transform.process(result);
 		
 		setResult(result);
 	}

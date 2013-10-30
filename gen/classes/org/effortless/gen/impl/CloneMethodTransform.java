@@ -10,11 +10,11 @@ import org.effortless.gen.GField;
 import org.effortless.gen.Transform;
 import org.effortless.gen.GMethod;
 
-public class CloneMethodClassTransform extends Object implements Transform<GClass> {
+public class CloneMethodTransform extends Object implements Transform<GClass> {
 
 	@Override
 	public void process(GClass clazz) {
-		List<GField> fields = clazz.getFields();
+		List<GField> fields = clazz.getProperties();
 		
 		GMethod mg = clazz.addMethod("createClone").setProtected(true).setReturnType(clazz);
 		mg.declVariable(clazz, "result", mg.callConstructor(clazz));

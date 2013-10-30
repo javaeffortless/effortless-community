@@ -14,9 +14,9 @@ import org.effortless.gen.GMethod;
 import org.effortless.gen.InfoModel;
 import org.effortless.model.CriteriaFilter;
 
-public class CreateFinderFilterClassTransform extends Object implements Transform<GClass> {
+public class CreateFinderFilterTransform extends Object implements Transform<GClass> {
 
-	public CreateFinderFilterClassTransform () {
+	public CreateFinderFilterTransform () {
 		super();
 		initiate();
 	}

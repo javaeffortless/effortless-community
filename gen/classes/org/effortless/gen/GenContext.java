@@ -9,10 +9,10 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.effortless.core.GlobalContext;
-import org.effortless.gen.impl.HibernateEntityClassTransform;
-import org.effortless.gen.impl.SamePackageClassTransform;
+import org.effortless.gen.impl.HibernateEntityTransform;
+import org.effortless.gen.impl.SamePackageTransform;
 import org.effortless.gen.impl.SamePackageModuleTransform;
-import org.effortless.gen.impl.UpdateDbClassTransform;
+import org.effortless.gen.impl.UpdateDbTransform;
 import org.effortless.gen.ui.EditorVMTransform;
 import org.effortless.gen.ui.FinderVMTransform;
 import org.effortless.server.ServerContext;
@@ -125,11 +125,11 @@ public class GenContext {
 		result = (List<Transform>)GlobalContext.get(CLASS_TRANSFORMS);
 		if (result == null) {
 			result = new ArrayList<Transform>();
-			result.add(new SamePackageClassTransform());
-			result.add(new HibernateEntityClassTransform());
+			result.add(new SamePackageTransform());
+			result.add(new HibernateEntityTransform());
 			result.add(new FinderVMTransform());
 			result.add(new EditorVMTransform());
-			result.add(new UpdateDbClassTransform());
+			result.add(new UpdateDbTransform());
 			GlobalContext.set(CLASS_TRANSFORMS, result);
 		}
 		return result;

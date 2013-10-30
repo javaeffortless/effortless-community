@@ -7,7 +7,7 @@ import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
 
-public class EntityTableClassTransform extends Object implements Transform<GClass> {
+public class EntityTableTransform extends Object implements Transform<GClass> {
 
 	@Override
 	public void process(GClass clazz) {

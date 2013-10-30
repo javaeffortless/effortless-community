@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.effortless.core.ObjectUtils;
+import org.effortless.model.ListPropertyChanges;
 
 public class LogChanges extends Object implements Externalizable {
 

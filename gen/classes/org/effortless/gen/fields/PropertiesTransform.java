@@ -8,7 +8,7 @@ import org.effortless.gen.GMethod;
 import org.effortless.gen.impl.CreateFileEntityTransform;
 import org.objectweb.asm.Opcodes;
 
-public class PropertiesClassTransform extends AbstractPropertiesClassTransform {
+public class PropertiesTransform extends AbstractPropertiesTransform {
 
 	protected void textProcessField (GField field) {
 		protectField(field);

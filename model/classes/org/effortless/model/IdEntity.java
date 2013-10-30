@@ -14,7 +14,7 @@ public interface IdEntity extends MarkDeleted {
 	
 	public Boolean getDeleted();
 	
-	public void setDeleted (Boolean newValue);
+//	public void setDeleted (Boolean newValue);
 
 	public boolean isSameVersion() throws ModelException;
 	

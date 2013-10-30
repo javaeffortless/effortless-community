@@ -6,7 +6,7 @@ import org.effortless.gen.GMethod;
 import org.effortless.gen.InfoModel;
 import org.objectweb.asm.Opcodes;
 
-public class MappingPropertiesClassTransform extends AbstractPropertiesClassTransform {
+public class MappingPropertiesTransform extends AbstractPropertiesTransform {
 
 	protected void textProcessField (GField field) {
 		GMethod m = field.getGetterMethod();

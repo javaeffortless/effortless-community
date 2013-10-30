@@ -145,8 +145,8 @@ public class AbstractIdEntity<Type extends AbstractIdEntity<Type>> extends Abstr
 		return this.deleted;
 	}
 
-	@Override
-	public void setDeleted(Boolean newValue) {
+//	@Override
+	protected void setDeleted(Boolean newValue) {
 		if (true) {
 			_setProperty("deleted", this.deleted, this.deleted = newValue);
 		}

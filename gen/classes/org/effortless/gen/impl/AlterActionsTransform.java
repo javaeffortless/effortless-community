@@ -12,7 +12,7 @@ import org.effortless.gen.GClass;
 import org.effortless.gen.GMethod;
 import org.effortless.model.AbstractEntity;
 
-public class AlterActionsClassTransform extends Object implements Transform<GClass> {
+public class AlterActionsTransform extends Object implements Transform<GClass> {
 
 	@Override
 	public void process(GClass clazz) {

@@ -1,4 +1,4 @@
-package org.effortless.model.log;
+package org.effortless.model;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -8,8 +8,8 @@ import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.effortless.model.Entity;
-import org.effortless.model.IdEntity;
+import org.effortless.model.log.LogChangeItem;
+import org.effortless.model.log.ProxyList;
 import org.effortless.util.CvtrUtils;
 
 public class ListPropertyChanges<Type extends Entity<Type>> extends ProxyList<Type> implements PropertyChangeListener, LogChangeItem {
@@ -77,9 +77,9 @@ public class ListPropertyChanges<Type extends Entity<Type>> extends ProxyList<Ty
 		boolean result = false;
 		if (o != null) {
 			if (this.exclusive) {
-				IdEntity toDelete = null;
+				AbstractIdEntity toDelete = null;
 				try {
-					toDelete = (IdEntity)o;
+					toDelete = (AbstractIdEntity)o;
 				}
 				catch (ClassCastException e) {
 				}

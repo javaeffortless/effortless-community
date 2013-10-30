@@ -15,7 +15,7 @@ import org.effortless.model.AbstractIdEntity;
 import org.effortless.model.Filter;
 import org.objectweb.asm.Opcodes;
 
-public class EntityStaticMethodsClassTransform extends Object implements Transform<GClass> {
+public class EntityStaticMethodsTransform extends Object implements Transform<GClass> {
 
 	/**
 	 * 

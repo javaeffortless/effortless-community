@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.effortless.core.ModelException;
 import org.effortless.gen.GClass;
+import org.effortless.gen.InfoModel;
 import org.effortless.gen.Transform;
 import org.effortless.gen.GField;
 import org.effortless.model.SessionManager;
@@ -91,7 +92,7 @@ public class EditorVMTransform extends Object implements Transform<GClass> {
 		
 		FieldTransform fieldTransform = new FieldTransform();
 		
-		List<GField> properties = getEditorProperties(clazz);
+		List<GField> properties = InfoModel.getEditorProperties(clazz);
 		String varId = "editor";
 		
 		List<String> zul = new ArrayList<String>();
@@ -128,18 +129,6 @@ public class EditorVMTransform extends Object implements Transform<GClass> {
 		} catch (IOException e) {
 			throw new ModelException(e);
 		} 
-	}
-	
-	protected List<GField> getEditorProperties (GClass clazz) {
-		List<GField> result = null;
-		result = new ArrayList<GField>();
-		List<GField> fields = clazz.getFields();
-		for (GField field : fields) {
-			if (!result.contains(field)) {
-				result.add(field);
-			}
-		}
-		return result;
 	}
 	
 }

@@ -9,7 +9,7 @@ import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
 import org.effortless.model.StartupDb;
 
-public class UpdateDbClassTransform extends Object implements Transform<GClass> {
+public class UpdateDbTransform extends Object implements Transform<GClass> {
 
 	@Override
 	public void process(GClass clazz) {

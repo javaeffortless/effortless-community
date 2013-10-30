@@ -43,6 +43,7 @@ import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.Collections;
+import org.effortless.core.ModelException;
 import org.objectweb.asm.Opcodes;
 
 public class GMethod extends Object implements GNode {
@@ -848,7 +849,14 @@ public class GMethod extends Object implements GNode {
 	}
 	
 	public Expression field (String fieldName) {
-		return field(this.classGen.getClassNode().getField(fieldName));
+		Expression result = null;
+		FieldNode _field = (fieldName != null ? this.classGen.getClassNode().getField(fieldName) : null);
+		if (_field == null) {
+			throw new ModelException("field not found " + fieldName);
+		}
+		result = new FieldExpression(_field);
+		return result;
+//		return field(this.classGen.getClassNode().getField(fieldName));
 	}
 
 	public Expression field (GField field) {
@@ -857,7 +865,13 @@ public class GMethod extends Object implements GNode {
 
 	public Expression field (FieldNode field) {
 		Expression result = null;
-		result = new FieldExpression(field);
+		String fieldName = (field != null ? field.getName() : null);
+		result = field(fieldName);
+//		FieldNode _field = (fieldName != null ? this.classGen.getClassNode().getField(fieldName) : null);
+//		if (_field == null) {
+//			throw new ModelException("field not found " + fieldName);
+//		}
+//		result = new FieldExpression(_field);
 		return result;
 	}
 
@@ -1479,6 +1493,48 @@ public class GMethod extends Object implements GNode {
 	public GMethod declVariable(GClass clazz, String name) {
 		return declVariable((clazz != null ? clazz.getClassNode() : null), name);
 	}
+
+	public boolean isPublic() {
+		return _isModifier(Opcodes.ACC_PUBLIC);
+	}
 	
+	protected boolean _isModifier (int modifier) {
+		boolean result = false;
+		if (this.methodNode != null) {
+			int modifiers = this.methodNode.getModifiers();
+			result = (modifiers & modifier) != 0;
+		}
+		return result;
+	}
+
+	public boolean isReturnType(ClassNode type) {
+		boolean result = false;
+		ClassNode nodeClass = (this.methodNode != null ? this.methodNode.getReturnType() : null);
+		result = (type != null && nodeClass != null && nodeClass.isDerivedFrom(type));
+		return result;
+	}
+
+	public int getNumParameters() {
+		int result = 0;
+		Parameter[] params = (this.methodNode != null ? this.methodNode.getParameters() : null);
+		result = (params != null ? params.length : 0);
+		return result;
+	}
+
+	public boolean isVoid() {
+		return isReturnType(ClassHelper.VOID_TYPE);
+	}
+
+	public boolean checkParameterType(int idx, ClassNode type) {
+		boolean result = false;
+		Parameter[] params = (this.methodNode != null ? this.methodNode.getParameters() : null);
+		int length = (params != null ? params.length : 0);
+		Parameter param = (idx >= 0 && idx < length && length > 0 ? params[idx] : null);
+		ClassNode fieldClass = (this.methodNode != null ? this.methodNode.getReturnType() : null);
+		result = (type != null && fieldClass != null && fieldClass.isDerivedFrom(type));
+		ClassNode nodeClass = (param != null ? param.getType() : null);
+		result = (type != null && nodeClass != null && nodeClass.isDerivedFrom(type));
+		return result;
+	}
 	
 }

@@ -7,7 +7,7 @@ import org.effortless.gen.GClass;
 import org.effortless.gen.Transform;
 import org.effortless.server.ServerContext;
 
-public class SamePackageClassTransform extends Object implements Transform<GClass> {
+public class SamePackageTransform extends Object implements Transform<GClass> {
 
 	@Override
 	public void process(GClass cg) {

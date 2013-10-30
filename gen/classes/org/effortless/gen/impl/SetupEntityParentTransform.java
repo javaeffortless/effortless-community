@@ -5,7 +5,7 @@ import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
 import org.effortless.model.AbstractIdEntity;
 
-public class SetupEntityParentClassTransform extends Object implements Transform<GClass> {
+public class SetupEntityParentTransform extends Object implements Transform<GClass> {
 
 	@Override
 	public void process(GClass cg) {

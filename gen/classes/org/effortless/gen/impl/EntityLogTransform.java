@@ -22,13 +22,13 @@ import org.effortless.gen.GenContext;
 import org.effortless.model.LogData;
 import org.objectweb.asm.Opcodes;
 
-public class EntityLogClassTransform extends Object implements Transform<GClass> {
+public class EntityLogTransform extends Object implements Transform<GClass> {
 
 	public static final ClassNode NO_LOG_CLAZZ = ClassNodeHelper.toClassNode(NoLog.class);
 	
 	@Override
 	public void process(GClass clazz) {
-		if (false && !clazz.hasAnnotation(NO_LOG_CLAZZ)) {
+		if (true && !clazz.hasAnnotation(NO_LOG_CLAZZ)) {
 			GApplication app = clazz.getApplication();
 			GClass logClass = app.getLogClass();
 			if (logClass == null) {

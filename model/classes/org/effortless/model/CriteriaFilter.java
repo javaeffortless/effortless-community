@@ -1145,9 +1145,9 @@ public class CriteriaFilter<Type extends Entity<Type>> extends AbstractFilter<Ty
 		boolean result = false;
 		if (o != null) {
 			if (true) {
-				IdEntity toDelete = null;
+				AbstractIdEntity toDelete = null;
 				try {
-					toDelete = (IdEntity)o;
+					toDelete = (AbstractIdEntity)o;
 				}
 				catch (ClassCastException e) {
 				}

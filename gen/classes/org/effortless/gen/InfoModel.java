@@ -16,7 +16,7 @@ public class InfoModel extends Object {
 		List<GField> result = null;
 		if (clazz != null) {
 			result = new ArrayList<GField>();
-			List<GField> fields = clazz.getFields();
+			List<GField> fields = clazz.getProperties();
 			for (GField field : fields) {
 				if (isNotNull(clazz, field)) {
 					result.add(field);
@@ -30,7 +30,7 @@ public class InfoModel extends Object {
 		List<GField> result = null;
 		if (clazz != null) {
 			result = new ArrayList<GField>();
-			List<GField> fields = clazz.getFields();
+			List<GField> fields = clazz.getProperties();
 			for (GField field : fields) {
 				if (isUnique(clazz, field)) {
 					result.add(field);
@@ -86,8 +86,8 @@ public class InfoModel extends Object {
 	
 	public static Boolean containsAnyField (GClass clazz, String[] names) {
 		Boolean result = false;
+		List<GField> fields = clazz.getProperties();
 		for (String name : names) { 
-			List<GField> fields = clazz.getFields();
 			for (GField field : fields) {
 				if (field.getName().contains(name)) {
 					result = true;
@@ -206,11 +206,11 @@ public class InfoModel extends Object {
         result = (result != null ? result : new ArrayList<GField>());
         int length = (result != null ? result.size() : 0);
         if (length < 5) {
-                List<GField> fields = clazz.getFields();
+                List<GField> fields = clazz.getProperties();
                 for (GField field : fields) {
                         if (!result.contains(field)) {
                                 result.add(field);
-                                if (result.size() >= 50) {
+                                if (result.size() >= 5) {
                                         break;
                                 }
                         }
@@ -221,7 +221,7 @@ public class InfoModel extends Object {
 
 	public static List<GField> listFileFields(GClass clazz) {
 		List<GField> result = null;
-		List<GField> fields = clazz.getFields();
+		List<GField> fields = clazz.getProperties();
 		result = new ArrayList<GField>();
 		for (GField field : fields) {
 			if (field.isType(FileEntity.class)) {
@@ -233,5 +233,19 @@ public class InfoModel extends Object {
 
 //si return type => se considera de consulta => NOLOG
 //si NO return type => se considera de modificacion => LOG
+
+	public static List<GField> getEditorProperties (GClass clazz) {
+		List<GField> result = null;
+		result = new ArrayList<GField>();
+		List<GField> fields = clazz.getProperties();
+		for (GField field : fields) {
+			if (!result.contains(field)) {
+				result.add(field);
+			}
+		}
+		return result;
+	}
+	
+	
 	
 }

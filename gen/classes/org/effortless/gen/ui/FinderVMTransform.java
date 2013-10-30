@@ -33,7 +33,7 @@ public class FinderVMTransform extends Object implements Transform<GClass> {
 
 	public void process (GClass clazz) {
 		if (clazz != null && clazz.checkEntityValid() && !clazz.checkEnum()) {
-			CreateFinderFilterClassTransform ffT = new CreateFinderFilterClassTransform();
+			CreateFinderFilterTransform ffT = new CreateFinderFilterTransform();
 			ffT.process(clazz);
 			GClass finderFilter = ffT.getResult();
 
