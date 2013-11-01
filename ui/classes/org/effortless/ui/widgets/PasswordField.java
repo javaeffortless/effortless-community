@@ -1,6 +1,5 @@
 package org.effortless.ui.widgets;
 
-//import org.effortless.core.ObjectUtils;
 import org.effortless.core.ObjectUtils;
 import org.effortless.ui.impl.CteUi;
 import org.effortless.ui.widgets.helper.PasswordFieldEditExtension;
@@ -8,9 +7,6 @@ import org.zkoss.zk.ui.annotation.ComponentAnnotation;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.select.annotation.Listen;
-//import org.zkoss.zk.ui.select.annotation.Wire;
-import org.zkoss.zul.Textbox;
 	 
 public class PasswordField extends TextField {
 	    
@@ -120,7 +116,9 @@ public class PasswordField extends TextField {
 
 	protected void _onClickPassword() {
 		_buildExtension();
-		this.extension.startPopup();
+		Boolean _readonly = getReadonly();
+		boolean readonly = (_readonly != null && _readonly.booleanValue());
+		this.extension.startPopup(readonly);
 	}
 
 	protected PasswordFieldEditExtension extension;
@@ -138,6 +136,10 @@ public class PasswordField extends TextField {
 
 	public void hide() {
 		this.wgt.setType("password");
+	}
+
+	protected void initUi_Readonly() {
+		super.initUi_Readonly();
 	}
 	
 }	

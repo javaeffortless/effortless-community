@@ -4,14 +4,14 @@ import java.beans.PropertyChangeEvent;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.IOException;
+//import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.effortless.core.ModelException;
+//import org.effortless.core.ModelException;
 import org.effortless.util.FileHashes;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -126,6 +126,7 @@ public class CriteriaFilter<Type extends Entity<Type>> extends AbstractFilter<Ty
 		else {
 			this.criteria.setFirstResult(0);
 			this.criteria.setMaxResults(-1);
+//			this.criteria.addOrder(org.hibernate.criterion.Order.asc("name"));
 		}
 	}
 
@@ -473,6 +474,20 @@ public class CriteriaFilter<Type extends Entity<Type>> extends AbstractFilter<Ty
 		return this;
 	}
 
+	public Filter<Type> orderAsc (String name) {
+		if (name != null) {
+			this.criteria.addOrder(Order.asc(name));
+		}
+		return this;
+	}
+	
+	public Filter<Type> orderDesc (String name) {
+		if (name != null) {
+			this.criteria.addOrder(Order.desc(name));
+		}
+		return this;
+	}
+	
 	public Filter<Type> ilk (String name, Object param) {
 		if (_notNull(param)) {
 			try {

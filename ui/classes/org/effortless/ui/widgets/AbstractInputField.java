@@ -19,12 +19,16 @@ public class AbstractInputField<W extends InputElement, T extends Object> extend
     	
 //    	this.wgt.setValue(this.getValue());
 
+    	initUi_Readonly();
+    }
+
+	protected void initUi_Readonly() {
 		Boolean readonly = getReadonly();
 		readonly = (readonly != null ? readonly : Boolean.FALSE);
 		this.wgt.setReadonly(readonly);
 		
 		Boolean disabled = readonly;
 		this.wgt.setDisabled(disabled);
-    }
+	}
 
 }

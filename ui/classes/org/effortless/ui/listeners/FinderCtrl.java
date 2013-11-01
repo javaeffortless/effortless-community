@@ -250,7 +250,7 @@ public class FinderCtrl extends Object implements org.zkoss.zk.ui.event.EventLis
 	}
 
 	protected void onFinderPreviousPage(Event event) {
-    	System.out.println("ON PREVIOUS PAGE ON MAIN CTRL");
+//    	System.out.println("ON PREVIOUS PAGE ON MAIN CTRL");
     	
 		FinderWindow finderWindow = (FinderWindow)event.getTarget();
 		EmbeddedFilterWindow filterWindow = (finderWindow != null ? finderWindow.getFilterEditor() : null);

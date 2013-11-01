@@ -23,9 +23,10 @@ public class PasswordFieldEditExtension extends AbstractComponent {
 		super();
 	}
 
-	public void startPopup () {
+	public void startPopup (boolean readonly) {
 		Boolean openPopup = (Boolean)this.wPopup.getAttribute(CteUi.OPEN_POPUP);
 		if (openPopup == null || openPopup.booleanValue() == false) {
+			_updateReadonly(readonly);
 			this.wPopup.open(this.field, doGetPopupPosition());
 			this.wPopup.setAttribute(CteUi.OPEN_POPUP, Boolean.TRUE);
 		}
@@ -34,7 +35,12 @@ public class PasswordFieldEditExtension extends AbstractComponent {
 			this.wPopup.close();
 		}
 	}
-	
+
+	protected void _updateReadonly(boolean readonly) {
+		this.mEdit.setVisible(!readonly);
+		this.mClear.setVisible(!readonly);
+	}
+
 	protected String doGetPopupPosition () {
 		return "overlap_after";
 	}

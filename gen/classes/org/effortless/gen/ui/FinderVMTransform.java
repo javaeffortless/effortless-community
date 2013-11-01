@@ -58,17 +58,18 @@ public class FinderVMTransform extends Object implements Transform<GClass> {
 	public void writeMoreInfoZul(GClass clazz) {
 		String className = clazz.getNameWithoutPackage();
 		
-		List<GField> properties = InfoModel.getFinderProperties(clazz);
-		
+		List<GField> properties = InfoModel.getInfoViewProperties(clazz);
+		FieldTransform ft = new FieldTransform();
 		List<String> zul = new ArrayList<String>();
 		zul.add("<zk>");
 		zul.add("  <info-window>");
 		int size = 0;
 		for (GField property : properties) {
 			size += 1;
-			String pName = property.getName();
-			String lName = StringUtils.uncapFirst(pName);
-			String widgetField = "<label-field value=\"$" + lName + "\" />";
+//			String pName = property.getName();
+//			String lName = StringUtils.uncapFirst(pName);
+//			String widgetField = "<label-field value=\"$" + lName + "\" />";
+			String widgetField = ft.writeReadonly(property);
 			zul.add("    " + widgetField + "");
 			if (size > 0) {
 				break;

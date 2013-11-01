@@ -1,11 +1,9 @@
 package org.effortless.gen.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
-import org.codehaus.groovy.ast.FieldNode;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
@@ -76,9 +74,18 @@ public class CreateFinderFilterTransform extends Object implements Transform<GCl
 					addFilterCondition(mg, field);
 	//				mg.add(mg.call("ilk", mg.cte(fName), mg.field(fName)));
 				}
+//				this.criteria.addOrder(org.hibernate.criterion.Order.desc("id"));
+//				mg.add(mg.call("orderDesc", mg.cte("id")));
 			}
 			mg.add(mg.call(mg.cteSuper(), "setupConditions"));
 
+//			protected void initiateOrderBy () {
+//			this.orderBy = null;
+//		}
+			mg = cg.addMethod("initiateOrderBy").setReturnType(ClassHelper.VOID_TYPE);
+			mg.add(mg.assign(mg.field("orderBy"), mg.cte("id DESC")));
+			
+			
 			clazz.addAnnotation(FILTER_ANN);
 			setResult(cg);
 		}

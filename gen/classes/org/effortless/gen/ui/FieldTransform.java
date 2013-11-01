@@ -13,6 +13,20 @@ public class FieldTransform extends Object/* implements Transform<GField>*/ {
 	protected void initiate () {
 		
 	}
+
+	public String writeReadonly (GField field) {
+		String result = null;
+		String pName = field.getName();
+		String lName = StringUtils.uncapFirst(pName);
+		if ((field.isFile() || field.isType(org.effortless.model.FileEntity.class)) && checkPhoto(field)) {
+			result = "<photo-field value=\"$" + lName + "\" readonly=\"true\" />";
+		}
+		else {
+			result = "<label-field value=\"$" + lName + "\" />";
+		}
+		return result;
+	}
+	
 	
 	public String writeZul (GField field) {
 		String result = null;

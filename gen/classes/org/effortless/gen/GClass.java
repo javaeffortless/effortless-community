@@ -17,7 +17,6 @@ import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.stmt.EmptyStatement;
 import org.codehaus.groovy.control.SourceUnit;
-import org.effortless.ann.Finder;
 import org.effortless.ann.NoTransform;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.Collections;
@@ -621,6 +620,13 @@ public class GClass extends Object implements GNode {
 		return result;
 	}
 
+	public GField getField(String name) {
+		GField result = null;
+		FieldNode node = (this.clazz != null && name != null ? this.clazz.getField(name) : null);
+		result = (node != null ? new GField(this, node) : null);
+		return result;
+	}
+
 	public boolean hasAnnotation (Class<?> clazz) {
 		boolean result = false;
 		if (clazz != null) {
@@ -667,7 +673,7 @@ public class GClass extends Object implements GNode {
 
 	public GAnnotation getAnnotation (Class<?> clazz) {
 		GAnnotation result = null;
-		List<AnnotationNode> annotations = this.clazz.getAnnotations(ClassNodeHelper.toClassNode(Finder.class));
+		List<AnnotationNode> annotations = this.clazz.getAnnotations(ClassNodeHelper.toClassNode(clazz));
 		if (annotations != null && annotations.size() == 1) {
 			AnnotationNode ann = annotations.get(0);
 			result = new GAnnotation(ann);
@@ -797,6 +803,18 @@ public class GClass extends Object implements GNode {
 				if (field.isProperty()) {
 					result.add(field);
 				}
+			}
+		}
+		return result;
+	}
+
+	public List<GMethod> getPublicMethods() {
+		List<GMethod> result = null;
+		result = new ArrayList<GMethod>();
+		List<GMethod> methods = getMethods();
+		for (GMethod method : methods) {
+			if (method != null && method.isPublic()) {
+				result.add(method);
 			}
 		}
 		return result;

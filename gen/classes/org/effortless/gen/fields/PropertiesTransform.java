@@ -218,7 +218,7 @@ public class PropertiesTransform extends AbstractPropertiesTransform {
 	protected boolean loadDefaultBooleanValue (GField field) {
 		boolean result = false;
 		String fieldName = (field != null ? field.getName() : null);
-		result = Collections.contains(BOOL_DEFAULT_TRUE, fieldName);
+		result = Collections.like(BOOL_DEFAULT_TRUE, fieldName);
 		return result;
 	}
 
@@ -232,11 +232,13 @@ public class PropertiesTransform extends AbstractPropertiesTransform {
 	}
 	
 	public static final String[] DATE_CURRENT_DEFAULT_TRUE = {"alta", "create"};
+	public static final String[] DATE_CURRENT_DEFAULT_TRUE_EQUALS = {"fecha", "date"};
 	
 	protected boolean loadDefaultDateValue (GField field) {
 		boolean result = false;
 		String fieldName = (field != null ? field.getName() : null);
-		result = Collections.contains(DATE_CURRENT_DEFAULT_TRUE, fieldName);
+		result = Collections.like(DATE_CURRENT_DEFAULT_TRUE, fieldName);
+		result = result || Collections.contains(DATE_CURRENT_DEFAULT_TRUE_EQUALS, fieldName);
 		return result;
 	}
 	

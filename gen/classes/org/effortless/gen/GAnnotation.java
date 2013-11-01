@@ -40,4 +40,8 @@ public class GAnnotation extends Object implements GNode {
 		return result;
 	}
 
+	public String getValue() {
+		return getMemberString("value");
+	}
+
 }

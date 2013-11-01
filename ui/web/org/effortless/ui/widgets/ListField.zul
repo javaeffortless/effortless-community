@@ -4,12 +4,13 @@
 -->
 <!--
   <vlayout width="100%">
+    <listbox id="wgt" width="auto" seltype="single" checkmark="true">
 -->
 	<hlayout width="auto">
 	  <label id="labelNumElementsText" />
 	  <label id="labelNumElementsValue" />
 	</hlayout>
-    <listbox id="wgt" width="auto" seltype="single" checkmark="true">
+    <listbox id="wgt" seltype="single" checkmark="true">
     </listbox>
 	<hlayout id="wPagination" sclass="z-hlayout-right" width="auto">
 		<a id="btnPreviousPage" />

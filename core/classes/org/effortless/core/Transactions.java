@@ -48,6 +48,7 @@ public class Transactions extends Object {
 		Transaction tx = (id != null && this.list != null ? this.list.get(id) : null);
 		if (tx != null) {
 			tx.commit();
+			this.session.flush();
 //			this.session.close();
 			this.list.remove(id);
 		}
@@ -57,6 +58,7 @@ public class Transactions extends Object {
 		Transaction tx = (id != null && this.list != null ? this.list.get(id) : null);
 		if (tx != null) {
 			tx.rollback();
+			this.session.flush();
 //			this.session.close();
 			this.list.remove(id);
 		}

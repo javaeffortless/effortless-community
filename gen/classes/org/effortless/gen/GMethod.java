@@ -41,6 +41,7 @@ import org.codehaus.groovy.ast.stmt.ThrowStatement;
 import org.codehaus.groovy.ast.stmt.TryCatchStatement;
 import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
+import org.effortless.ann.Finder;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.Collections;
 import org.effortless.core.ModelException;
@@ -126,6 +127,10 @@ public class GMethod extends Object implements GNode {
 		return this;
 	}
 
+	public ClassNode getReturnType () {
+		return (this.methodNode != null ? this.methodNode.getReturnType() : null);
+	}
+	
 	public GMethod addParameter (Class<?> type, String name) {
 		return addParameter(ClassNodeHelper.toClassNode(type), name);
 	}
@@ -1534,6 +1539,16 @@ public class GMethod extends Object implements GNode {
 		result = (type != null && fieldClass != null && fieldClass.isDerivedFrom(type));
 		ClassNode nodeClass = (param != null ? param.getType() : null);
 		result = (type != null && nodeClass != null && nodeClass.isDerivedFrom(type));
+		return result;
+	}
+
+	public GAnnotation getAnnotation (Class<?> clazz) {
+		GAnnotation result = null;
+		List<AnnotationNode> annotations = this.methodNode.getAnnotations(ClassNodeHelper.toClassNode(clazz));
+		if (annotations != null && annotations.size() == 1) {
+			AnnotationNode ann = annotations.get(0);
+			result = new GAnnotation(ann);
+		}
 		return result;
 	}
 	

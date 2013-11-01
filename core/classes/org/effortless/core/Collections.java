@@ -30,6 +30,19 @@ public class Collections {
 		}
 		return result;
 	}
+
+	public static boolean like (String[] values, String value) {
+		boolean result = false;
+		int length = (values != null ? values.length : 0);
+		for (int i = 0; i < length; i++) {
+			String item = values[i];
+			if ((item == null && value == null) || (value != null && value.contains(item))) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
 	
 	public static boolean contains (String[] values, String value) {
 		boolean result = false;
@@ -43,7 +56,5 @@ public class Collections {
 		}
 		return result;
 	}
-	
-	
 	
 }

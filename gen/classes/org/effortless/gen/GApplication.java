@@ -26,6 +26,7 @@ public class GApplication implements GNode {
 		initiateName();
 		initiateLogClass();
 		initiateFileClass();
+		initiateSettingsClass();
 	}
 	
 	protected String name;
@@ -204,6 +205,27 @@ public class GApplication implements GNode {
 	public GClass loadClass(ClassNode fieldType) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	protected GClass settingsClass;
+
+	protected void initiateSettingsClass () {
+		this.settingsClass = null;
+	}
+	
+	public GClass getSettingsClass() {
+		return this.settingsClass;
+	}
+	
+	public void setSettingsClass(GClass newValue) {
+		this.settingsClass = newValue;
+	}
+
+	public GClass newClass(String name) {
+		GClass result = null;
+		result = new GClass(name, getSourceUnit());
+		this.addClass(result);
+		return result;
 	}
 	
 }

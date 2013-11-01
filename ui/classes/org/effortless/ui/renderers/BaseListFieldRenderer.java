@@ -70,7 +70,7 @@ public class BaseListFieldRenderer<T extends Object> {
 	    		if (i == 0) {
 	    			Listhead header = new Listhead();
 	    			header.setColumnshide(false);
-	    			header.setSizable(false);
+	    			header.setSizable(true);
 	    			boolean anyColumn = false;
 	    			for (int j = 0; j < numColumns; j++) {
 	    				Component cmp = components[j];
@@ -89,7 +89,7 @@ public class BaseListFieldRenderer<T extends Object> {
 	    					if (iconField != null) {
 		    					listheader.setWidth("24px");
 	    					}
-	    					else {
+	    					else if (false) {
 		    					listheader.setWidth("auto");
 	    					}
 	    					header.appendChild(listheader);

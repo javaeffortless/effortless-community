@@ -41,9 +41,11 @@ public class InfoWindow<T extends Object> extends AbstractFieldWindow<T> {
     
     protected void initUi_Wnd () {
     	//<window id="wnd" width="100%" height="100%" contentStyle="overflow:auto" border="normal">
-    	this.setWidth("100%");
-    	this.setHeight("100%");
-    	this.setContentStyle("overflow:auto");
+//    	this.setWidth("100%");
+//    	this.setHeight("100%");
+    	this.setWidth("auto");
+    	this.setHeight("auto");
+    	this.setContentStyle("overflow:hidden");
     	this.setBorder("none");
     	this.setSclass("info-window");
     }

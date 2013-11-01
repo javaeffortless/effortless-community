@@ -14,6 +14,7 @@ import org.effortless.gen.Transform;
 import org.effortless.gen.GApplication;
 import org.effortless.gen.GClass;
 import org.effortless.gen.GenContext;
+import org.effortless.gen.fields.CreateSettingsTransform;
 import org.effortless.model.SessionManager;
 import org.effortless.server.ServerContext;
 
@@ -76,6 +77,7 @@ public class EntityASTTransformation implements ASTTransformation, Opcodes {
 							}
 					}
 				}
+				new CreateSettingsTransform().process(app);
 //				appTransform.addItem(nodes, sourceUnit);
 			}
 		}

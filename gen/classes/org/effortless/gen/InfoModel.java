@@ -3,7 +3,9 @@ package org.effortless.gen;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.effortless.ann.Finder;
 import org.effortless.core.Collections;
+import org.effortless.core.StringUtils;
 import org.effortless.model.FileEntity;
 
 public class InfoModel extends Object {
@@ -241,6 +243,28 @@ public class InfoModel extends Object {
 		for (GField field : fields) {
 			if (!result.contains(field)) {
 				result.add(field);
+			}
+		}
+		return result;
+	}
+
+	public static List<GField> getInfoViewProperties(GClass clazz) {
+		List<GField> result = null;
+		if (clazz != null) {
+			GAnnotation ann = clazz.getAnnotation(Finder.class);
+			String infoProperties = StringUtils.forceNotNull((ann != null ? ann.getMemberString("info") : null));
+			if (infoProperties.length() > 0) {
+				result = new ArrayList<GField>();
+				String[] array = infoProperties.split(",");
+				for (String fName : array) {
+					GField field = clazz.getField(fName);
+					if (field != null) {
+						result.add(field);
+					}
+				}
+			}
+			else {
+				result = getFinderProperties(clazz);
 			}
 		}
 		return result;

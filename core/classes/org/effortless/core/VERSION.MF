@@ -1,8 +1,8 @@
-#Sun, 27 Oct 2013 08:48:15 +0100
+#Fri, 01 Nov 2013 01:23:37 +0000
 #Build Number for ANT. Do not edit!
-#Sun Oct 27 08:48:15 WET 2013
+#Fri Nov 01 01:23:36 WET 2013
 version=1.0alpha
-build.number=102
-build.date=20131027084815+0000
-build.author=
+build.number=105
+build.date=20131101012337+0000
 id=effortless-core
+build.author=

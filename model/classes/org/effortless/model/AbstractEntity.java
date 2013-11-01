@@ -1022,6 +1022,14 @@ public abstract class AbstractEntity<Type extends AbstractEntity<Type>> extends 
 				this.trySaveLogException(e, ERROR_CREATE, _executionTime);
 				throw e;
 			}
+			catch (org.hibernate.exception.ConstraintViolationException e) {
+				SessionManager.rollbackTransaction(this, txId);
+				if (!__stopExecutionTime) {
+					_executionTime = __stopExecutionTime();
+				}
+				this.trySaveLogException(e, ERROR_CREATE, _executionTime);
+				throw new ModelException(e);
+			}
 			catch (Exception e) {
 				SessionManager.rollbackTransaction(this, txId);
 				if (!__stopExecutionTime) {
@@ -1746,6 +1754,14 @@ public abstract class AbstractEntity<Type extends AbstractEntity<Type>> extends 
 					_executionTime = __stopExecutionTime();
 				}
 				throw e;
+			}
+			catch (org.hibernate.exception.ConstraintViolationException e) {
+				SessionManager.rollbackTransaction(this, txId);
+				if (!__stopExecutionTime) {
+					_executionTime = __stopExecutionTime();
+				}
+				this.trySaveLogException(e, ERROR_CREATE, _executionTime);
+				throw new ModelException(e);
 			}
 			catch (Exception e) {
 				SessionManager.rollbackTransaction(this, txId);
