@@ -6,7 +6,9 @@ import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.SourceUnit;
+import org.effortless.ann.Module;
 import org.effortless.core.ClassNodeHelper;
+import org.effortless.core.StringUtils;
 import org.effortless.model.Entity;
 
 public class GApplication implements GNode {
@@ -69,7 +71,20 @@ public class GApplication implements GNode {
 
 	public List<String> getModules () {
 		List<String> result = null;
-		result = getUnitNames();
+//		result = getUnitNames();
+		result = new ArrayList<String>();
+		List<GClass> classes = this.classes;
+		if (classes != null) {
+			List<String> newModules = new ArrayList<String>();
+			for (GClass clazz : classes) {
+				String newModule = StringUtils.forceNotNull(clazz.getModuleName());
+				if (newModule.length() > 0 && !newModules.contains(newModule)) {
+					newModules.add(newModule);
+				}
+			}
+			result.addAll(newModules);
+		}
+		
 		return result;
 	}
 
@@ -164,21 +179,35 @@ public class GApplication implements GNode {
 		return result;
 	}
 	
-	public List<ClassNode> getClassesByUnit (String unitName) {
-		List<ClassNode> result = null;
-		SourceUnit unit = getUnit(unitName);
-		result = (unit != null ? unit.getAST().getClasses() : null);
+	public List<GClass> getClassesByUnit (String unitName) {
+		List<GClass> result = null;
+
+		List<GClass> classes = this.classes;
+		if (classes != null) {
+			result = new ArrayList<GClass>();
+			for (GClass clazz : classes) {
+				String moduleName = clazz.getModuleName();
+				if (moduleName != null && moduleName.equals(unitName)) {
+					result.add(clazz);
+				}
+			}
+		}
+		
+		
+//		SourceUnit unit = getUnit(unitName);
+//		result = new ArrayList<ClassNode>();
+//		result = (unit != null ? unit.getAST().getClasses() : null);
 		return result;
 	}
 	
-	protected static final ClassNode ENTITY_CLASS = ClassNodeHelper.toClassNode(Entity.class);
+//	protected static final ClassNode ENTITY_CLASS = ClassNodeHelper.toClassNode(Entity.class);
 	
 	public List<String> getEntitiesByUnit (String unitName) {
 		List<String> result = null;
 		result = new ArrayList<String>();
-		List<ClassNode> classes = getClassesByUnit(unitName);
-		for (ClassNode clazz : classes) {
-			if (clazz != null && clazz.implementsInterface(ENTITY_CLASS)) {
+		List<GClass> classes = getClassesByUnit(unitName);
+		for (GClass clazz : classes) {
+			if (clazz != null && clazz.isType(Entity.class)) {
 				String className = clazz.getNameWithoutPackage();
 				result.add(className);
 			}

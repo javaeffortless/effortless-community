@@ -1,5 +1,6 @@
 package org.effortless.gen.impl;
 
+import org.effortless.ann.Module;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.gen.GClass;
 import org.effortless.model.LogData;
@@ -14,6 +15,7 @@ public class CreateLogEntityTransform extends AbstractCreateClassTransform<GClas
 		GClass result = null;
 		
 		result = tryNeedsNewExternalEntity(clazz, ClassNodeHelper.toClassNode(LogData.class), null);
+		result.addAnnotation(Module.class, "others");
 
 		AdaptLogEntityTransform transform = new AdaptLogEntityTransform();
 		transform.process(result);

@@ -1,5 +1,6 @@
 package org.effortless.gen;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import java.util.Iterator;
@@ -17,9 +18,11 @@ import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.stmt.EmptyStatement;
 import org.codehaus.groovy.control.SourceUnit;
+import org.effortless.ann.Module;
 import org.effortless.ann.NoTransform;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.Collections;
+import org.effortless.core.StringUtils;
 import org.effortless.model.Entity;
 import org.objectweb.asm.Opcodes;
 
@@ -817,6 +820,31 @@ public class GClass extends Object implements GNode {
 				result.add(method);
 			}
 		}
+		return result;
+	}
+
+	public String getModuleName () {
+		String result = null;
+		GAnnotation ann = getAnnotation(Module.class);
+		result = StringUtils.forceNotNull((ann != null ? ann.getValue() : null));
+		if (result.length() <= 0) {
+			SourceUnit sourceUnit = this.getSourceUnit();
+			String name = (sourceUnit != null ? sourceUnit.getName() : result);
+			int idx = (name != null ? name.lastIndexOf(File.separator) : -1);
+			name = (idx >= 0 ? name.substring(idx + 1) : name);
+			idx = (name != null ? name.indexOf(".gy") : -1);
+			name = (name != null ? name.substring(0, idx) : name);
+			result = name;
+		}
+		result = (result.length() > 0 ? result : null);
+		return result;
+	}
+
+	public boolean isType (Class<?> type) {
+		boolean result = false;
+		ClassNode clazz = this.clazz;
+		result = (type != null && clazz != null && clazz.isDerivedFrom(ClassNodeHelper.toClassNode(type)));
+		result = result || (type != null && clazz != null && clazz.declaresInterface(ClassNodeHelper.toClassNode(type)));
 		return result;
 	}
 	
