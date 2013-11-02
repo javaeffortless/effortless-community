@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
@@ -15,7 +16,7 @@ import org.codehaus.groovy.ast.GenericsType;
 import org.codehaus.groovy.ast.InnerClassNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
-import org.codehaus.groovy.ast.expr.Expression;
+//import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.stmt.EmptyStatement;
 import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.ann.Module;
@@ -26,14 +27,14 @@ import org.effortless.core.StringUtils;
 import org.effortless.model.Entity;
 import org.objectweb.asm.Opcodes;
 
-public class GClass extends Object implements GNode {
+public class GClass extends AbstractNode<GClass> implements GNode {
 
 	protected GClass () {
 		super();
-		initiate();
 	}
 	
 	protected void initiate () {
+		super.initiate();
 		this.clazz = null;
 	}
 	
@@ -392,113 +393,113 @@ public class GClass extends Object implements GNode {
 		return result;
 	}
 
-	public GClass addAnnotation (Class<?> annotation) {
-		return addAnnotation(ClassNodeHelper.toClassNode(annotation));
-	}
-	
-	
-	public GClass addAnnotation (ClassNode annotation) {
-		AnnotationNode ann = new AnnotationNode(annotation);
-		this.clazz.addAnnotation(ann);
-		return this;
-	}
-
-	public GClass addAnnotation (AnnotationNode annotation) {
-		this.clazz.addAnnotation(annotation);
-		return this;
-	}
-
-	public GClass addAnnotation (Class<?> annotation, String value) {
-		return addAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
-	}
-	
-	public GClass addAnnotation (ClassNode annotation, String value) {
-		return addAnnotation(annotation, "value", value);
-	}
-
-	public GClass addAnnotation (Class<?> annotation, String property, String value) {
-		return addAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
-	}
-
-	public GClass addAnnotation (Class<?> annotation, String property, boolean value) {
-		return addAnnotation(ClassNodeHelper.toClassNode(annotation), property, (value ? ConstantExpression.PRIM_TRUE : ConstantExpression.PRIM_FALSE));
-	}
-
-	
-	
-	public GClass addAnnotation (ClassNode annotation, String property, String value) {
-		return addAnnotation(annotation, property, new ConstantExpression(value));
-	}
-
-	public GClass addAnnotation (ClassNode annotation, String property, Expression expr) {
-		AnnotationNode ann = new AnnotationNode(annotation);
-		ann.setMember(property, expr);
-		this.clazz.addAnnotation(ann);
-		return this;
-	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public AnnotationNode createAnnotation (Class<?> annotation) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation));
-	}
-	
-	public AnnotationNode createAnnotation (ClassNode annotation) {
-		AnnotationNode result = new AnnotationNode(annotation);
-		return result;
-	}
-
-	public AnnotationNode createAnnotation (Class<?> annotation, String value) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
-	}
-	
-	public AnnotationNode createAnnotation (Class<?> annotation, Expression value) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
-	}
-	
-	public AnnotationNode createAnnotation (ClassNode annotation, String value) {
-		return createAnnotation(annotation, "value", value);
-	}
-
-	public AnnotationNode createAnnotation (Class<?> annotation, String property, String value) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
-	}
-
-	public AnnotationNode createAnnotation (ClassNode annotation, String property, String value) {
-		return createAnnotation(annotation, property, new ConstantExpression(value));
-	}
-
-	public AnnotationNode createAnnotation (Class<?> annotation, String property, Expression value) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
-	}
-	
-	public AnnotationNode createAnnotation (ClassNode annotation, String property, Expression value) {
-		AnnotationNode result = new AnnotationNode(annotation);
-		result.setMember(property, value);
-		return result;
-	}
-	
-	public AnnotationNode createAnnotation (Class<?> annotation, String[] properties, Expression... values) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), properties, values);
-	}
-	
-	public AnnotationNode createAnnotation (ClassNode annotation, String[] properties, Expression... values) {
-		AnnotationNode result = new AnnotationNode(annotation);
-		int length = (properties != null ? properties.length : 0);
-		for (int i = 0; i < length; i++) {
-			result.setMember(properties[i], values[i]);
-		}
-		return result;
-	}
+//	public GClass addAnnotation (Class<?> annotation) {
+//		return addAnnotation(ClassNodeHelper.toClassNode(annotation));
+//	}
+//	
+//	
+//	public GClass addAnnotation (ClassNode annotation) {
+//		AnnotationNode ann = new AnnotationNode(annotation);
+//		this.clazz.addAnnotation(ann);
+//		return this;
+//	}
+//
+//	public GClass addAnnotation (AnnotationNode annotation) {
+//		this.clazz.addAnnotation(annotation);
+//		return this;
+//	}
+//
+//	public GClass addAnnotation (Class<?> annotation, String value) {
+//		return addAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
+//	}
+//	
+//	public GClass addAnnotation (ClassNode annotation, String value) {
+//		return addAnnotation(annotation, "value", value);
+//	}
+//
+//	public GClass addAnnotation (Class<?> annotation, String property, String value) {
+//		return addAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
+//	}
+//
+//	public GClass addAnnotation (Class<?> annotation, String property, boolean value) {
+//		return addAnnotation(ClassNodeHelper.toClassNode(annotation), property, (value ? ConstantExpression.PRIM_TRUE : ConstantExpression.PRIM_FALSE));
+//	}
+//
+//	
+//	
+//	public GClass addAnnotation (ClassNode annotation, String property, String value) {
+//		return addAnnotation(annotation, property, new ConstantExpression(value));
+//	}
+//
+//	public GClass addAnnotation (ClassNode annotation, String property, Expression expr) {
+//		AnnotationNode ann = new AnnotationNode(annotation);
+//		ann.setMember(property, expr);
+//		this.clazz.addAnnotation(ann);
+//		return this;
+//	}
+//
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	public AnnotationNode createAnnotation (Class<?> annotation) {
+//		return createAnnotation(ClassNodeHelper.toClassNode(annotation));
+//	}
+//	
+//	public AnnotationNode createAnnotation (ClassNode annotation) {
+//		AnnotationNode result = new AnnotationNode(annotation);
+//		return result;
+//	}
+//
+//	public AnnotationNode createAnnotation (Class<?> annotation, String value) {
+//		return createAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
+//	}
+//	
+//	public AnnotationNode createAnnotation (Class<?> annotation, Expression value) {
+//		return createAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
+//	}
+//	
+//	public AnnotationNode createAnnotation (ClassNode annotation, String value) {
+//		return createAnnotation(annotation, "value", value);
+//	}
+//
+//	public AnnotationNode createAnnotation (Class<?> annotation, String property, String value) {
+//		return createAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
+//	}
+//
+//	public AnnotationNode createAnnotation (ClassNode annotation, String property, String value) {
+//		return createAnnotation(annotation, property, new ConstantExpression(value));
+//	}
+//
+//	public AnnotationNode createAnnotation (Class<?> annotation, String property, Expression value) {
+//		return createAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
+//	}
+//	
+//	public AnnotationNode createAnnotation (ClassNode annotation, String property, Expression value) {
+//		AnnotationNode result = new AnnotationNode(annotation);
+//		result.setMember(property, value);
+//		return result;
+//	}
+//	
+//	public AnnotationNode createAnnotation (Class<?> annotation, String[] properties, Expression... values) {
+//		return createAnnotation(ClassNodeHelper.toClassNode(annotation), properties, values);
+//	}
+//	
+//	public AnnotationNode createAnnotation (ClassNode annotation, String[] properties, Expression... values) {
+//		AnnotationNode result = new AnnotationNode(annotation);
+//		int length = (properties != null ? properties.length : 0);
+//		for (int i = 0; i < length; i++) {
+//			result.setMember(properties[i], values[i]);
+//		}
+//		return result;
+//	}
 	
 	
 	
@@ -674,16 +675,6 @@ public class GClass extends Object implements GNode {
 		return result;
 	}
 
-	public GAnnotation getAnnotation (Class<?> clazz) {
-		GAnnotation result = null;
-		List<AnnotationNode> annotations = this.clazz.getAnnotations(ClassNodeHelper.toClassNode(clazz));
-		if (annotations != null && annotations.size() == 1) {
-			AnnotationNode ann = annotations.get(0);
-			result = new GAnnotation(ann);
-		}
-		return result;
-	}
-
 	public GMethod getMethod (String name) {
 		GMethod result = null;
 		List<MethodNode> methods = (this.clazz != null ? this.clazz.getMethods(name) : null);
@@ -840,12 +831,13 @@ public class GClass extends Object implements GNode {
 		return result;
 	}
 
-	public boolean isType (Class<?> type) {
-		boolean result = false;
-		ClassNode clazz = this.clazz;
-		result = (type != null && clazz != null && clazz.isDerivedFrom(ClassNodeHelper.toClassNode(type)));
-		result = result || (type != null && clazz != null && clazz.declaresInterface(ClassNodeHelper.toClassNode(type)));
-		return result;
+	protected ClassNode _getType () {
+		return this.clazz;
 	}
-	
+
+	@Override
+	protected AnnotatedNode _getAnnotatedNode() {
+		return this.clazz;
+	}
+
 }

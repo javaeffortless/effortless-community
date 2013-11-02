@@ -6,9 +6,7 @@ import java.lang.annotation.Target;
 
 @java.lang.annotation.Documented
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface NotNull {
-
-	public boolean enabled();
+@Target(ElementType.TYPE)
+public @interface Person {
 	
 }

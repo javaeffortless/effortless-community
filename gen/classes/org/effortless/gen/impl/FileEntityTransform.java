@@ -10,6 +10,9 @@ import org.effortless.model.FileEntity;
 
 public class FileEntityTransform extends HibernateEntityTransform {
 
+	protected void addFields (GClass cg) {
+	}
+	
 	protected void setupEntityParent (GClass cg) {
 		ClassNode clazz = cg.getClassNode();
 		ClassNode superClass = clazz.getSuperClass();

@@ -170,6 +170,7 @@ public class XmlHibernateUtil {
 		addProperty(sf, "connection.password", pass);
 
 		addProperty(sf, "hbm2ddl.auto", "update");
+//		addProperty(sf, "hbm2ddl.auto", "validate");
 		
 		//<!-- Enable Hibernate's automatic session context management -->
 		addProperty(sf, "current_session_context_class", "thread");

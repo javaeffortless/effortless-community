@@ -71,7 +71,7 @@ public class MappingPropertiesTransform extends AbstractPropertiesTransform {
 //		addSimpleMapping(field, m);
 
 		String columnName = field.getName().toUpperCase() + "_ID";
-		AnnotationNode ann = getter.addAnnotation(javax.persistence.ManyToOne.class);//@javax.persistence.ManyToOne(cascade = {javax.persistence.CascadeType.ALL})
+		AnnotationNode ann = getter.createAnnotation(javax.persistence.ManyToOne.class);//@javax.persistence.ManyToOne(cascade = {javax.persistence.CascadeType.ALL})
 		ann.addMember("cascade", getter.enumValue(javax.persistence.CascadeType.class, "ALL"));
 		ann.addMember("targetEntity", getter.cteClass(field.getType()));
 		ann.addMember("fetch", getter.enumValue(javax.persistence.FetchType.class, "LAZY"));
@@ -93,13 +93,15 @@ public class MappingPropertiesTransform extends AbstractPropertiesTransform {
 		getter.addAnnotation(javax.persistence.Basic.class, "fetch", getter.enumValue(javax.persistence.FetchType.class, "EAGER"));
 		
 		//@ManyToOne() 
-		AnnotationNode ann = getter.addAnnotation(javax.persistence.ManyToOne.class);
+		AnnotationNode ann = getter.createAnnotation(javax.persistence.ManyToOne.class);
 		ann.addMember("cascade", getter.enumValue(javax.persistence.CascadeType.class, "ALL"));
 		ann.addMember("targetEntity", getter.cteClass(field.getType()));
 		ann.addMember("fetch", getter.enumValue(javax.persistence.FetchType.class, "LAZY"));
+		getter.addAnnotation(ann);
 		
 		String columnName = field.getName().toUpperCase() + "_ID";
-		AnnotationNode column = getter.addAnnotation(javax.persistence.JoinColumn.class, "name", getter.cte(columnName));//@JoinColumn(name="CUST_ID")
+		AnnotationNode column = getter.createAnnotation(javax.persistence.JoinColumn.class, "name", getter.cte(columnName));//@JoinColumn(name="CUST_ID")
+		getter.addAnnotation(column);
 		
 		//@javax.persistence.Column(name="column", unique=true, nullable=false)
 		if (InfoModel.isSingleUnique(field)) {
@@ -123,7 +125,8 @@ public class MappingPropertiesTransform extends AbstractPropertiesTransform {
 	public void addSimpleMapping (GField field, GMethod mg) {
 		String columnName = field.getName().toUpperCase();
 		//@javax.persistence.Column(name="column", unique=true, nullable=false)
-		AnnotationNode column = mg.addAnnotation(javax.persistence.Column.class, "name", mg.cte(columnName));
+		AnnotationNode column = mg.createAnnotation(javax.persistence.Column.class, "name", mg.cte(columnName));
+		mg.addAnnotation(column);
 		if (InfoModel.isSingleUnique(field)) {
 			column.addMember("unique", mg.cteTrue());
 		}

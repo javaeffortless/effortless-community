@@ -20,10 +20,15 @@ public class HibernateEntityTransform extends Object implements Transform<GClass
 	protected void setupEntityParent (GClass clazz) {
 		new SetupEntityParentTransform().process(clazz);
 	}
+
+	protected void addFields (GClass cg) {
+		new AddFieldsTransform().process(cg);
+	}
 	
 	@Override
 	public void process(GClass cg) {
 		if (cg != null && cg.checkEntityValid() && !cg.checkEnum()) {
+			addFields(cg);
 			new AlterActionsTransform().process(cg);
 //			ecg.alterActions();
 //				ActionsTransform.processClass(clazz, sourceUnit);

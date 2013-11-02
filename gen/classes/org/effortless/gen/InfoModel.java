@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.effortless.ann.Finder;
+import org.effortless.ann.NotNull;
 import org.effortless.core.Collections;
 import org.effortless.core.StringUtils;
 import org.effortless.model.FileEntity;
@@ -117,8 +118,19 @@ public class InfoModel extends Object {
 				}
 			}
 		}
+		result = (result && isNull(field) ? false : result);
 		return result;
 	}
+	
+	public static boolean isNull (GField field) {
+		boolean result = false;
+		GAnnotation ann = field.getAnnotation(NotNull.class);
+		String value = StringUtils.forceNotNull((ann != null ? ann.getMemberString("enabled") : null));
+		result = (ann != null && (value.length() > 0 && "false".equals(value)));
+		return result;
+	}
+	
+	
 
 	public static boolean isSingleUnique(GField field) {
         boolean result = false;

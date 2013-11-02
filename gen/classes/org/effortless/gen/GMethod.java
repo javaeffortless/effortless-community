@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
@@ -47,7 +48,7 @@ import org.effortless.core.Collections;
 import org.effortless.core.ModelException;
 import org.objectweb.asm.Opcodes;
 
-public class GMethod extends Object implements GNode {
+public class GMethod extends AbstractNode<GMethod> implements GNode {
 
 	protected GMethod () {
 		super();
@@ -185,65 +186,65 @@ public class GMethod extends Object implements GNode {
 //	
 //}
 
-	public AnnotationNode addAnnotation (Class<?> annotation) {
-		return addAnnotation(ClassNodeHelper.toClassNode(annotation));
-	}
-	
-	public GMethod addAnnotation (AnnotationNode annotation) {
-		this.methodNode.addAnnotation(annotation);
-		return this;
-	}
-	
-	public AnnotationNode addAnnotation (ClassNode annotation) {
-		AnnotationNode result = new AnnotationNode(annotation);
-		this.methodNode.addAnnotation(result);
-		return result;
-	}
-
-	public AnnotationNode addAnnotation (Class<?> annotation, String value) {
-		return addAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
-	}
-	
-	public AnnotationNode addAnnotation (Class<?> annotation, Expression value) {
-		return addAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
-	}
-	
-	public AnnotationNode addAnnotation (ClassNode annotation, String value) {
-		return addAnnotation(annotation, "value", value);
-	}
-
-	public AnnotationNode addAnnotation (Class<?> annotation, String property, String value) {
-		return addAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
-	}
-
-	public AnnotationNode addAnnotation (ClassNode annotation, String property, String value) {
-		return addAnnotation(annotation, property, new ConstantExpression(value));
-	}
-
-	public AnnotationNode addAnnotation (Class<?> annotation, String property, Expression value) {
-		return addAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
-	}
-	
-	public AnnotationNode addAnnotation (ClassNode annotation, String property, Expression value) {
-		AnnotationNode result = new AnnotationNode(annotation);
-		result.setMember(property, value);
-		this.methodNode.addAnnotation(result);
-		return result;
-	}
-	
-	public AnnotationNode addAnnotation (Class<?> annotation, String[] properties, Expression... values) {
-		return addAnnotation(ClassNodeHelper.toClassNode(annotation), properties, values);
-	}
-	
-	public AnnotationNode addAnnotation (ClassNode annotation, String[] properties, Expression... values) {
-		AnnotationNode result = new AnnotationNode(annotation);
-		int length = (properties != null ? properties.length : 0);
-		for (int i = 0; i < length; i++) {
-			result.setMember(properties[i], values[i]);
-		}
-		this.methodNode.addAnnotation(result);
-		return result;
-	}
+//	public AnnotationNode addAnnotation (Class<?> annotation) {
+//		return addAnnotation(ClassNodeHelper.toClassNode(annotation));
+//	}
+//	
+//	public GMethod addAnnotation (AnnotationNode annotation) {
+//		this.methodNode.addAnnotation(annotation);
+//		return this;
+//	}
+//	
+//	public AnnotationNode addAnnotation (ClassNode annotation) {
+//		AnnotationNode result = new AnnotationNode(annotation);
+//		this.methodNode.addAnnotation(result);
+//		return result;
+//	}
+//
+//	public AnnotationNode addAnnotation (Class<?> annotation, String value) {
+//		return addAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
+//	}
+//	
+//	public AnnotationNode addAnnotation (Class<?> annotation, Expression value) {
+//		return addAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
+//	}
+//	
+//	public AnnotationNode addAnnotation (ClassNode annotation, String value) {
+//		return addAnnotation(annotation, "value", value);
+//	}
+//
+//	public AnnotationNode addAnnotation (Class<?> annotation, String property, String value) {
+//		return addAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
+//	}
+//
+//	public AnnotationNode addAnnotation (ClassNode annotation, String property, String value) {
+//		return addAnnotation(annotation, property, new ConstantExpression(value));
+//	}
+//
+//	public AnnotationNode addAnnotation (Class<?> annotation, String property, Expression value) {
+//		return addAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
+//	}
+//	
+//	public AnnotationNode addAnnotation (ClassNode annotation, String property, Expression value) {
+//		AnnotationNode result = new AnnotationNode(annotation);
+//		result.setMember(property, value);
+//		this.methodNode.addAnnotation(result);
+//		return result;
+//	}
+//	
+//	public AnnotationNode addAnnotation (Class<?> annotation, String[] properties, Expression... values) {
+//		return addAnnotation(ClassNodeHelper.toClassNode(annotation), properties, values);
+//	}
+//	
+//	public AnnotationNode addAnnotation (ClassNode annotation, String[] properties, Expression... values) {
+//		AnnotationNode result = new AnnotationNode(annotation);
+//		int length = (properties != null ? properties.length : 0);
+//		for (int i = 0; i < length; i++) {
+//			result.setMember(properties[i], values[i]);
+//		}
+//		this.methodNode.addAnnotation(result);
+//		return result;
+//	}
 	
 	
 
@@ -805,10 +806,6 @@ public class GMethod extends Object implements GNode {
 		return isNull(this._loadVariable(name));
 	}
 	
-	public Expression cteNull () {
-		return ConstantExpression.NULL;
-	}
-	
 	public Expression ne (Expression left, Expression right) {
 		return _cmp(Token.newSymbol(Types.COMPARE_NOT_EQUAL, -1, -1), left, right);
 	}
@@ -849,10 +846,6 @@ public class GMethod extends Object implements GNode {
 		return result;
 	}
 
-	public Expression cte (Object value) {
-		return new ConstantExpression(value);
-	}
-	
 	public Expression field (String fieldName) {
 		Expression result = null;
 		FieldNode _field = (fieldName != null ? this.classGen.getClassNode().getField(fieldName) : null);
@@ -951,14 +944,6 @@ public class GMethod extends Object implements GNode {
 			result = new ArgumentListExpression(arguments);
 		}
 		return result;
-	}
-	
-	public Expression cteSuper () {
-		return VariableExpression.SUPER_EXPRESSION;
-	}
-	
-	public Expression cteThis () {
-		return VariableExpression.THIS_EXPRESSION;
 	}
 	
 
@@ -1149,29 +1134,6 @@ public class GMethod extends Object implements GNode {
 		return result;
 	}
 
-	public Expression cteTrue() {
-		return ConstantExpression.PRIM_TRUE;
-	}
-	
-	public Expression cteFalse() {
-		return ConstantExpression.PRIM_FALSE;
-	}
-
-	public Expression cteTRUE() {
-		return ConstantExpression.TRUE;
-	}
-	
-	public Expression cteFALSE() {
-		return ConstantExpression.FALSE;
-	}
-
-	public Expression cteClass(Class<?> type) {
-		return cteClass(ClassNodeHelper.toClassNode(type));
-	}
-	
-	public Expression cteClass(ClassNode type) {
-		return new ClassExpression(type);
-	}
 
 	public Expression cast(ClassNode type, Expression value) {
 		CastExpression result = null;
@@ -1550,6 +1512,16 @@ public class GMethod extends Object implements GNode {
 			result = new GAnnotation(ann);
 		}
 		return result;
+	}
+
+	@Override
+	protected ClassNode _getType() {
+		return getReturnType();
+	}
+
+	@Override
+	protected AnnotatedNode _getAnnotatedNode() {
+		return this.methodNode;
 	}
 	
 }

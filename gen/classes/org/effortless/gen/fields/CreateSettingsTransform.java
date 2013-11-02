@@ -16,7 +16,7 @@ public class CreateSettingsTransform extends Object implements Transform<GApplic
 		if (node != null && node.getSettingsClass() == null) {
 			GClass cg = node.newClass("Settings");
 			node.setSettingsClass(cg);
-			cg.addAnnotation(Module.class, "settings");
+			cg.addAnnotation(Module.class, "appSettings");
 			
 			cg.addField(Integer.class, "defaultPageSize");
 	

@@ -21,6 +21,9 @@ public class AdaptLogEntityTransform extends HibernateEntityTransform {
 		}
 	}
 	
+	protected void addFields (GClass cg) {
+	}
+	
 	@Override
 	protected void applyEntityLog (GClass clazz) {
 	}
