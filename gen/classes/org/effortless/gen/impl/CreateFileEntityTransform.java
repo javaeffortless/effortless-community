@@ -16,13 +16,17 @@ public class CreateFileEntityTransform extends AbstractCreateClassTransform<GFie
 	public void process (GField field) {
 		GClass result = null;
 		
-		result = tryNeedsNewExternalEntity(field.getClazz(), ClassNodeHelper.toClassNode(FileEntity.class), FileEntityTuplizer.class);
-		result.addAnnotation(Module.class, "others");
+		result = field.getApplication().getFileClass();
+		if (result == null) {
+			result = tryNeedsNewExternalEntity(field.getClazz(), ClassNodeHelper.toClassNode(FileEntity.class), FileEntityTuplizer.class);
+			result.addAnnotation(Module.class, "others");
 
-		FileEntityTransform transform = new FileEntityTransform();
-		transform.process(result);
+			FileEntityTransform transform = new FileEntityTransform();
+			transform.process(result);
 
-		
+			
+			field.getApplication().setFileClass(result);
+		}
 		setResult(result);
 	}
 

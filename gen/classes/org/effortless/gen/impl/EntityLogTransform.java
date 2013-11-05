@@ -29,14 +29,9 @@ public class EntityLogTransform extends Object implements Transform<GClass> {
 	@Override
 	public void process(GClass clazz) {
 		if (true && !clazz.hasAnnotation(NO_LOG_CLAZZ)) {
-			GApplication app = clazz.getApplication();
-			GClass logClass = app.getLogClass();
-			if (logClass == null) {
-				CreateLogEntityTransform creator = new CreateLogEntityTransform();
-				creator.process(clazz);
-				logClass = creator.getResult();
-				app.setLogClass(logClass);
-			}
+			CreateLogEntityTransform creator = new CreateLogEntityTransform();
+			creator.process(clazz);
+			GClass logClass = creator.getResult();
 			if (logClass != null) {
 				addMethodNewLogData(clazz, logClass);
 			}

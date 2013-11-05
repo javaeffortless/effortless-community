@@ -53,13 +53,9 @@ public class PropertiesTransform extends AbstractPropertiesTransform {
 	}
 
 	protected void fileProcessField (GField field) {
-		GClass fileClazz = field.getApplication().getFileClass();
-		if (fileClazz == null) {
-			CreateFileEntityTransform feT = new CreateFileEntityTransform();
-			feT.process(field);
-			fileClazz = feT.getResult();
-			field.getApplication().setFileClass(fileClazz);
-		}
+		CreateFileEntityTransform feT = new CreateFileEntityTransform();
+		feT.process(field);
+		GClass fileClazz = feT.getResult();
 
 		//	protected FileEntity fichero;
 		field.setModifiers(Opcodes.ACC_PROTECTED);
