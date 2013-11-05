@@ -100,7 +100,7 @@ public class LoginCtrl extends Object implements org.zkoss.zk.ui.event.EventList
 		Session session = Sessions.getCurrent();
 		SecuritySystem securitySystem = (session != null ? (SecuritySystem)session.getAttribute(GlobalContext.SECURITY_CONTEXT) : null);
 		if (securitySystem != null) {
-			Object currentUser = securitySystem.login(loginName, loginPassword);
+			Object currentUser = (loginName != null && loginPassword != null ? securitySystem.login(loginName, loginPassword) : null);
 			result = (currentUser != null);
 			if (result) {
 				session.setAttribute(GlobalContext.CURRENT_USER, currentUser);

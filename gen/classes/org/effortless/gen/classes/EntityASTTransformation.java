@@ -77,10 +77,17 @@ public class EntityASTTransformation implements ASTTransformation, Opcodes {
 							}
 					}
 				}
-				new CreateSettingsTransform().process(app);
+				completeApplication(app);
 //				appTransform.addItem(nodes, sourceUnit);
 			}
 		}
+	}
+
+	protected void completeApplication(GApplication app) {
+		new CreateSettingsTransform().process(app);
+		new CreateUserProfileTransform().process(app);
+		new CreateUserTransform().process(app);
+		new CreateSecuritySystemTransform().process(app);
 	}
 
 	protected String loadAppId (SourceUnit sourceUnit) {

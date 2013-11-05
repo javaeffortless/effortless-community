@@ -1,13 +1,12 @@
 package org.effortless.gen;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.SourceUnit;
-import org.effortless.ann.Module;
-import org.effortless.core.ClassNodeHelper;
 import org.effortless.core.StringUtils;
 import org.effortless.model.Entity;
 
@@ -29,6 +28,8 @@ public class GApplication implements GNode {
 		initiateLogClass();
 		initiateFileClass();
 		initiateSettingsClass();
+		initiateUserProfileClass();
+		initiateUserClass();
 	}
 	
 	protected String name;
@@ -44,6 +45,15 @@ public class GApplication implements GNode {
 	public void setName (String newValue) {
 		this.name = newValue;
 	}
+	
+	public String getAlias () {
+		String result = null;
+		String appId = getName();
+		int idx = (appId != null ? appId.lastIndexOf(".") : -1);
+		result = (idx > -1 ? appId.substring(idx + 1) : appId);
+		return result;
+	}
+
 	
 	protected List<GClass> classes;
 	
@@ -255,6 +265,34 @@ public class GApplication implements GNode {
 		result = new GClass(name, getSourceUnit());
 		this.addClass(result);
 		return result;
+	}
+
+	protected GClass userProfileClass;
+
+	protected void initiateUserProfileClass () {
+		this.userProfileClass = null;
+	}
+	
+	public GClass getUserProfileClass() {
+		return this.userProfileClass;
+	}
+
+	public void setUserProfileClass(GClass newValue) {
+		this.userProfileClass = newValue;
+	}
+
+	protected GClass userClass;
+
+	protected void initiateUserClass () {
+		this.userClass = null;
+	}
+	
+	public GClass getUserClass() {
+		return this.userClass;
+	}
+
+	public void setUserClass(GClass newValue) {
+		this.userClass = newValue;
 	}
 	
 }

@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.effortless.core.GlobalContext;
+import org.effortless.core.ModelException;
 import org.effortless.core.StringUtils;
 import org.effortless.security.AbstractSecuritySystem;
+import org.effortless.security.PropertiesSecuritySystem;
 import org.effortless.security.SecuritySystem;
 import org.effortless.server.binder.EffortlessELFactory;
 import org.zkoss.lang.ClassResolver;
@@ -171,9 +173,22 @@ public class GroovyRichlet extends GenericRichlet {
 	protected SecuritySystem buildSecuritySystem (Session session) {
 		SecuritySystem result = null;
 		if (session != null) {
-			String appId = ServerContext.getAppId();
-			AbstractSecuritySystem _ss = new AbstractSecuritySystem();
-			result = _ss;
+			String ssClassName = ServerContext.getDefaultSecuritySystemClassName();
+			if (ssClassName != null) {
+				try {
+					Class<?> ssClass = Thread.currentThread().getContextClassLoader().loadClass(ssClassName);
+					result = (SecuritySystem)ssClass.newInstance();
+				} catch (ClassNotFoundException e) {
+				} catch (InstantiationException e) {
+					throw new ModelException("Error al crear sistema de seguridad", e);
+				} catch (IllegalAccessException e) {
+					throw new ModelException("Error al crear sistema de seguridad", e);
+				}
+			}
+			if (result == null) {
+				PropertiesSecuritySystem _ss = new PropertiesSecuritySystem();
+				result = _ss;
+			}
 		}
 		return result;
 	}

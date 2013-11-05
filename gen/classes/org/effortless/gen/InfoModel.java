@@ -282,6 +282,28 @@ public class InfoModel extends Object {
 		return result;
 	}
 	
+	public static boolean checkComment (GField field) {
+		return checkKeywords(field, new String[] {"comment", "comentario"});
+	}
+	
+	public static boolean checkPassword (GField field) {
+		return checkKeywords(field, new String[] {"password", "contrase", "secret"});
+	}
+	
+	protected static boolean checkKeywords (GField field, String[] keywords) {
+		boolean result = false;
+		String pName = field.getName();
+		String lName = StringUtils.uncapFirst(pName);
+		for (int i = 0; i < keywords.length; i++) {
+			result = (!result && keywords[i].contains(lName) ? true : result);
+		}
+		return result;
+	}
+	
+	public static boolean checkPhoto (GField field) {
+		return checkKeywords(field, new String[] {"photo", "image", "foto", "icon"});
+	}
+	
 	
 	
 }

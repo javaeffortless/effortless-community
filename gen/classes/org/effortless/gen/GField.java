@@ -194,4 +194,10 @@ public class GField extends AbstractNode<GField> implements GNode {
 		return this.field;
 	}
 
+//	public void copyAnnotation(GAnnotation ann) {
+//		if (ann != null) {
+//			ann.getNode().copyNodeMetaData(this.field);
+//		}
+//	}
+
 }

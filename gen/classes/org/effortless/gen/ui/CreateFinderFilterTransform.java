@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
+import org.effortless.ann.HashPassword;
 import org.effortless.core.ClassNodeHelper;
+import org.effortless.core.StringUtils;
+import org.effortless.gen.GAnnotation;
 import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
 import org.effortless.gen.GField;
@@ -102,7 +105,14 @@ public class CreateFinderFilterTransform extends Object implements Transform<GCl
 	public void addFilterProperty(GClass filter, GField field) {
 		if (field != null) {
 			if (field.isString()) {
-				addFilterPropertySimple(filter, field);
+				GField filterField = addFilterPropertySimple(filter, field);
+				if (InfoModel.checkPassword(filterField)) {
+					GAnnotation ann = field.getAnnotation(HashPassword.class);
+					String hashAlgorithm = StringUtils.forceNotNull((ann != null ? ann.getValue() : null));
+					if (hashAlgorithm.length() > 0) {
+						filterField.addAnnotation(HashPassword.class, hashAlgorithm);
+					}
+				}
 			}
 			else if (field.isTime()) {
 				addFilterPropertySimple(filter, field);
@@ -137,8 +147,8 @@ public class CreateFinderFilterTransform extends Object implements Transform<GCl
 		}
 	}
 	
-	public void addFilterPropertySimple (GClass filter, GField field) {
-		addFilterPropertySimple(filter, field, field.getName());
+	public GField addFilterPropertySimple (GClass filter, GField field) {
+		return addFilterPropertySimple(filter, field, field.getName());
 	}
 	
 	public void addFilterPropertyBooleanDouble (GClass filter, GField field) {
@@ -149,7 +159,8 @@ public class CreateFinderFilterTransform extends Object implements Transform<GCl
 		}
 	}
 	
-	protected void addFilterPropertySimple (GClass filter, GField field, String name) {
+	protected GField addFilterPropertySimple (GClass filter, GField field, String name) {
+		GField result = null;
 		if (field != null && name != null) {
 			String fName = name;
 
@@ -160,6 +171,7 @@ public class CreateFinderFilterTransform extends Object implements Transform<GCl
 //			String capfName = StringUtils.capFirst(fName);
 			
 			GField filterField = filter.addField(fType, fName);
+			result = filterField;
 			
 			GMethod mg = null;
 			
@@ -178,7 +190,7 @@ public class CreateFinderFilterTransform extends Object implements Transform<GCl
 			mg = filter.addMethod(setterName).setPublic(true).addParameter(fType, "newValue");
 			mg.add(mg.call("_setProperty", mg.cte(fName), mg.field(fName), mg.assign(mg.field(fName), mg.var("newValue"))));
 		}
-		
+		return result;
 	}
 
 	public void addFilterCondition(GMethod mg, GField field) {

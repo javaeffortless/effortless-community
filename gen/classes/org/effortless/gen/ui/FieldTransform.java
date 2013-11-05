@@ -1,7 +1,10 @@
 package org.effortless.gen.ui;
 
+import org.effortless.ann.HashPassword;
 import org.effortless.core.StringUtils;
 import org.effortless.gen.GField;
+import org.effortless.gen.InfoModel;
+import org.effortless.model.Filter;
 
 public class FieldTransform extends Object/* implements Transform<GField>*/ {
 
@@ -18,7 +21,7 @@ public class FieldTransform extends Object/* implements Transform<GField>*/ {
 		String result = null;
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);
-		if ((field.isFile() || field.isType(org.effortless.model.FileEntity.class)) && checkPhoto(field)) {
+		if ((field.isFile() || field.isType(org.effortless.model.FileEntity.class)) && InfoModel.checkPhoto(field)) {
 			result = "<photo-field value=\"$" + lName + "\" readonly=\"true\" />";
 		}
 		else {
@@ -73,32 +76,19 @@ public class FieldTransform extends Object/* implements Transform<GField>*/ {
 		String result = null;
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);
-		if (checkComment(field)) {
+		if (InfoModel.checkComment(field)) {
 			result = "<comment-field value=\"$" + lName + "\" />";
 		}
-		else if (checkPassword(field)) {
-			result = "<password-field value=\"$" + lName + "\" />";
+		else if (InfoModel.checkPassword(field)) {
+			String hashAlgorithm = null;
+			try { hashAlgorithm = field.getAnnotation(HashPassword.class).getValue(); } catch (Throwable t) {}
+			String attrHashAlgorithm = (hashAlgorithm != null ? " hashAlgorithm=\"" + hashAlgorithm + "\"" : "");
+			boolean isFilter = field.getClazz().isType(Filter.class);
+			String attrType = (isFilter ? " type=\"login\"" : "");
+			result = "<password-field value=\"$" + lName + "\"" + attrHashAlgorithm + attrType +  " />";
 		}
 		else {
 			result = "<text-field value=\"$" + lName + "\" />";
-		}
-		return result;
-	}
-	
-	protected boolean checkComment (GField field) {
-		return checkKeywords(field, new String[] {"comment", "comentario"});
-	}
-	
-	protected boolean checkPassword (GField field) {
-		return checkKeywords(field, new String[] {"password", "contrase", "secret"});
-	}
-	
-	protected boolean checkKeywords (GField field, String[] keywords) {
-		boolean result = false;
-		String pName = field.getName();
-		String lName = StringUtils.uncapFirst(pName);
-		for (int i = 0; i < keywords.length; i++) {
-			result = (!result && keywords[i].contains(lName) ? true : result);
 		}
 		return result;
 	}
@@ -176,7 +166,7 @@ public class FieldTransform extends Object/* implements Transform<GField>*/ {
 		String pName = field.getName();
 		String lName = StringUtils.uncapFirst(pName);
 		
-		if (checkPhoto(field)) {
+		if (InfoModel.checkPhoto(field)) {
 			result = "<photo-field value=\"$" + lName + "\" />";
 		}
 		else {
@@ -188,10 +178,6 @@ public class FieldTransform extends Object/* implements Transform<GField>*/ {
 //		result = "<button label=\"" + attrLabel + "\" upload=\"" + attrUpload + "\"" + attrApply + attrViewModel + " onUpload=\"@command((empty " + vmFieldName + ".value ? 'upload' : null), upEvent=event)\" onClick=\"@command((empty " + vmFieldName + ".value ? null : 'download'))\"" + "/>";
 		
 		return result;
-	}
-	
-	protected boolean checkPhoto (GField field) {
-		return checkKeywords(field, new String[] {"photo", "image", "foto", "icon"});
 	}
 	
 	public String listField (GField field) {

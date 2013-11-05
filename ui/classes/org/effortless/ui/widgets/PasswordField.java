@@ -1,6 +1,7 @@
 package org.effortless.ui.widgets;
 
 import org.effortless.core.ObjectUtils;
+import org.effortless.core.StringUtils;
 import org.effortless.ui.impl.CteUi;
 import org.effortless.ui.widgets.helper.PasswordFieldEditExtension;
 import org.zkoss.zk.ui.annotation.ComponentAnnotation;
@@ -21,6 +22,22 @@ public class PasswordField extends TextField {
 		
 		this._onChange = null;
 		this._onClick = null;
+		
+		initiateHashAlgorithm();
+	}
+	
+	protected String hashAlgorithm;
+	
+	protected void initiateHashAlgorithm () {
+		this.hashAlgorithm = null;
+	}
+	
+	public String getHashAlgorithm () {
+		return this.hashAlgorithm;
+	}
+	
+	public void setHashAlgorithm (String newValue) {
+		this.hashAlgorithm = newValue;
 	}
 	
     protected void initUi () {
@@ -141,5 +158,29 @@ public class PasswordField extends TextField {
 	protected void initUi_Readonly() {
 		super.initUi_Readonly();
 	}
+
+	public void changeValue(String newValue) {
+		String hashAlgorithm = StringUtils.forceNotNull(getHashAlgorithm());
+		newValue = (hashAlgorithm.length() > 0 && newValue != null ? org.effortless.core.Hashes.getInstance().digest(hashAlgorithm, newValue) : newValue);			
+		setValue(newValue);
+	}
+
+//	public void setValue (String newValue) {
+//		String hashAlgorithm = StringUtils.forceNotNull(getHashAlgorithm());
+//		if (hashAlgorithm.length() > 0) {
+//			newValue = (newValue != null ? org.effortless.core.Hashes.getInstance().digest(hashAlgorithm, newValue) : newValue);
+//			super.setValue(newValue, false);
+//		}
+//		else {
+//			super.setValue(newValue);
+//		}
+//	}
+//
+//	protected void _refreshValue () {
+//		String hashAlgorithm = StringUtils.forceNotNull(getHashAlgorithm());
+//		if (hashAlgorithm.length() <= 0) {
+//			super._refreshValue();
+//		}
+//	}
 	
 }	

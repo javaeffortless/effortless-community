@@ -1,19 +1,20 @@
 package org.effortless.gen.impl;
 
-import org.codehaus.groovy.ast.ClassNode;
-import org.codehaus.groovy.ast.MethodNode;
-import org.codehaus.groovy.ast.Parameter;
-import org.codehaus.groovy.ast.expr.ArgumentListExpression;
-import org.codehaus.groovy.ast.expr.ClassExpression;
-import org.codehaus.groovy.ast.expr.Expression;
-import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
-import org.codehaus.groovy.ast.stmt.ReturnStatement;
-import org.codehaus.groovy.control.SourceUnit;
+//import org.codehaus.groovy.ast.ClassNode;
+//import org.codehaus.groovy.ast.MethodNode;
+//import org.codehaus.groovy.ast.Parameter;
+//import org.codehaus.groovy.ast.expr.ArgumentListExpression;
+//import org.codehaus.groovy.ast.expr.ClassExpression;
+//import org.codehaus.groovy.ast.expr.Expression;
+//import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
+//import org.codehaus.groovy.ast.stmt.ReturnStatement;
+//import org.codehaus.groovy.control.SourceUnit;
 import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
-import org.effortless.model.AbstractIdEntity;
 import org.effortless.model.Filter;
-import org.objectweb.asm.Opcodes;
+//import org.effortless.model.AbstractIdEntity;
+//import org.effortless.model.Filter;
+//import org.objectweb.asm.Opcodes;
 
 public class EntityStaticMethodsTransform extends Object implements Transform<GClass> {
 
@@ -41,4 +42,9 @@ public class EntityStaticMethodsTransform extends Object implements Transform<GC
 //		clazz.addMethod(method);
 	}
 
+//	public static org.effortless.model.Filter<org.effortless.model.AbstractIdEntity> listBy () {
+//		
+//		return AbstractIdEntity.listBy(AllBasicProperties.class);
+//	}
+	
 }

@@ -6,9 +6,9 @@ import java.lang.annotation.Target;
 
 @java.lang.annotation.Documented
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Module {
-	
+@Target(ElementType.FIELD)
+public @interface HashPassword {
+
 	public String value();
 	
 }

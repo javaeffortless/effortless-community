@@ -134,7 +134,8 @@ public class PasswordFieldEditExtension extends AbstractComponent {
 					flag = flag && value1.length() > 0 && value2.length() > 0;
 					flag = flag && value1.equals(value2);
 					if (flag) {
-						_this.field.setValue(value1);
+//						_this.field.setValue(value1);
+						_this.field.changeValue(value1);
 						wnd.setVisible(false);
 					}
 					else {

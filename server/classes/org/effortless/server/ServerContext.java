@@ -9,6 +9,7 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.CompilationCustomizer;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.effortless.core.GlobalContext;
+import org.effortless.core.StringUtils;
 import org.zkoss.zk.ui.Session;
 
 public class ServerContext extends Object {
@@ -136,6 +137,22 @@ public class ServerContext extends Object {
 	
 	public static void setAppId (String newValue) {
 		GlobalContext.set(GlobalContext.APP_ID, newValue);
+	}
+
+	public static String getAppAlias () {
+		String result = null;
+		String appId = getAppId();
+		int idx = (appId != null ? appId.lastIndexOf(".") : -1);
+		result = (idx > -1 ? appId.substring(idx + 1) : appId);
+		return result;
+	}
+	
+	public static String getDefaultSecuritySystemClassName () {
+		String result = null;
+		String appId = getAppId();
+		String appAlias = getAppAlias();
+		result = appId + "." + StringUtils.capFirst(appAlias) + "SecuritySystem";
+		return result;
 	}
 	
 }
