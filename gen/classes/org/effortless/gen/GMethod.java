@@ -67,6 +67,7 @@ public class GMethod extends AbstractNode<GMethod> implements GNode {
 		this.code = new BlockStatement();
 		this.code.addStatement(EmptyStatement.INSTANCE);
 		this.methodNode = new MethodNode(name, Opcodes.ACC_PUBLIC, ClassHelper.VOID_TYPE, Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, this.code);
+//		this.methodNode.setModifiers(0);
 		this.classGen = classGen;
 		this.classGen.getClassNode().addMethod(this.methodNode);
 	}
@@ -92,27 +93,6 @@ public class GMethod extends AbstractNode<GMethod> implements GNode {
 	
 	public GClass getClassGen () {
 		return this.classGen;
-	}
-	
-	public GMethod setPublic (boolean newValue) {
-		if (newValue) {
-			this.methodNode.setModifiers(Opcodes.ACC_PUBLIC);
-		}
-		return this;
-	}
-	
-	public GMethod setProtected (boolean newValue) {
-		if (newValue) {
-			this.methodNode.setModifiers(Opcodes.ACC_PROTECTED);
-		}
-		return this;
-	}
-
-	public GMethod setPrivate (boolean newValue) {
-		if (newValue) {
-			this.methodNode.setModifiers(Opcodes.ACC_PRIVATE);
-		}
-		return this;
 	}
 	
 	public GMethod setReturnType (Class<?> type) {
@@ -1522,6 +1502,45 @@ public class GMethod extends AbstractNode<GMethod> implements GNode {
 	@Override
 	protected AnnotatedNode _getAnnotatedNode() {
 		return this.methodNode;
+	}
+
+	public GMethod setPublic (boolean newValue) {
+		if (newValue) {
+			setProtected(false);
+			setPrivate(false);
+		}
+		return _addRemoteModifier(Opcodes.ACC_PUBLIC, newValue);
+	}
+	
+	public GMethod setProtected (boolean newValue) {
+		if (newValue) {
+			setPublic(false);
+			setPrivate(false);
+		}
+		return _addRemoteModifier(Opcodes.ACC_PROTECTED, newValue);
+	}
+
+	public GMethod setPrivate (boolean newValue) {
+		if (newValue) {
+			setPublic(false);
+			setProtected(false);
+		}
+		return _addRemoteModifier(Opcodes.ACC_PRIVATE, newValue);
+	}
+	
+	public GMethod setStatic(boolean newValue) {
+		return _addRemoteModifier(Opcodes.ACC_STATIC, newValue);
+	}
+	
+	public GMethod setFinal(boolean newValue) {
+		return _addRemoteModifier(Opcodes.ACC_FINAL, newValue);
+	}
+	
+	protected GMethod _addRemoteModifier(int value, boolean add) {
+		int modifiers = this.methodNode.getModifiers();
+		int newModifiers = (add ? modifiers | value : modifiers & (~value));
+		this.methodNode.setModifiers(newModifiers);
+		return this;
 	}
 	
 }

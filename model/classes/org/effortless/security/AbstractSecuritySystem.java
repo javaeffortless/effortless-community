@@ -407,5 +407,8 @@ public abstract class AbstractSecuritySystem extends Object implements SecurityS
 	}
 	
 	public abstract Object login (String loginName, String loginPassword);
+
+	public void setupSession (Object user) {
+	}
 	
 }

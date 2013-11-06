@@ -123,7 +123,13 @@ public class UiApplication {
 		return result;
 	}
 
-	
+	public static Object loadCurrentSingleton (Class<?> clazz) {
+		Object result = null;
+		if (clazz != null) {
+			result = MethodUtils.runStatic(clazz, "getCurrent", null);
+		}
+		return result;
+	}
 	
 //	String zul = "/org.effortless.icondb/resources/";
 	public static String getResourcesDir () {
@@ -235,7 +241,7 @@ public class UiApplication {
 		if (filter != null) {
 			filter.setPaginated(Boolean.TRUE);
 			filter.setPageIndex(Integer.valueOf(0));
-			filter.setPageSize(Integer.valueOf(2));
+//			filter.setPageSize(Integer.valueOf(2));
 			result = filter;
 		}
 		return result;

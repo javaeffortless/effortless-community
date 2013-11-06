@@ -45,4 +45,8 @@ public class NoneSecuritySystem extends Object implements SecuritySystem {
 		return loginName;
 	}
 
+	@Override
+	public void setupSession(Object user) {
+	}
+
 }

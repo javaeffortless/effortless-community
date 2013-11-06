@@ -9,4 +9,6 @@ public interface SecuritySystem extends Serializable {
 	
 	public Object login (String loginName, String loginPassword);
 	
+	public void setupSession (Object user); 
+	
 }

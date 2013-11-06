@@ -141,7 +141,7 @@ public class FieldCtrl extends Object implements org.zkoss.zk.ui.event.EventList
 		if (filter != null) {
 			filter.setPaginated(Boolean.TRUE);
 			filter.setPageIndex(Integer.valueOf(0));
-			filter.setPageSize(Integer.valueOf(3));
+//			filter.setPageSize(Integer.valueOf(3));
 		}
 		
 		if (filter != null && autoStartSearch) {

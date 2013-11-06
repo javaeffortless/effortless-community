@@ -1,8 +1,8 @@
-#Mon, 04 Nov 2013 23:42:58 +0000
+#Wed, 06 Nov 2013 00:55:31 +0000
 #Build Number for ANT. Do not edit!
-#Mon Nov 04 23:42:58 WET 2013
+#Wed Nov 06 00:55:30 WET 2013
 version=1.0alpha
-build.number=80
-build.date=20131104234258+0000
-build.author=
+build.number=85
+build.date=20131106005531+0000
 id=effortless-model
+build.author=

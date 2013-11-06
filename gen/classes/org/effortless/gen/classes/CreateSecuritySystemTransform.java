@@ -1,20 +1,13 @@
 package org.effortless.gen.classes;
 
-import java.util.List;
-
+import org.codehaus.groovy.ast.ClassHelper;
 import org.effortless.ann.HashPassword;
-import org.effortless.ann.Module;
-import org.effortless.ann.Person;
+import org.effortless.core.GlobalContext;
 import org.effortless.core.StringUtils;
 import org.effortless.gen.GApplication;
 import org.effortless.gen.GClass;
 import org.effortless.gen.GMethod;
-import org.effortless.gen.GenContext;
 import org.effortless.gen.Transform;
-import org.effortless.model.CriteriaFilter;
-import org.effortless.model.Entity;
-import org.effortless.server.ServerContext;
-
 
 /*
  * 
@@ -106,12 +99,43 @@ public class CreateSecuritySystemTransform extends Object implements Transform<G
 				}
 //				filter.eq("activo", Boolean.TRUE);
 				mg.add(mg.call(mg.var("filter"), "eq", mg.cte("activo"), mg.cteTRUE()));
+if (false) {
+//				filter.eq("deleted", Boolean.FALSE);
+				mg.add(mg.call(mg.var("filter"), "eq", mg.cte("deleted"), mg.cteFALSE()));
+}
 //				result = (filter.size() > 0 ? filter.get(0) : null);
-				mg.add(mg.assign(mg.var("result"), mg.triple(mg.gt(mg.call(mg.var("filter"), "size"), mg.cte(Integer.valueOf(0))), mg.call(mg.var("filter"), "get", mg.cte(Integer.valueOf(0))), mg.cteNull())));
+				mg.add(mg.assign(mg.var("result"), mg.triple(mg.eq(mg.call(mg.var("filter"), "size"), mg.cte(Integer.valueOf(1))), mg.call(mg.var("filter"), "get", mg.cte(Integer.valueOf(0))), mg.cteNull())));
 				
 				//return result;
 				mg.addReturn("result");
 
+			if (node.getSettingsClass() != null) {
+				//public void setupSession (Object user) {
+				//}
+				mg = cg.addMethod("setupSession").setPublic(true).addParameter(Object.class, "user").setReturnType(ClassHelper.VOID_TYPE);
+
+if (false) {
+				//org.effortless.model.SimpleFilter filter = new org.effortless.model.SimpleFilter(Settings.class);
+				mg.declVariable(org.effortless.model.SimpleFilter.class, "filter", mg.callConstructor(org.effortless.model.SimpleFilter.class, mg.cteClass(node.getSettingsClass().getClassNode())));
+if (false) {
+//				filter.eq("deleted", Boolean.FALSE);
+				mg.add(mg.call(mg.var("filter"), "eq", mg.cte("deleted"), mg.cteFALSE()));
+}
+//				Settings cfg = (Settings)(filter.size() > 0 ? filter.get(0) : null);
+				mg.declVariable(node.getSettingsClass(), "cfg", mg.cast(node.getSettingsClass().getClassNode(), mg.triple(mg.gt(mg.call(mg.var("filter"), "size"), mg.cte(Integer.valueOf(0))), mg.call(mg.var("filter"), "get", mg.cte(Integer.valueOf(0))), mg.cteNull())));
+}
+else {
+				//Settings cfg = Settings.getCurrent();
+				mg.declVariable(node.getSettingsClass(), "cfg", mg.callStatic(node.getSettingsClass().getClassNode(), "getCurrent"));
+}
+//				Integer defaultPageSize = (cfg != null ? cfg.getDefaultPageSize() : null);
+				String defaultPageSizePropertyName = "defaultPageSize";
+				String defaultPageSizeGetterName = "get" + StringUtils.capFirst(defaultPageSizePropertyName);
+				mg.declVariable(Integer.class, defaultPageSizePropertyName, mg.triple(mg.notNull(mg.var("cfg")), mg.call(mg.var("cfg"), defaultPageSizeGetterName), mg.cteNull()));
+				
+				//GlobalContext.set(GlobalContext.DEFAULT_PAGE_SIZE, Integer.valueOf(4));
+				mg.add(mg.callStatic(GlobalContext.class, "set", mg.cte(GlobalContext.DEFAULT_PAGE_SIZE), mg.var(defaultPageSizePropertyName)));
+			}
 		}
 	}
 

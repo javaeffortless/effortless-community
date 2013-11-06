@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.effortless.core.GlobalContext;
 //import org.effortless.MySession;
 import org.effortless.core.ObjectUtils;
 import org.effortless.security.Resource;
@@ -19,6 +20,7 @@ import org.effortless.security.SecuritySeverity;
 import org.effortless.security.SecuritySystem;
 import org.effortless.security.resources.ResourceType;
 import org.effortless.server.binder.BeanMapLoadOnDemand;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.metadata.ClassMetadata;
 
@@ -169,8 +171,16 @@ public abstract class AbstractFilter<Type extends Object> extends Object/*Abstra
 	protected Integer pageSize;
 	
 	protected void initiatePageSize () {
-		this.pageSize = Integer.valueOf(25);
+		this.pageSize = loadDefaultPageSize();
+//		this.pageSize = Integer.valueOf(25);
 //		this.pageSize = Integer.valueOf(1);
+	}
+	
+	public static Integer loadDefaultPageSize () {
+		Integer result = null;
+		try { result = GlobalContext.get(GlobalContext.DEFAULT_PAGE_SIZE, Integer.class); }	catch (Throwable t) {}
+		result = (result != null && result.intValue() > 0 ? result : Integer.valueOf(25));
+		return result;
 	}
 	
 	public Integer getPageSize() {

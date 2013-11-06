@@ -88,7 +88,9 @@ public class MenuCtrl extends Object implements org.zkoss.zk.ui.event.EventListe
 			Class clazz = UiApplication.getEntityClass(cName);
 			if (clazz != null) {
 				if (InfoFacade.isSingleton(clazz)) {
-					Object item = UiApplication.newItem(clazz);
+//					Object item = UiApplication.newItem(clazz);
+					Object item = UiApplication.loadCurrentSingleton(clazz);
+					item = (item != null ? item : UiApplication.newItem(clazz));
 					String editorSrc = UiApplication.getEditorZul(clazz);
 			    	if (item != null) {
 			    		EditorWindow editorWindow = Windows.openEditor(item, editorSrc);
@@ -116,7 +118,7 @@ public class MenuCtrl extends Object implements org.zkoss.zk.ui.event.EventListe
 					if (filter != null) {
 						filter.setPaginated(Boolean.TRUE);
 						filter.setPageIndex(Integer.valueOf(0));
-						filter.setPageSize(Integer.valueOf(3));
+//						filter.setPageSize(Integer.valueOf(3));
 					}
 					
 					if (filter != null && autoStartSearch) {

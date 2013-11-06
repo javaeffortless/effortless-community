@@ -474,19 +474,19 @@ public class CriteriaFilter<Type extends Entity<Type>> extends AbstractFilter<Ty
 		return this;
 	}
 
-	public Filter<Type> orderAsc (String name) {
-		if (name != null) {
-			this.criteria.addOrder(Order.asc(name));
-		}
-		return this;
-	}
-	
-	public Filter<Type> orderDesc (String name) {
-		if (name != null) {
-			this.criteria.addOrder(Order.desc(name));
-		}
-		return this;
-	}
+//	public Filter<Type> orderAsc (String name) {
+//		if (name != null) {
+//			this.criteria.addOrder(Order.asc(name));
+//		}
+//		return this;
+//	}
+//	
+//	public Filter<Type> orderDesc (String name) {
+//		if (name != null) {
+//			this.criteria.addOrder(Order.desc(name));
+//		}
+//		return this;
+//	}
 	
 	public Filter<Type> ilk (String name, Object param) {
 		if (_notNull(param)) {

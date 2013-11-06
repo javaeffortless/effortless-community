@@ -26,6 +26,8 @@ public class GlobalContext extends Object {
 
 	public static final String SECURITY_CONTEXT = "SECURITY_CONTEXT";
 
+	public static final String DEFAULT_PAGE_SIZE = "DEFAULT_PAGE_SIZE";
+
 	
 	public static Session getSession () {
 		return Sessions.getCurrent();

@@ -106,30 +106,7 @@ public class GClass extends AbstractNode<GClass> implements GNode {
 			}
 		}
 	}
-	
-	
-	
-	public GClass setPublic (boolean newValue) {
-		if (newValue) {
-			this.clazz.setModifiers(Opcodes.ACC_PUBLIC);
-		}
-		return this;
-	}
-	
-	public GClass setProtected (boolean newValue) {
-		if (newValue) {
-			this.clazz.setModifiers(Opcodes.ACC_PROTECTED);
-		}
-		return this;
-	}
-	
-	public GClass setPrivate (boolean newValue) {
-		if (newValue) {
-			this.clazz.setModifiers(Opcodes.ACC_PRIVATE);
-		}
-		return this;
-	}
-	
+
 	public ClassNode createGenericType (Class<?> clazz, Class<?>[] types) {
 		return createGenericType(ClassNodeHelper.toClassNode(clazz), ClassNodeHelper.toClassNodes(types));
 	}
@@ -840,4 +817,69 @@ public class GClass extends AbstractNode<GClass> implements GNode {
 		return this.clazz;
 	}
 
+	
+//	public GClass setPublic (boolean newValue) {
+//		if (newValue) {
+//			this.clazz.setModifiers(Opcodes.ACC_PUBLIC);
+//		}
+//		return this;
+//	}
+//	
+//	public GClass setProtected (boolean newValue) {
+//		if (newValue) {
+//			this.clazz.setModifiers(Opcodes.ACC_PROTECTED);
+//		}
+//		return this;
+//	}
+//	
+//	public GClass setPrivate (boolean newValue) {
+//		if (newValue) {
+//			this.clazz.setModifiers(Opcodes.ACC_PRIVATE);
+//		}
+//		return this;
+//	}
+	
+	
+	
+	public GClass setPublic (boolean newValue) {
+		if (newValue) {
+			setProtected(false);
+			setPrivate(false);
+		}
+		return _addRemoteModifier(Opcodes.ACC_PUBLIC, newValue);
+	}
+	
+	public GClass setProtected (boolean newValue) {
+		if (newValue) {
+			setPublic(false);
+			setPrivate(false);
+		}
+		return _addRemoteModifier(Opcodes.ACC_PROTECTED, newValue);
+	}
+
+	public GClass setPrivate (boolean newValue) {
+		if (newValue) {
+			setProtected(false);
+			setPublic(false);
+		}
+		return _addRemoteModifier(Opcodes.ACC_PRIVATE, newValue);
+	}
+	
+	public GClass setStatic(boolean newValue) {
+		return _addRemoteModifier(Opcodes.ACC_STATIC, newValue);
+	}
+	
+	public GClass setFinal(boolean newValue) {
+		return _addRemoteModifier(Opcodes.ACC_FINAL, newValue);
+	}
+	
+	protected GClass _addRemoteModifier(int value, boolean add) {
+		int modifiers = this.clazz.getModifiers();
+		int newModifiers = (add ? modifiers | value : modifiers & (~value));
+		this.clazz.setModifiers(newModifiers);
+		return this;
+	}
+	
+	
+	
 }
