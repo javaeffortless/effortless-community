@@ -28,6 +28,12 @@ public class HibernateEntityTransform extends Object implements Transform<GClass
 	@Override
 	public void process(GClass cg) {
 		if (cg != null && cg.checkEntityValid() && !cg.checkEnum()) {
+			GMethod mg = null;
+			mg = cg.addConstructor().setPublic(true);
+			mg.add(mg.cteSuper());
+//			mg.add(mg.debug("HOLA CREANDO"));
+			
+			
 			addFields(cg);
 			new AlterActionsTransform().process(cg);
 //			ecg.alterActions();

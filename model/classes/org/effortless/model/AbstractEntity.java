@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,6 +37,7 @@ import org.effortless.security.resources.ResourceType;
 import org.hibernate.Session;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.ByteBufferOutputStream;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
@@ -2370,9 +2372,14 @@ public abstract class AbstractEntity<Type extends AbstractEntity<Type>> extends 
 	public void writeExternal(java.io.ObjectOutput output) throws java.io.IOException {
 		Kryo kryo = _doGetKryo();
 		ObjectOutputStream oos = (ObjectOutputStream)output;
+		
+//		ByteBuffer buf = ByteBuffer.allocate(1024);
+//		ByteBufferOutputStream byteBufferOutputStream = new ByteBufferOutputStream(buf);		
+		
 		Output kryoOutput = new Output(oos);
+//		Output kryoOutput = new Output(byteBufferOutputStream);
 		doWrite(kryo, kryoOutput);
-		output.close();		
+//		output.close();
 	}
 	  
 	protected void doWrite(Kryo kryo, Output out) {
@@ -2387,7 +2394,7 @@ public abstract class AbstractEntity<Type extends AbstractEntity<Type>> extends 
 		ObjectInputStream ois = (ObjectInputStream)input;
 		Input kryoInput = new Input(ois);
 		doRead(kryo, kryoInput);
-		input.close();		
+//		input.close();		
 	}
 
 	protected void doRead(Kryo kryo, Input in) {

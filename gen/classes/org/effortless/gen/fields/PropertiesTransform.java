@@ -22,6 +22,8 @@ public class PropertiesTransform extends AbstractPropertiesTransform {
 		addInitiateDefaultDate(field);
 		addEntityGetter(field);
 		addEntitySetter(field);
+//		GMethod mg = addEntitySetter(field);
+//		mg.add(mg.debug("debug set " + field.getName()));
 	}
 	
 	protected void boolProcessField (GField field) {
@@ -171,6 +173,7 @@ public class PropertiesTransform extends AbstractPropertiesTransform {
 	
 	protected void protectField (GField field) {
 		field.setModifiers(Opcodes.ACC_PROTECTED);
+		field.getField().setInitialValueExpression(null); 		
 	}
 
 	protected void addInitiate (GField field) {
@@ -191,11 +194,14 @@ public class PropertiesTransform extends AbstractPropertiesTransform {
 		return result;
 	}
 	
-	public void addEntitySetter (GField field) {
+	public GMethod addEntitySetter (GField field) {
+		GMethod result = null;
 		String setterName = field.getSetterName();
 		String fName = field.getName();
 		GMethod mg = field.getClazz().addMethod(setterName).setPublic(true).addParameter(field.getType(), "newValue");
 		mg.add(mg.call("_setProperty", mg.cte(fName), mg.field(field), mg.assign(mg.field(field), "newValue")));//this._setProperty('text', this.text, this.text = newValue);
+		result = mg;
+		return result;
 	}
 
 	
@@ -223,8 +229,12 @@ public class PropertiesTransform extends AbstractPropertiesTransform {
 		
 		GMethod mg = field.getClazz().addMethod(methodName).setProtected(true);
 		boolean defaultValue = loadDefaultDateValue(field);
-		Expression defaultExpression = (defaultValue ? mg.callConstructor(java.util.Date.class) : mg.cteNull());
+//		Expression defaultExpression = (defaultValue ? mg.callConstructor(java.util.Date.class) : mg.cteNull());
+//		Expression defaultExpression = mg.callConstructor(java.util.Date.class);
+//		Expression defaultExpression = mg.callStatic(org.effortless.core.DateUtils.class, "getCurrentDate");
+		Expression defaultExpression = (defaultValue ? mg.callStatic(org.effortless.core.DateUtils.class, "getCurrentDate") : mg.cteNull());
 		mg.add(mg.assign(mg.field(field.getName()), defaultExpression));
+//		mg.add(mg.debug("inicializando " + field.getName()));
 	}
 	
 	public static final String[] DATE_CURRENT_DEFAULT_TRUE = {"alta", "create"};

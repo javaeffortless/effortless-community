@@ -31,6 +31,9 @@ import org.effortless.util.FileHashes;
 import org.hibernate.annotations.Tuplizer;
 import org.hibernate.tuple.entity.PojoEntityTuplizer;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Output;
+
 
 //http://code.google.com/p/xxhash/ Para calcular huellas
 //https://github.com/jpountz/lz4-java Para comprimir con rapidez  (http://fastcompression.blogspot.com.es/p/lz4.html)
@@ -1700,6 +1703,113 @@ public class FileEntity<Type extends FileEntity<Type>> extends AbstractIdEntity<
 	
 	
 	
+	protected void doWrite (com.esotericsoftware.kryo.Kryo kryo, com.esotericsoftware.kryo.io.Output out) {
+		super.doWrite(kryo, out);
+		kryo.writeObjectOrNull(out, this.audioChannelType, String.class);
+		kryo.writeObjectOrNull(out, this.audioCompressor, String.class);
+		kryo.writeObjectOrNull(out, this.audioDataRate, Double.class);
+		kryo.writeObjectOrNull(out, this.author, String.class);
+		kryo.writeObjectOrNull(out, this.bitsPerSample, String.class);
+		kryo.writeObjectOrNull(out, this.byteLength, Double.class);
+		kryo.writeObjectOrNull(out, this.canSeekOnTime, Boolean.class);
+		kryo.writeObjectOrNull(out, this.channels, Integer.class);
+		kryo.writeObjectOrNull(out, this.characterCount, Integer.class);
+		kryo.writeObjectOrNull(out, this.comment, String.class);
+		kryo.writeObjectOrNull(out, this.compress, String.class);
+//		kryo.writeObjectOrNull(out, this.content, File.class);
+		kryo.writeObjectOrNull(out, this.contentType, String.class);
+		kryo.writeObjectOrNull(out, this.creationDate, Date.class);
+		kryo.writeObjectOrNull(out, this.description, String.class);
+		kryo.writeObjectOrNull(out, this.duration, Double.class);
+		kryo.writeObjectOrNull(out, this.editTimeSeconds, Integer.class);
+		kryo.writeObjectOrNull(out, this.embedded, Boolean.class);
+		kryo.writeObjectOrNull(out, this.fileVersion, String.class);
+		kryo.writeObjectOrNull(out, this.format, String.class);
+		kryo.writeObjectOrNull(out, this.frameRate, Double.class);
+		kryo.writeObjectOrNull(out, this.hasAudio, Boolean.class);
+		kryo.writeObjectOrNull(out, this.hash1, String.class);
+		kryo.writeObjectOrNull(out, this.hash2, String.class);
+		kryo.writeObjectOrNull(out, this.hash3, String.class);
+		kryo.writeObjectOrNull(out, this.hasVideo, Boolean.class);
+		kryo.writeObjectOrNull(out, this.height, Integer.class);
+		kryo.writeObjectOrNull(out, this.imageCount, Integer.class);
+		kryo.writeObjectOrNull(out, this.keywords, String.class);
+		kryo.writeObjectOrNull(out, this.language, String.class);
+		kryo.writeObjectOrNull(out, this.lastModification, Date.class);
+		kryo.writeObjectOrNull(out, this.lastModified, Date.class);
+		kryo.writeObjectOrNull(out, this.name, String.class);
+		kryo.writeObjectOrNull(out, this.objectCount, Integer.class);
+		kryo.writeObjectOrNull(out, this.pageCount, Integer.class);
+		kryo.writeObjectOrNull(out, this.paragraphCount, Integer.class);
+		kryo.writeObjectOrNull(out, this.path, String.class);
+		kryo.writeObjectOrNull(out, this.printDate, Date.class);
+		kryo.writeObjectOrNull(out, this.registerDate, Date.class);
+		kryo.writeObjectOrNull(out, this.revisionNumber, Integer.class);
+		kryo.writeObjectOrNull(out, this.sampleRate, String.class);
+		kryo.writeObjectOrNull(out, this.size, Long.class);
+		kryo.writeObjectOrNull(out, this.software, String.class);
+		kryo.writeObjectOrNull(out, this.subject, String.class);
+		kryo.writeObjectOrNull(out, this.tableCount, Integer.class);
+		kryo.writeObjectOrNull(out, this.title, String.class);
+		kryo.writeObjectOrNull(out, this.totalDataRate, Double.class);
+		kryo.writeObjectOrNull(out, this.videoDataRate, Double.class);
+		kryo.writeObjectOrNull(out, this.width, Integer.class);
+		kryo.writeObjectOrNull(out, this.wordCount, Integer.class);
+	}
+	
+	protected void doRead(com.esotericsoftware.kryo.Kryo kryo, com.esotericsoftware.kryo.io.Input in) {
+		super.doRead(kryo, in);
+		this.audioChannelType = kryo.readObjectOrNull(in, String.class);
+		this.audioCompressor = kryo.readObjectOrNull(in, String.class);
+		this.audioDataRate = kryo.readObjectOrNull(in, Double.class);
+		this.author = kryo.readObjectOrNull(in, String.class);
+		this.bitsPerSample = kryo.readObjectOrNull(in, String.class);
+		this.byteLength = kryo.readObjectOrNull(in, Double.class);
+		this.canSeekOnTime = kryo.readObjectOrNull(in, Boolean.class);
+		this.channels = kryo.readObjectOrNull(in, Integer.class);
+		this.characterCount = kryo.readObjectOrNull(in, Integer.class);
+		this.comment = kryo.readObjectOrNull(in, String.class);
+		this.compress = kryo.readObjectOrNull(in, String.class);
+//		this.content = kryo.readObjectOrNull(in, File.class);
+		this.contentType = kryo.readObjectOrNull(in, String.class);
+		this.creationDate = kryo.readObjectOrNull(in, Date.class);
+		this.description = kryo.readObjectOrNull(in, String.class);
+		this.duration = kryo.readObjectOrNull(in, Double.class);
+		this.editTimeSeconds = kryo.readObjectOrNull(in, Integer.class);
+		this.embedded = kryo.readObjectOrNull(in, Boolean.class);
+		this.fileVersion = kryo.readObjectOrNull(in, String.class);
+		this.format = kryo.readObjectOrNull(in, String.class);
+		this.frameRate = kryo.readObjectOrNull(in, Double.class);
+		this.hasAudio = kryo.readObjectOrNull(in, Boolean.class);
+		this.hash1 = kryo.readObjectOrNull(in, String.class);
+		this.hash2 = kryo.readObjectOrNull(in, String.class);
+		this.hash3 = kryo.readObjectOrNull(in, String.class);
+		this.hasVideo = kryo.readObjectOrNull(in, Boolean.class);
+		this.height = kryo.readObjectOrNull(in, Integer.class);
+		this.imageCount = kryo.readObjectOrNull(in, Integer.class);
+		this.keywords = kryo.readObjectOrNull(in, String.class);
+		this.language = kryo.readObjectOrNull(in, String.class);
+		this.lastModification = kryo.readObjectOrNull(in, Date.class);
+		this.lastModified = kryo.readObjectOrNull(in, Date.class);
+		this.name = kryo.readObjectOrNull(in, String.class);
+		this.objectCount = kryo.readObjectOrNull(in, Integer.class);
+		this.pageCount = kryo.readObjectOrNull(in, Integer.class);
+		this.paragraphCount = kryo.readObjectOrNull(in, Integer.class);
+		this.path = kryo.readObjectOrNull(in, String.class);
+		this.printDate = kryo.readObjectOrNull(in, Date.class);
+		this.registerDate = kryo.readObjectOrNull(in, Date.class);
+		this.revisionNumber = kryo.readObjectOrNull(in, Integer.class);
+		this.sampleRate = kryo.readObjectOrNull(in, String.class);
+		this.size = kryo.readObjectOrNull(in, Long.class);
+		this.software = kryo.readObjectOrNull(in, String.class);
+		this.subject = kryo.readObjectOrNull(in, String.class);
+		this.tableCount = kryo.readObjectOrNull(in, Integer.class);
+		this.title = kryo.readObjectOrNull(in, String.class);
+		this.totalDataRate = kryo.readObjectOrNull(in, Double.class);
+		this.videoDataRate = kryo.readObjectOrNull(in, Double.class);
+		this.width = kryo.readObjectOrNull(in, Integer.class);
+		this.wordCount = kryo.readObjectOrNull(in, Integer.class);
+	}
 	
 	
 	

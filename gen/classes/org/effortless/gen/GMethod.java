@@ -82,6 +82,15 @@ public class GMethod extends AbstractNode<GMethod> implements GNode {
 		this.code = new BlockStatement();
 		this.preserveCode();
 	}
+
+	public GMethod (MethodNode methodNode, GClass classGen, BlockStatement code) {
+		this.methodNode = methodNode;
+		this.classGen = classGen;
+		this.code = code;
+//		this.preserveCode();
+	}
+	
+	
 	
 	protected MethodNode methodNode;
 	
@@ -308,6 +317,19 @@ public class GMethod extends AbstractNode<GMethod> implements GNode {
 	
 	public GMethod gPrintln (String msg) {
 		return gPrintln(new ConstantExpression(msg));
+	}
+
+	public Expression debug (String msg) {
+		return debug(new ConstantExpression(msg));
+	}
+	
+	public Expression debug (Expression msg) {
+		Expression result = null;
+		ClassExpression system = new ClassExpression(new ClassNode(System.class));
+		PropertyExpression systemOut = new PropertyExpression(system, "out");
+		MethodCallExpression beginCall = new MethodCallExpression(systemOut, "println", new ArgumentListExpression(new Expression[] {msg}));
+		result = beginCall;
+		return result;
 	}
 	
 	public GMethod gPrintln (Expression msg) {

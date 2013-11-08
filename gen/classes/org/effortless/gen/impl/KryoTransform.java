@@ -19,6 +19,8 @@ import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 import org.codehaus.groovy.syntax.Token;
 import org.codehaus.groovy.syntax.Types;
 import org.effortless.core.ClassNodeHelper;
+import org.effortless.gen.GField;
+import org.effortless.gen.GMethod;
 import org.effortless.gen.Transform;
 import org.effortless.gen.GClass;
 import org.objectweb.asm.Opcodes;
@@ -75,6 +77,17 @@ public class KryoTransform extends Object implements Transform<GClass> {
 	 * @param sourceUnit
 	 */
 	public static void addWrite(GClass cg) {
+if (true) {
+		GMethod mg = cg.addMethod("doWrite").setProtected(true).setReturnType(ClassHelper.VOID_TYPE).addParameter(com.esotericsoftware.kryo.Kryo.class, "kryo").addParameter(com.esotericsoftware.kryo.io.Output.class, "out");
+		mg.add(mg.call(mg.cteSuper(), "doWrite", mg.var("kryo"), mg.var("out")));
+		List<GField> fields = cg.getFields();
+		if (fields != null) {
+			for (GField field : fields) {
+				mg.add(mg.call(mg.var("kryo"), "writeObjectOrNull", mg.var("out"), mg.field(field), mg.cteClass(field.getType())));
+			}
+		}
+}
+else {
 		ClassNode clazz = cg.getClassNode();
 		if (clazz != null) {
 			List<FieldNode> fields = clazz.getFields();
@@ -99,6 +112,7 @@ public class KryoTransform extends Object implements Transform<GClass> {
 				clazz.addMethod(method);
 			}
 		}
+}
 	}
 
 	/**
@@ -117,6 +131,17 @@ public class KryoTransform extends Object implements Transform<GClass> {
 	 * @param sourceUnit
 	 */
 	public static void addRead(GClass cg) {
+if (true) {
+	GMethod mg = cg.addMethod("doRead").setProtected(true).setReturnType(ClassHelper.VOID_TYPE).addParameter(com.esotericsoftware.kryo.Kryo.class, "kryo").addParameter(com.esotericsoftware.kryo.io.Input.class, "in");
+	mg.add(mg.call(mg.cteSuper(), "doRead", mg.var("kryo"), mg.var("in")));
+	List<GField> fields = cg.getFields();
+	if (fields != null) {
+		for (GField field : fields) {
+			mg.add(mg.assign(mg.field(field), mg.call(mg.var("kryo"), "readObjectOrNull", mg.var("in"), mg.cteClass(field.getType()))));
+		}
+	}
+}
+else {
 		ClassNode clazz = cg.getClassNode();
 		if (clazz != null) {
 			List<FieldNode> fields = clazz.getFields();
@@ -142,6 +167,7 @@ public class KryoTransform extends Object implements Transform<GClass> {
 				clazz.addMethod(method);
 			}
 		}
+}
 	}
 	
 }
