@@ -296,11 +296,12 @@ public class GClass extends AbstractNode<GClass> implements GNode {
 
 	public GMethod addConstructor () {
 		GMethod result = null;
-		BlockStatement code = new BlockStatement();
-		code.addStatement(EmptyStatement.INSTANCE);
-		ConstructorNode constructor = new ConstructorNode(Opcodes.ACC_PUBLIC, code);
+//		BlockStatement code = new BlockStatement();
+//		code.addStatement(EmptyStatement.INSTANCE);
+		ConstructorNode constructor = new ConstructorNode(Opcodes.ACC_PUBLIC, EmptyStatement.INSTANCE);
 		this.clazz.addConstructor(constructor);
-		result = new GMethod(constructor, this, code);
+//		result = new GMethod(constructor, this, code);
+		result = new GMethod(constructor, this);
 		return result;
 	}
 	

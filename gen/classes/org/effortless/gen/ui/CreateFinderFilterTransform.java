@@ -46,6 +46,11 @@ public class CreateFinderFilterTransform extends Object implements Transform<GCl
 			String cName = getFinderFilterName(clazz);
 			GClass cg = new GClass(cName, clazz.getSourceUnit());
 			cg.setSuperClass(cg.createGenericType(CriteriaFilter.class, clazz.getClassNode()));
+
+			GMethod mg = null;
+			
+			mg = cg.addConstructor().setPublic(true);
+			mg.add(mg.cteSuper());
 			
 			List<GField> fields = InfoModel.getFinderProperties(clazz);
 			if (fields != null) {
@@ -53,8 +58,6 @@ public class CreateFinderFilterTransform extends Object implements Transform<GCl
 					addFilterProperty(cg, field);
 				}
 			}
-			
-			GMethod mg = null;
 	
 	//		protected Class<?> doGetFilterClass () {
 	//			return Item.class;
