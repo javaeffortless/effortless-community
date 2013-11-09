@@ -1,5 +1,7 @@
 package org.effortless.gen.fields;
 
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.effortless.core.Collections;
 import org.effortless.gen.GClass;
@@ -156,7 +158,19 @@ public class PropertiesTransform extends AbstractPropertiesTransform {
 	}
 	
 	protected void listProcessField (GField field) {
-		
+////		ClassNode c = ClassHelper.makeReference();//field.getType()
+//		ClassNode c0 = field.getType();
+//		ClassNode c1 = c0.redirect();
+//		field.setType(c1);
+//		ClassNode c2 = ClassHelper.make(c0.getName());
+//		field.setType(c2);
+//		ClassNode c3 = new ClassNode(c0.getTypeClass());
+//		field.setType(c3);
+		protectField(field);
+		addInitiate(field);
+		addEntityGetter(field);
+		addEntitySetter(field);
+//		System.out.println("field =" + field);
 	}
 	
 	protected void refProcessField (GField field) {

@@ -287,6 +287,8 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends Object imp
 		return result;
 	}
 
-	
+//	protected ClassNode _toPlain (ClassNode node) {
+//		return (node != null ? node.getPlainNodeReference() : node);
+//	}
 	
 }

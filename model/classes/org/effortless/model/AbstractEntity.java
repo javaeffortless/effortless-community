@@ -2426,6 +2426,7 @@ public abstract class AbstractEntity<Type extends AbstractEntity<Type>> extends 
 	public Type clone () {
 		Type result = null;
 		result = createClone();
+		copyTo(result);
 		return result;
 	}
 	

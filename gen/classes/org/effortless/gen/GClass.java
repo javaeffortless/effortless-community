@@ -884,6 +884,8 @@ public class GClass extends AbstractNode<GClass> implements GNode {
 		return this;
 	}
 	
-	
+	public ClassNode getPlainClassForGenerics () {
+		return (this.clazz != null ? this.clazz.getPlainNodeReference() : this.clazz);
+	}
 	
 }

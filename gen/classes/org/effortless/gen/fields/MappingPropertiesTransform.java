@@ -1,6 +1,8 @@
 package org.effortless.gen.fields;
 
 import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.GenericsType;
 import org.effortless.gen.GField;
 import org.effortless.gen.GMethod;
 import org.effortless.gen.InfoModel;
@@ -83,7 +85,22 @@ public class MappingPropertiesTransform extends AbstractPropertiesTransform {
 	}
 	
 	protected void listProcessField (GField field) {
-		
+		GMethod getter = field.getGetterMethod();
+//		@OneToMany(mappedBy="owner")
+		AnnotationNode ann = null;
+		ann = getter.createAnnotation(javax.persistence.OneToMany.class);
+		ann.addMember("mappedBy", field.cte("owner"));
+		getter.addAnnotation(ann);
+		ClassNode cType = field.getType();
+		GenericsType[] types = cType.getGenericsTypes();
+		cType = types[0].getType();
+		if (cType != null) {
+			
+		}
+//	    @JoinColumn(name="PART_ID")
+//		ann = getter.createAnnotation(javax.persistence.JoinColumn.class);
+//		ann.addMember("name", field.cte("ITEM_ID"));
+//		getter.addAnnotation(ann);
 	}
 	
 	protected void refProcessField (GField field) {
