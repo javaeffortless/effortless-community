@@ -13,6 +13,10 @@ import org.effortless.gen.GMethod;
 
 public class CloneMethodTransform extends Object implements Transform<GClass> {
 
+	public CloneMethodTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GClass clazz) {
 		List<GField> fields = clazz.getProperties();

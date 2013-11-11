@@ -11,6 +11,10 @@ import org.effortless.model.StartupDb;
 
 public class UpdateDbTransform extends Object implements Transform<GClass> {
 
+	public UpdateDbTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GClass clazz) {
 		if (clazz != null && clazz.checkEntityValid() && !clazz.checkEnum()) {

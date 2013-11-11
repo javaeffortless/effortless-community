@@ -54,6 +54,10 @@ public class BasicEditorViewModel {
 
 public class EditorVMTransform extends Object implements Transform<GClass> {
 
+	public EditorVMTransform () {
+		super();
+	}
+	
 	public void process (GClass cg) {
 		if (cg != null && cg.checkEntityValid() && !cg.checkEnum()) {
 			writeZul(cg);

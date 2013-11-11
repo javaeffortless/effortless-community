@@ -9,6 +9,10 @@ import org.effortless.gen.GMethod;
 
 public class InitiateMethodTransform extends Object implements Transform<GClass> {
 
+	public InitiateMethodTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GClass clazz) {
 		List<GField> fields = clazz.getFields();

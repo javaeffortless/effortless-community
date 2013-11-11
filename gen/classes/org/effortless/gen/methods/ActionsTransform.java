@@ -40,6 +40,10 @@ import org.effortless.model.AbstractEntity;
 
 public class ActionsTransform extends Object implements Transform<GClass> {
 
+	public ActionsTransform () {
+		super();
+	}
+	
 	public void process (GClass clazz) {
 		if (clazz != null) {
 			List<GMethod> methods = clazz.getAllDeclaredMethods();

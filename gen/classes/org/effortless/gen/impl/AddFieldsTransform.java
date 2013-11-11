@@ -12,6 +12,10 @@ import org.effortless.gen.Transform;
 
 public class AddFieldsTransform extends Object implements Transform<GClass> {
 
+	public AddFieldsTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GClass node) {
 		if (node != null) {
@@ -39,7 +43,7 @@ public class AddFieldsTransform extends Object implements Transform<GClass> {
 		}
 	}
 
-	private void addPersonFields(GClass node) {
+	protected void addPersonFields(GClass node) {
 		doAddField(node, String.class, "alias");
 		doAddField(node, String.class, "nombre");
 		doAddField(node, String.class, "apellidos");
@@ -47,18 +51,18 @@ public class AddFieldsTransform extends Object implements Transform<GClass> {
 		doAddField(node, File.class, "foto");
 	}
 
-	private void addNonPersonFields(GClass node) {
+	protected void addNonPersonFields(GClass node) {
 		GField fNombre = doAddField(node, String.class, "nombre");
-		if (fNombre != null) {
-			fNombre.createAnnotation(NotNull.class, "enabled", node.cteFalse());
+		if (fNombre != null && !fNombre.hasAnnotation(org.effortless.ann.NotNull.class)) {
+			fNombre.addAnnotation(org.effortless.ann.NotNull.class, "enabled", node.cteFalse());
 		}
 		doAddField(node, String.class, "descripcion");
 	}
 	
 	protected GField doAddField (GClass node, Class<?> type, String fieldName) {
 		GField result = null;
-		GField field = node.getField(fieldName);
-		result = (field == null ? node.addField(type, fieldName) : null);
+		result = node.getField(fieldName);
+		result = (result != null ? result : node.addField(type, fieldName));
 		return result;
 	}
 

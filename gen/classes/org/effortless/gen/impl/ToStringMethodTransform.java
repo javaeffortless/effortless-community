@@ -10,6 +10,10 @@ import org.effortless.gen.GMethod;
 
 public class ToStringMethodTransform extends Object implements Transform<GClass> {
 
+	public ToStringMethodTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GClass clazz) {
 		List<GField> fields = InfoModel.listNotNullUnique(clazz);

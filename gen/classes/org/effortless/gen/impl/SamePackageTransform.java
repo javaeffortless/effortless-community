@@ -9,6 +9,10 @@ import org.effortless.server.ServerContext;
 
 public class SamePackageTransform extends Object implements Transform<GClass> {
 
+	public SamePackageTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GClass cg) {
 		ClassNode clazz = cg.getClassNode();

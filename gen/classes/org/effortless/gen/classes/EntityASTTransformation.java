@@ -10,6 +10,7 @@ import org.codehaus.groovy.control.*;
 import org.objectweb.asm.Opcodes;
 
 import org.effortless.gen.GModule;
+import org.effortless.gen.InfoModel;
 import org.effortless.gen.Transform;
 import org.effortless.gen.GApplication;
 import org.effortless.gen.GClass;
@@ -24,8 +25,12 @@ import org.effortless.server.ServerContext;
 //@GroovyASTTransformation(phase=CompilePhase.CONVERSION)
 @GroovyASTTransformation(phase=CompilePhase.SEMANTIC_ANALYSIS)
 //@GroovyASTTransformation(phase=CompilePhase.CANONICALIZATION)
-public class EntityASTTransformation implements ASTTransformation, Opcodes {
+public class EntityASTTransformation extends Object implements ASTTransformation, Opcodes {
 
+	public EntityASTTransformation () {
+		super();
+	}
+	
 	public void visit(ASTNode[] nodes, SourceUnit sourceUnit) {
 //		List classes = sourceUnit.getAST()?.getClasses()
 //		classes.each { ClassNode clazz ->
@@ -84,10 +89,12 @@ public class EntityASTTransformation implements ASTTransformation, Opcodes {
 	}
 
 	protected void completeApplication(GApplication app) {
+if (InfoModel.checkCompleteApplication()) {
 		new CreateSettingsTransform().process(app);
 		new CreateUserProfileTransform().process(app);
 		new CreateUserTransform().process(app);
 		new CreateSecuritySystemTransform().process(app);
+}
 	}
 
 	protected String loadAppId (SourceUnit sourceUnit) {

@@ -24,6 +24,10 @@ import org.objectweb.asm.Opcodes;
 
 public class EntityLogTransform extends Object implements Transform<GClass> {
 
+	public EntityLogTransform () {
+		super();
+	}
+	
 	public static final ClassNode NO_LOG_CLAZZ = ClassNodeHelper.toClassNode(NoLog.class);
 	
 	@Override

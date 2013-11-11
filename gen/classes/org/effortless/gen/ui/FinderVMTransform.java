@@ -31,6 +31,10 @@ import org.effortless.ui.resources.ImageResources;
  */
 public class FinderVMTransform extends Object implements Transform<GClass> {
 
+	public FinderVMTransform () {
+		super();
+	}
+	
 	public void process (GClass clazz) {
 		if (clazz != null && clazz.checkEntityValid() && !clazz.checkEnum()) {
 			CreateFinderFilterTransform ffT = new CreateFinderFilterTransform();

@@ -9,6 +9,10 @@ import org.effortless.gen.GMethod;
 
 public class CompareMethodTransform extends Object implements Transform<GClass> {
 
+	public CompareMethodTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GClass clazz) {
 		List<GField> fields = clazz.getProperties();

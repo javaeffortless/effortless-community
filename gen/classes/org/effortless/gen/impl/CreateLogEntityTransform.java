@@ -4,6 +4,7 @@ import org.effortless.ann.Module;
 import org.effortless.core.ClassNodeHelper;
 import org.effortless.gen.GApplication;
 import org.effortless.gen.GClass;
+import org.effortless.gen.InfoModel;
 import org.effortless.model.LogData;
 
 public class CreateLogEntityTransform extends AbstractCreateClassTransform<GClass> {
@@ -17,7 +18,7 @@ public class CreateLogEntityTransform extends AbstractCreateClassTransform<GClas
 		
 		GApplication app = clazz.getApplication();
 		result = app.getLogClass();
-		if (result == null) {
+		if (result == null && InfoModel.checkCreateLogEntity()) {
 			result = tryNeedsNewExternalEntity(clazz, ClassNodeHelper.toClassNode(LogData.class), null);
 			result.addAnnotation(Module.class, "others");
 

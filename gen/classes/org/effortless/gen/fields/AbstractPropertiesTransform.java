@@ -6,6 +6,10 @@ import org.effortless.model.FileEntity;
 
 public abstract class AbstractPropertiesTransform extends Object implements Transform<GField> {
 
+	public AbstractPropertiesTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GField gField) {
 		processField(gField);

@@ -303,6 +303,18 @@ public class InfoModel extends Object {
 	public static boolean checkPhoto (GField field) {
 		return checkKeywords(field, new String[] {"photo", "image", "foto", "icon"});
 	}
+
+	public static boolean checkCompleteApplication() {
+		return true;
+	}
+
+	public static boolean checkCreateFileEntity() {
+		return true;
+	}
+
+	public static boolean checkCreateLogEntity() {
+		return true;
+	}
 	
 	
 	

@@ -15,6 +15,7 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer;
 import org.codehaus.groovy.control.customizers.CompilationCustomizer;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
+import org.codehaus.groovy.control.messages.WarningMessage;
 import org.effortless.core.FilenameUtils;
 //import org.effortless.model.StartupDb;
 //import org.effortless.transform.MainTransform;
@@ -202,6 +203,7 @@ System.out.println(">>>>>>>>>> realPath effortless " + realPath);
 		config.setDebug(true);
 		config.setClasspath(rootScripts);
 		config.setVerbose(true);
+		config.setWarningLevel(WarningMessage.PARANOIA);
 	}
 
 }

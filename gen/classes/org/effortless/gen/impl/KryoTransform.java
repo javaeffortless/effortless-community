@@ -50,6 +50,10 @@ import org.objectweb.asm.Opcodes;
  */
 public class KryoTransform extends Object implements Transform<GClass> {
 
+	public KryoTransform () {
+		super();
+	}
+	
 	public static final ClassNode INPUT = ClassNodeHelper.toClassNode(com.esotericsoftware.kryo.io.Input.class);
 	public static final ClassNode OUTPUT = ClassNodeHelper.toClassNode(com.esotericsoftware.kryo.io.Output.class);
 	public static final ClassNode KRYO = ClassNodeHelper.toClassNode(com.esotericsoftware.kryo.Kryo.class);

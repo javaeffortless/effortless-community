@@ -14,6 +14,10 @@ import org.effortless.model.AbstractEntity;
 
 public class AlterActionsTransform extends Object implements Transform<GClass> {
 
+	public AlterActionsTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GClass clazz) {
 		// TODO Auto-generated method stub

@@ -7,6 +7,10 @@ import org.effortless.model.AbstractIdEntity;
 
 public class SetupEntityParentTransform extends Object implements Transform<GClass> {
 
+	public SetupEntityParentTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GClass cg) {
 		setupParent(cg);

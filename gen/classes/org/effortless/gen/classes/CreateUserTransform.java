@@ -14,19 +14,26 @@ import org.effortless.gen.Transform;
 
 public class CreateUserTransform extends Object implements Transform<GApplication> {
 
+	public CreateUserTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GApplication node) {
 		if (node != null && node.getUserClass() == null) {
 			GClass cg = node.newClass("Usuario");
 			node.setUserClass(cg);
 			
-			AnnotationNode ann = cg.createAnnotation(Finder.class);
-			ann.addMember("properties", cg.cte("activo,login,nombre,apellidos"));
-			ann.addMember("info", cg.cte("foto"));
-			cg.addAnnotation(ann);
+			if (!cg.hasAnnotation(Finder.class)) {
+				cg.addAnnotation(Finder.class).addMember("properties", cg.cte("activo,login,nombre,apellidos")).addMember("info", cg.cte("foto"));
+			}
 			
-			cg.addAnnotation(Person.class);
-			cg.addAnnotation(Module.class, "usuarios");
+			if (!cg.hasAnnotation(Person.class)) {
+				cg.addAnnotation(Person.class);
+			}
+			if (!cg.hasAnnotation(Module.class)) {
+				cg.addAnnotation(Module.class, "usuarios");
+			}
 
 			cg.addField(String.class, "login");
 			

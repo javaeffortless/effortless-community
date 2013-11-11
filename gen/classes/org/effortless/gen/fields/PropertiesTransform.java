@@ -1,7 +1,5 @@
 package org.effortless.gen.fields;
 
-import org.codehaus.groovy.ast.ClassHelper;
-import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.effortless.core.Collections;
 import org.effortless.gen.GClass;
@@ -12,6 +10,10 @@ import org.objectweb.asm.Opcodes;
 
 public class PropertiesTransform extends AbstractPropertiesTransform {
 
+	public PropertiesTransform () {
+		super();
+	}
+	
 	protected void textProcessField (GField field) {
 		protectField(field);
 		addInitiate(field);

@@ -93,6 +93,7 @@ public class GClass extends AbstractNode<GClass> implements GNode {
 	public GField addField (ClassNode type, String name) {
 		GField result = null;
 		FieldNode node = new FieldNode(name, Opcodes.ACC_PROTECTED, type, this.clazz, ConstantExpression.NULL);
+		node.setInitialValueExpression(null);
 		this.clazz.addField(node);
 		result = new GField(this, node);
 //		FieldExpression fieldExpression = new FieldExpression(field);
@@ -609,24 +610,6 @@ public class GClass extends AbstractNode<GClass> implements GNode {
 		GField result = null;
 		FieldNode node = (this.clazz != null && name != null ? this.clazz.getField(name) : null);
 		result = (node != null ? new GField(this, node) : null);
-		return result;
-	}
-
-	public boolean hasAnnotation (Class<?> clazz) {
-		boolean result = false;
-		if (clazz != null) {
-			ClassNode cNode = ClassNodeHelper.toClassNode(clazz);
-			result = hasAnnotation(cNode);
-		}
-		return result;
-	}
-
-	public boolean hasAnnotation (ClassNode clazz) {
-		boolean result = false;
-		if (clazz != null) {
-			List<AnnotationNode> annotations = (this.clazz != null ? this.clazz.getAnnotations(clazz) : null);
-			result = (annotations != null && annotations.size() > 0);
-		}
 		return result;
 	}
 

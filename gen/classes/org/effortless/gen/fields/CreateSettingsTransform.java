@@ -16,6 +16,10 @@ import org.effortless.model.Filter;
 
 public class CreateSettingsTransform extends Object implements Transform<GApplication> {
 
+	public CreateSettingsTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GApplication node) {
 		if (node != null && node.getSettingsClass() == null) {

@@ -18,6 +18,10 @@ import org.effortless.model.Filter;
 
 public class EntityStaticMethodsTransform extends Object implements Transform<GClass> {
 
+	public EntityStaticMethodsTransform () {
+		super();
+	}
+	
 	/**
 	 * 
 		public static Filter<AllBasicProperties> listBy () {

@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface NotNull {
 
-	public boolean enabled();
+	boolean enabled() default true;
 	
 }

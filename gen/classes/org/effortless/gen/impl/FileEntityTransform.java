@@ -10,6 +10,10 @@ import org.effortless.model.FileEntity;
 
 public class FileEntityTransform extends HibernateEntityTransform {
 
+	public FileEntityTransform () {
+		super();
+	}
+	
 	protected void addFields (GClass cg) {
 	}
 	

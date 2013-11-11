@@ -17,6 +17,10 @@ import org.effortless.gen.methods.InstanceMethodTransform;
 
 public class HibernateEntityTransform extends Object implements Transform<GClass> {
 
+	public HibernateEntityTransform () {
+		super();
+	}
+	
 	protected void setupEntityParent (GClass clazz) {
 		new SetupEntityParentTransform().process(clazz);
 	}

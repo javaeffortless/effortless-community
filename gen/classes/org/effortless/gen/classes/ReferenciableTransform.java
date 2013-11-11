@@ -30,6 +30,10 @@ import org.effortless.model.Referenciable;
  */
 public class ReferenciableTransform extends Object implements Transform<GClass> {
 
+	public ReferenciableTransform () {
+		super();
+	}
+	
 	public void process (GClass cg) {
 		if (cg != null) {
 			

@@ -1,8 +1,12 @@
 package org.effortless.gen.fields;
 
+import javax.persistence.ManyToOne;
+
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.GenericsType;
+import org.effortless.gen.GAnnotation;
+import org.effortless.gen.GClass;
 import org.effortless.gen.GField;
 import org.effortless.gen.GMethod;
 import org.effortless.gen.InfoModel;
@@ -10,6 +14,10 @@ import org.objectweb.asm.Opcodes;
 
 public class MappingPropertiesTransform extends AbstractPropertiesTransform {
 
+	public MappingPropertiesTransform () {
+		super();
+	}
+	
 	protected void textProcessField (GField field) {
 		GMethod m = field.getGetterMethod();
 		addSimpleMapping(field, m);
@@ -73,7 +81,7 @@ public class MappingPropertiesTransform extends AbstractPropertiesTransform {
 //		addSimpleMapping(field, m);
 
 		String columnName = field.getName().toUpperCase() + "_ID";
-		AnnotationNode ann = getter.createAnnotation(javax.persistence.ManyToOne.class);//@javax.persistence.ManyToOne(cascade = {javax.persistence.CascadeType.ALL})
+		GAnnotation ann = getter.addAnnotation(javax.persistence.ManyToOne.class);//@javax.persistence.ManyToOne(cascade = {javax.persistence.CascadeType.ALL})
 		ann.addMember("cascade", getter.enumValue(javax.persistence.CascadeType.class, "ALL"));
 		ann.addMember("targetEntity", getter.cteClass(field.getType()));
 		ann.addMember("fetch", getter.enumValue(javax.persistence.FetchType.class, "LAZY"));
@@ -87,15 +95,19 @@ public class MappingPropertiesTransform extends AbstractPropertiesTransform {
 	protected void listProcessField (GField field) {
 		GMethod getter = field.getGetterMethod();
 //		@OneToMany(mappedBy="owner")
-		AnnotationNode ann = null;
-		ann = getter.createAnnotation(javax.persistence.OneToMany.class);
+		GAnnotation ann = null;
+		ann = getter.addAnnotation(javax.persistence.OneToMany.class);
 		ann.addMember("mappedBy", field.cte("owner"));
-		getter.addAnnotation(ann);
+
 		ClassNode cType = field.getType();
 		GenericsType[] types = cType.getGenericsTypes();
 		cType = types[0].getType();
-		if (cType != null) {
-			
+		GClass targetClass = new GClass(cType);
+		targetClass.setApplication(field.getApplication());
+		if (cType != null && targetClass != null) {
+//			@ManyToOne
+			ClassNode plainClass = field.getClazz().getPlainClassForGenerics();
+			targetClass.addField(plainClass, "owner").addAnnotation(ManyToOne.class);
 		}
 //	    @JoinColumn(name="PART_ID")
 //		ann = getter.createAnnotation(javax.persistence.JoinColumn.class);
@@ -110,15 +122,16 @@ public class MappingPropertiesTransform extends AbstractPropertiesTransform {
 		getter.addAnnotation(javax.persistence.Basic.class, "fetch", getter.enumValue(javax.persistence.FetchType.class, "EAGER"));
 		
 		//@ManyToOne() 
-		AnnotationNode ann = getter.createAnnotation(javax.persistence.ManyToOne.class);
-		ann.addMember("cascade", getter.enumValue(javax.persistence.CascadeType.class, "ALL"));
-		ann.addMember("targetEntity", getter.cteClass(field.getType()));
-		ann.addMember("fetch", getter.enumValue(javax.persistence.FetchType.class, "LAZY"));
-		getter.addAnnotation(ann);
+		boolean refInner = (field.getAnnotation(ManyToOne.class) != null);
+		GAnnotation ann = getter.addAnnotation(javax.persistence.ManyToOne.class);
+		if (!refInner) {
+			ann.addMember("cascade", getter.enumValue(javax.persistence.CascadeType.class, "ALL"));
+			ann.addMember("targetEntity", getter.cteClass(field.getType()));
+			ann.addMember("fetch", getter.enumValue(javax.persistence.FetchType.class, "LAZY"));
+		}
 		
 		String columnName = field.getName().toUpperCase() + "_ID";
-		AnnotationNode column = getter.createAnnotation(javax.persistence.JoinColumn.class, "name", getter.cte(columnName));//@JoinColumn(name="CUST_ID")
-		getter.addAnnotation(column);
+		GAnnotation column = getter.addAnnotation(javax.persistence.JoinColumn.class, "name", getter.cte(columnName));//@JoinColumn(name="CUST_ID")
 		
 		//@javax.persistence.Column(name="column", unique=true, nullable=false)
 		if (InfoModel.isSingleUnique(field)) {
@@ -142,8 +155,8 @@ public class MappingPropertiesTransform extends AbstractPropertiesTransform {
 	public void addSimpleMapping (GField field, GMethod mg) {
 		String columnName = field.getName().toUpperCase();
 		//@javax.persistence.Column(name="column", unique=true, nullable=false)
-		AnnotationNode column = mg.createAnnotation(javax.persistence.Column.class, "name", mg.cte(columnName));
-		mg.addAnnotation(column);
+		GAnnotation column = mg.addAnnotation(javax.persistence.Column.class, "name", mg.cte(columnName));
+
 		if (InfoModel.isSingleUnique(field)) {
 			column.addMember("unique", mg.cteTrue());
 		}

@@ -1,7 +1,10 @@
 package org.effortless.model;
 
 import java.io.File;
+
 import java.io.IOException;
+//import java.lang.annotation.Annotation;
+//import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,12 +15,12 @@ import nu.xom.ValidityException;
 
 import org.effortless.core.FilenameUtils;
 import org.effortless.core.ModelException;
-import org.effortless.core.GlobalContext;
+//import org.effortless.core.GlobalContext;
 import org.effortless.server.ServerContext;
 import org.hibernate.SessionFactory;
-import org.hibernate.event.service.spi.EventListenerRegistry;
-import org.hibernate.event.spi.EventType;
-import org.hibernate.internal.SessionFactoryImpl;
+//import org.hibernate.event.service.spi.EventListenerRegistry;
+//import org.hibernate.event.spi.EventType;
+//import org.hibernate.internal.SessionFactoryImpl;
 
 public class StartupDb {
 
@@ -82,7 +85,7 @@ public class StartupDb {
 	}
 
 	public static void startDs (String fileName) {
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+//		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 
 		String baseName = FilenameUtils.getBaseName(fileName);
 		int lastIndexOf = baseName.lastIndexOf("-ds");
@@ -117,7 +120,56 @@ public class StartupDb {
 		
 		org.effortless.core.XmlHibernateUtil.decryptCfg(configuration);
 		
+		
+//		try {
+//			Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass("org.effortless.lotogest.Loteria");
+//			Annotation[] annotations = clazz.getAnnotations();
+//			for (Annotation ann : annotations) {
+//				System.out.println(">>>>> type = " + ann.annotationType());
+//			}
+//			{
+//				Field[] fields = clazz.getFields();
+//				for (Field field : fields) {
+//					System.out.println("############ field Name = " + field.getName() + " (BEGIN)");
+//					Annotation[] fieldAnnotations = field.getAnnotations();
+//					for (Annotation ann : fieldAnnotations) {
+//						System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> type = " + ann.annotationType());
+//					}
+//					System.out.println("############ field Name = " + field.getName() + " (END)");
+//				}
+//			}
+//			System.out.println("-------------DECLARED FIELDS");
+//			{
+//				Field[] fields = clazz.getDeclaredFields();
+//				for (Field field : fields) {
+//					System.out.println("############ field Name = " + field.getName() + " (BEGIN)");
+//					{
+//						Annotation[] fieldAnnotations = field.getDeclaredAnnotations();
+//						for (Annotation ann : fieldAnnotations) {
+//							System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> type = " + ann.annotationType());
+//						}
+//					}
+//					{
+//						Annotation[] fieldAnnotations = field.getAnnotations();
+//						for (Annotation ann : fieldAnnotations) {
+//							System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> type = " + ann.annotationType());
+//						}
+//					}
+//					System.out.println("############ field Name = " + field.getName() + " (END)");
+//				}
+//			}
+//			System.out.println("AAAAAAAAA");
+//		} catch (ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 //		enableJndiWritable()
+		try {
+			throw new NullPointerException();
+		}
+		catch (Throwable t) {
+			t.printStackTrace();
+		}
 		org.hibernate.SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistryBuilder.buildServiceRegistry());
 
 		registerListeners(sessionFactory);

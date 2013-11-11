@@ -10,6 +10,10 @@ import org.effortless.gen.Transform;
 
 public class CreateUserProfileTransform extends Object implements Transform<GApplication> {
 
+	public CreateUserProfileTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GApplication node) {
 		if (node != null && node.getUserProfileClass() == null) {

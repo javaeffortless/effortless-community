@@ -10,6 +10,10 @@ import org.effortless.server.ServerContext;
 
 public class SamePackageModuleTransform extends Object implements Transform<GModule> {
 
+	public SamePackageModuleTransform () {
+		super();
+	}
+	
 	public void process (GModule module) {
 		setupPackage(module.getNode());
 	}

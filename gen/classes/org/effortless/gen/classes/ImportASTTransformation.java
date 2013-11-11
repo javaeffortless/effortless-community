@@ -1,5 +1,9 @@
 package org.effortless.gen.classes;
 
-public class ImportASTTransformation {
+public class ImportASTTransformation extends Object {
 
+	public ImportASTTransformation () {
+		super();
+	}
+	
 }

@@ -24,8 +24,11 @@ import org.effortless.ui.resources.ImageResources;
  *
  */
 
-public class MainVMTransform {
+public class MainVMTransform extends Object {
 
+	public MainVMTransform () {
+		super();
+	}
 	
 	/**
 	 * 

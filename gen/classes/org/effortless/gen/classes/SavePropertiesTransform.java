@@ -31,6 +31,10 @@ import org.effortless.gen.GMethod;
  */
 public class SavePropertiesTransform extends Object implements Transform<GClass> {
 
+	public SavePropertiesTransform () {
+		super();
+	}
+	
 	public void process (GClass cg) {
 		if (cg != null) {
 			

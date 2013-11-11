@@ -24,6 +24,10 @@ import org.objectweb.asm.Opcodes;
  */
 public class FinalFieldsTransform extends Object implements Transform<GClass> {
 
+	public FinalFieldsTransform () {
+		super();
+	}
+	
 	public void process (GClass clazz) {
 		if (clazz != null) {
 			

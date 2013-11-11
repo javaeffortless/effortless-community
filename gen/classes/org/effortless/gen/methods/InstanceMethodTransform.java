@@ -24,6 +24,10 @@ import org.effortless.gen.Transform;
  */
 public class InstanceMethodTransform extends Object implements Transform<GMethod> {
 
+	public InstanceMethodTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GMethod node) {
 		GAnnotation ann = node.getAnnotation(InstanceMethod.class);

@@ -11,6 +11,10 @@ import org.effortless.model.LogData;
 
 public class AdaptLogEntityTransform extends HibernateEntityTransform {
 
+	public AdaptLogEntityTransform () {
+		super();
+	}
+	
 	@Override
 	protected void setupEntityParent (GClass cg) {
 		ClassNode clazz = cg.getClassNode();

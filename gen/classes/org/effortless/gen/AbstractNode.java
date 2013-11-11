@@ -104,137 +104,84 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends Object imp
 	protected abstract AnnotatedNode _getAnnotatedNode ();
 	
 	
-	public T addAnnotation (Class<?> annotation) {
+	public GAnnotation addAnnotation (Class<?> annotation) {
 		return addAnnotation(ClassNodeHelper.toClassNode(annotation));
 	}
 	
 	
-	public T addAnnotation (ClassNode annotation) {
+	public GAnnotation addAnnotation (ClassNode annotation) {
+		GAnnotation result = null;
 		AnnotationNode ann = new AnnotationNode(annotation);
 		AnnotatedNode annotatedNode = _getAnnotatedNode();
+		result = new GAnnotation(ann, annotatedNode);
 		annotatedNode.addAnnotation(ann);
-		return (T)this;
+		return result;
 	}
 
-	public T addAnnotation (AnnotationNode annotation) {
+	public GAnnotation addAnnotation (AnnotationNode annotation) {
+		GAnnotation result = null;
 		AnnotatedNode annotatedNode = _getAnnotatedNode();
+		result = new GAnnotation(annotation, annotatedNode);
 		annotatedNode.addAnnotation(annotation);
-		return (T)this;
+		return result;
 	}
 
-	public T addAnnotation (Class<?> annotation, String value) {
+	public GAnnotation addAnnotation (Class<?> annotation, String value) {
 		return addAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
 	}
 	
-	public T addAnnotation (Class<?> annotation, Expression value) {
+	public GAnnotation addAnnotation (Class<?> annotation, Expression value) {
 		return addAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
 	}
 	
-	public T addAnnotation (ClassNode annotation, String value) {
+	public GAnnotation addAnnotation (ClassNode annotation, String value) {
 		return addAnnotation(annotation, "value", value);
 	}
 
-	public T addAnnotation (Class<?> annotation, String property, String value) {
+	public GAnnotation addAnnotation (Class<?> annotation, String property, String value) {
 		return addAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
 	}
 
-	public T addAnnotation (Class<?> annotation, String property, boolean value) {
+	public GAnnotation addAnnotation (Class<?> annotation, String property, boolean value) {
 		return addAnnotation(ClassNodeHelper.toClassNode(annotation), property, (value ? ConstantExpression.PRIM_TRUE : ConstantExpression.PRIM_FALSE));
 	}
 
 	
 	
-	public T addAnnotation (ClassNode annotation, String property, String value) {
+	public GAnnotation addAnnotation (ClassNode annotation, String property, String value) {
 		return addAnnotation(annotation, property, new ConstantExpression(value));
 	}
 
-	public T addAnnotation (ClassNode annotation, String property, Expression expr) {
+	public GAnnotation addAnnotation (ClassNode annotation, String property, Expression expr) {
+		GAnnotation result = null;
 		AnnotationNode ann = new AnnotationNode(annotation);
 		ann.setMember(property, expr);
 		AnnotatedNode annotatedNode = _getAnnotatedNode();
+		result = new GAnnotation(ann, annotatedNode);
 		annotatedNode.addAnnotation(ann);
-		return (T)this;
+		return result;
 	}
 
-	public T addAnnotation (Class<?> annotation, String property, Expression value) {
+	public GAnnotation addAnnotation (Class<?> annotation, String property, Expression value) {
 		return addAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
 	}
 	
-	public T addAnnotation (Class<?> annotation, String[] properties, Expression... values) {
+	public GAnnotation addAnnotation (Class<?> annotation, String[] properties, Expression... values) {
 		return addAnnotation(ClassNodeHelper.toClassNode(annotation), properties, values);
 	}
 	
-	public T addAnnotation (ClassNode annotation, String[] properties, Expression... values) {
-		AnnotationNode result = new AnnotationNode(annotation);
+	public GAnnotation addAnnotation (ClassNode annotation, String[] properties, Expression... values) {
+		GAnnotation result = null;
+		AnnotationNode ann = new AnnotationNode(annotation);
 		int length = (properties != null ? properties.length : 0);
 		for (int i = 0; i < length; i++) {
-			result.setMember(properties[i], values[i]);
+			ann.setMember(properties[i], values[i]);
 		}
-		addAnnotation(result);
-		return (T)this;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public AnnotationNode createAnnotation (Class<?> annotation) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation));
-	}
-	
-	public AnnotationNode createAnnotation (ClassNode annotation) {
-		AnnotationNode result = new AnnotationNode(annotation);
+		AnnotatedNode annotatedNode = _getAnnotatedNode();
+		result = new GAnnotation(ann, annotatedNode);
+		annotatedNode.addAnnotation(ann);
 		return result;
 	}
-
-	public AnnotationNode createAnnotation (Class<?> annotation, String value) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
-	}
-	
-	public AnnotationNode createAnnotation (Class<?> annotation, Expression value) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
-	}
-	
-	public AnnotationNode createAnnotation (ClassNode annotation, String value) {
-		return createAnnotation(annotation, "value", value);
-	}
-
-	public AnnotationNode createAnnotation (Class<?> annotation, String property, String value) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
-	}
-
-	public AnnotationNode createAnnotation (ClassNode annotation, String property, String value) {
-		return createAnnotation(annotation, property, new ConstantExpression(value));
-	}
-
-	public AnnotationNode createAnnotation (Class<?> annotation, String property, Expression value) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
-	}
-	
-	public AnnotationNode createAnnotation (ClassNode annotation, String property, Expression value) {
-		AnnotationNode result = new AnnotationNode(annotation);
-		result.setMember(property, value);
-		return result;
-	}
-	
-	public AnnotationNode createAnnotation (Class<?> annotation, String[] properties, Expression... values) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), properties, values);
-	}
-	
-	public AnnotationNode createAnnotation (ClassNode annotation, String[] properties, Expression... values) {
-		AnnotationNode result = new AnnotationNode(annotation);
-		int length = (properties != null ? properties.length : 0);
-		for (int i = 0; i < length; i++) {
-			result.setMember(properties[i], values[i]);
-		}
-		return result;
-	}
-
 	
 	public Expression cteNull () {
 		return ConstantExpression.NULL;
@@ -282,7 +229,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends Object imp
 		List<AnnotationNode> annotations = annotatedNode.getAnnotations(ClassNodeHelper.toClassNode(clazz));
 		if (annotations != null && annotations.size() == 1) {
 			AnnotationNode ann = annotations.get(0);
-			result = new GAnnotation(ann);
+			result = new GAnnotation(ann, _getAnnotatedNode());
 		}
 		return result;
 	}
@@ -290,5 +237,26 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends Object imp
 //	protected ClassNode _toPlain (ClassNode node) {
 //		return (node != null ? node.getPlainNodeReference() : node);
 //	}
+
+	public boolean hasAnnotation (Class<?> clazz) {
+		boolean result = false;
+		if (clazz != null) {
+			ClassNode cNode = ClassNodeHelper.toClassNode(clazz);
+			result = hasAnnotation(cNode);
+		}
+		return result;
+	}
+
+	public boolean hasAnnotation (ClassNode clazz) {
+		boolean result = false;
+		if (clazz != null) {
+			AnnotatedNode annotatedNode = _getAnnotatedNode();
+			List<AnnotationNode> annotations = (annotatedNode != null ? annotatedNode.getAnnotations(clazz) : null);
+			result = (annotations != null && annotations.size() > 0);
+		}
+		return result;
+	}
+
+	
 	
 }

@@ -9,6 +9,10 @@ import org.effortless.gen.GMethod;
 
 public class EqualsMethodTransform extends Object implements Transform<GClass> {
 
+	public EqualsMethodTransform () {
+		super();
+	}
+	
 	@Override
 	public void process(GClass clazz) {
 		List<GField> fields = clazz.getProperties();

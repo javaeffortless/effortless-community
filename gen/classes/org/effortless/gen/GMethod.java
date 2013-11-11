@@ -246,58 +246,6 @@ public class GMethod extends AbstractNode<GMethod> implements GNode {
 	
 	
 	
-	public AnnotationNode createAnnotation (Class<?> annotation) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation));
-	}
-	
-	public AnnotationNode createAnnotation (ClassNode annotation) {
-		AnnotationNode result = new AnnotationNode(annotation);
-		return result;
-	}
-
-	public AnnotationNode createAnnotation (Class<?> annotation, String value) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
-	}
-	
-	public AnnotationNode createAnnotation (Class<?> annotation, Expression value) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), "value", value);
-	}
-	
-	public AnnotationNode createAnnotation (ClassNode annotation, String value) {
-		return createAnnotation(annotation, "value", value);
-	}
-
-	public AnnotationNode createAnnotation (Class<?> annotation, String property, String value) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
-	}
-
-	public AnnotationNode createAnnotation (ClassNode annotation, String property, String value) {
-		return createAnnotation(annotation, property, new ConstantExpression(value));
-	}
-
-	public AnnotationNode createAnnotation (Class<?> annotation, String property, Expression value) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), property, value);
-	}
-	
-	public AnnotationNode createAnnotation (ClassNode annotation, String property, Expression value) {
-		AnnotationNode result = new AnnotationNode(annotation);
-		result.setMember(property, value);
-		return result;
-	}
-	
-	public AnnotationNode createAnnotation (Class<?> annotation, String[] properties, Expression... values) {
-		return createAnnotation(ClassNodeHelper.toClassNode(annotation), properties, values);
-	}
-	
-	public AnnotationNode createAnnotation (ClassNode annotation, String[] properties, Expression... values) {
-		AnnotationNode result = new AnnotationNode(annotation);
-		int length = (properties != null ? properties.length : 0);
-		for (int i = 0; i < length; i++) {
-			result.setMember(properties[i], values[i]);
-		}
-		return result;
-	}
-	
 	
 	
 	
@@ -1502,16 +1450,6 @@ public class GMethod extends AbstractNode<GMethod> implements GNode {
 		result = (type != null && fieldClass != null && fieldClass.isDerivedFrom(type));
 		ClassNode nodeClass = (param != null ? param.getType() : null);
 		result = (type != null && nodeClass != null && nodeClass.isDerivedFrom(type));
-		return result;
-	}
-
-	public GAnnotation getAnnotation (Class<?> clazz) {
-		GAnnotation result = null;
-		List<AnnotationNode> annotations = this.methodNode.getAnnotations(ClassNodeHelper.toClassNode(clazz));
-		if (annotations != null && annotations.size() == 1) {
-			AnnotationNode ann = annotations.get(0);
-			result = new GAnnotation(ann);
-		}
 		return result;
 	}
 
