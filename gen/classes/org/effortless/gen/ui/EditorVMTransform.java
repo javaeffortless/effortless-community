@@ -119,7 +119,7 @@ public class EditorVMTransform extends Object implements Transform<GClass> {
 		ImageResources.copy(appId, "close", "close.png", 16);
 
 		
-		String zulName = clazz.getNameWithoutPackage().trim() + "_editor.zul";
+		String zulName = clazz.getSimpleName().trim() + "_editor.zul";
 		String folder = clazz.getPackageName();
 		if (!GClass.ONE_PACKAGE) {
 			int idx = folder.lastIndexOf(".");

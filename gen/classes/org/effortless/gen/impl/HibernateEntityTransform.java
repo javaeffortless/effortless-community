@@ -29,6 +29,12 @@ public class HibernateEntityTransform extends Object implements Transform<GClass
 		new AddFieldsTransform().process(cg);
 	}
 	
+	protected void setupStaticClass (GClass clazz) {
+		if (clazz != null && clazz.isInner()) {
+			clazz.setStatic(true);
+		}
+	}
+	
 	@Override
 	public void process(GClass cg) {
 		if (cg != null && cg.checkEntityValid() && !cg.checkEnum()) {
@@ -37,6 +43,7 @@ public class HibernateEntityTransform extends Object implements Transform<GClass
 			mg.add(mg.cteSuper());
 //			mg.add(mg.debug("HOLA CREANDO"));
 			
+			setupStaticClass(cg);
 			
 			addFields(cg);
 			new AlterActionsTransform().process(cg);

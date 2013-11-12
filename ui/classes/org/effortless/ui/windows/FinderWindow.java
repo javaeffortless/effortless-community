@@ -482,7 +482,7 @@ public class FinderWindow<T extends Object> extends AbstractFieldWindow<List<T>>
     			String pattern = ViewContext.i18n("finderTitle", false);
     			if (pattern != null) {
         			String entities = ViewContext.i18n(entityName + "_" + "optionLabel", false);
-    				title = pattern.replaceAll("\\{0\\}", entities);
+    				title = (entities != null ? pattern.replaceAll("\\{0\\}", entities) : null);
     			}
     		}
     		title = (title != null ? title.trim() : "");

@@ -219,6 +219,7 @@ public class GApplication implements GNode {
 		for (GClass clazz : classes) {
 			if (clazz != null && clazz.isType(Entity.class)) {
 				String className = clazz.getNameWithoutPackage();
+//				String className = clazz.getSimpleName();
 				result.add(className);
 			}
 		}

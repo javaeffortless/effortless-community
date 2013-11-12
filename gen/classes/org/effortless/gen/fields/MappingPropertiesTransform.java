@@ -102,12 +102,16 @@ public class MappingPropertiesTransform extends AbstractPropertiesTransform {
 		ClassNode cType = field.getType();
 		GenericsType[] types = cType.getGenericsTypes();
 		cType = types[0].getType();
-		GClass targetClass = new GClass(cType);
-		targetClass.setApplication(field.getApplication());
-		if (cType != null && targetClass != null) {
-//			@ManyToOne
-			ClassNode plainClass = field.getClazz().getPlainClassForGenerics();
-			targetClass.addField(plainClass, "owner").addAnnotation(ManyToOne.class);
+//		cType.isPrimaryClassNode();
+//		ClassNode outerClass = (cType != null ? cType.getOuterClass() : null);
+		if (cType != null) {
+			GClass innerClass = new GClass(cType);
+			innerClass.setApplication(field.getApplication());
+			if (innerClass != null && field.getClazz().checkInner(innerClass)) {
+	//			@ManyToOne
+				ClassNode plainClass = field.getClazz().getPlainClassForGenerics();
+				innerClass.addField(plainClass, "owner").addAnnotation(ManyToOne.class);
+			}
 		}
 //	    @JoinColumn(name="PART_ID")
 //		ann = getter.createAnnotation(javax.persistence.JoinColumn.class);
@@ -129,6 +133,7 @@ public class MappingPropertiesTransform extends AbstractPropertiesTransform {
 			ann.addMember("targetEntity", getter.cteClass(field.getType()));
 			ann.addMember("fetch", getter.enumValue(javax.persistence.FetchType.class, "LAZY"));
 		}
+		
 		
 		String columnName = field.getName().toUpperCase() + "_ID";
 		GAnnotation column = getter.addAnnotation(javax.persistence.JoinColumn.class, "name", getter.cte(columnName));//@JoinColumn(name="CUST_ID")

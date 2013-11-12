@@ -64,7 +64,7 @@ public class FieldTransform extends Object/* implements Transform<GField>*/ {
 		else if (field.isCollection() || field.isList()) {
 			result = listField(field);
 		}
-		else {
+		else if (field.isEntity()) {
 			result = refField(field);
 		}
 		

@@ -561,6 +561,14 @@ public class GClass extends AbstractNode<GClass> implements GNode {
 		return result;
 	}
 
+	public String getSimpleName() {
+		String result = null;
+		result = getNameWithoutPackage();
+		int idx = (result != null ? result.lastIndexOf("$") : -1);
+		result = (idx > -1 ? result.substring(idx + 1) : result);
+		return result;
+	}
+
 	public String getNameWithoutPackage() {
 		return (this.clazz != null ? this.clazz.getNameWithoutPackage() : null);
 	}
@@ -618,7 +626,9 @@ public class GClass extends AbstractNode<GClass> implements GNode {
 		name = (name != null ? name.trim() : "");
 		if (name.length() > 0) {
 			FieldNode field = this.clazz.getField(name);
-			result = new GField(this, field);
+			if (field != null) {
+				result = new GField(this, field);
+			}
 		}
 		return result;
 	}
@@ -833,7 +843,7 @@ public class GClass extends AbstractNode<GClass> implements GNode {
 			setProtected(false);
 			setPrivate(false);
 		}
-		return _addRemoteModifier(Opcodes.ACC_PUBLIC, newValue);
+		return _addRemoveModifier(Opcodes.ACC_PUBLIC, newValue);
 	}
 	
 	public GClass setProtected (boolean newValue) {
@@ -841,7 +851,7 @@ public class GClass extends AbstractNode<GClass> implements GNode {
 			setPublic(false);
 			setPrivate(false);
 		}
-		return _addRemoteModifier(Opcodes.ACC_PROTECTED, newValue);
+		return _addRemoveModifier(Opcodes.ACC_PROTECTED, newValue);
 	}
 
 	public GClass setPrivate (boolean newValue) {
@@ -849,18 +859,18 @@ public class GClass extends AbstractNode<GClass> implements GNode {
 			setProtected(false);
 			setPublic(false);
 		}
-		return _addRemoteModifier(Opcodes.ACC_PRIVATE, newValue);
+		return _addRemoveModifier(Opcodes.ACC_PRIVATE, newValue);
 	}
 	
 	public GClass setStatic(boolean newValue) {
-		return _addRemoteModifier(Opcodes.ACC_STATIC, newValue);
+		return _addRemoveModifier(Opcodes.ACC_STATIC, newValue);
 	}
 	
 	public GClass setFinal(boolean newValue) {
-		return _addRemoteModifier(Opcodes.ACC_FINAL, newValue);
+		return _addRemoveModifier(Opcodes.ACC_FINAL, newValue);
 	}
 	
-	protected GClass _addRemoteModifier(int value, boolean add) {
+	protected GClass _addRemoveModifier(int value, boolean add) {
 		int modifiers = this.clazz.getModifiers();
 		int newModifiers = (add ? modifiers | value : modifiers & (~value));
 		this.clazz.setModifiers(newModifiers);
@@ -870,5 +880,45 @@ public class GClass extends AbstractNode<GClass> implements GNode {
 	public ClassNode getPlainClassForGenerics () {
 		return (this.clazz != null ? this.clazz.getPlainNodeReference() : this.clazz);
 	}
+
+	public boolean checkInner(GClass clazz) {
+		boolean result = false;
+		String className = (clazz != null ? clazz.getName() : null);
+		result = checkInner(className);
+		return result;
+	}
+
+	public boolean checkInner(ClassNode clazz) {
+		boolean result = false;
+		String className = (clazz != null ? clazz.getName() : null);
+		result = checkInner(className);
+		return result;
+	}
+	
+	public boolean checkInner(String className) {
+		boolean result = false;
+		if (className != null) {
+			Iterator<InnerClassNode> innerClasses = this.clazz.getInnerClasses();
+			if (innerClasses != null) {
+				while (innerClasses.hasNext()) {
+					InnerClassNode innerClass = innerClasses.next();
+					String itemInnerClassName = (innerClass != null ? innerClass.getName() : null);
+					if (className.equals(itemInnerClassName)) {
+						result = true;
+						break;
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	public boolean isInner() {
+		boolean result = false;
+		result = result || (this.clazz != null ? !this.clazz.isPrimaryClassNode() : false);
+		result = result || (this.clazz != null ? this.clazz.getOuterClass() != null : false);
+		return result;
+	}
+	
 	
 }

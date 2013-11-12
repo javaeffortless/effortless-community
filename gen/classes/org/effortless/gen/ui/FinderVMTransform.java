@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.codehaus.groovy.ast.ClassNode;
+//import org.codehaus.groovy.ast.ClassNode;
 import org.effortless.ann.Finder;
 import org.effortless.core.Collections;
 import org.effortless.core.ModelException;
-import org.effortless.core.StringUtils;
+//import org.effortless.core.StringUtils;
 import org.effortless.gen.GAnnotation;
 import org.effortless.gen.GClass;
 import org.effortless.gen.Transform;
@@ -60,7 +60,7 @@ public class FinderVMTransform extends Object implements Transform<GClass> {
 	 * 
 	 */
 	public void writeMoreInfoZul(GClass clazz) {
-		String className = clazz.getNameWithoutPackage();
+		String className = clazz.getSimpleName();
 		
 		List<GField> properties = InfoModel.getInfoViewProperties(clazz);
 		FieldTransform ft = new FieldTransform();
@@ -100,11 +100,11 @@ public class FinderVMTransform extends Object implements Transform<GClass> {
 	
 
 	protected void writeFinderFilterZul(GClass _filter, GClass clazz) {
-		ClassNode filter = _filter.getClassNode();
+//		ClassNode filter = _filter.getClassNode();
 		
 		FieldTransform fieldTransform = new FieldTransform();
 		
-		String className = filter.getNameWithoutPackage();
+		String className = _filter.getSimpleName();
 		
 		List<GField> properties = InfoModel.getFinderProperties(_filter);
 		
@@ -250,7 +250,7 @@ public class FinderVMTransform extends Object implements Transform<GClass> {
 		ImageResources.copy(appId, "update", "update.png", 16);
 		ImageResources.copy(appId, "delete", "delete.png", 16);
 
-		String zulName = clazz.getNameWithoutPackage().trim() + "_finder.zul";
+		String zulName = clazz.getSimpleName().trim() + "_finder.zul";
 		String folder = clazz.getPackageName();
 		if (!GClass.ONE_PACKAGE) {
 			int idx = folder.lastIndexOf(".");
