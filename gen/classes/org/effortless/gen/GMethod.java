@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.JoinColumn;
+
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassHelper;
@@ -1501,5 +1503,5 @@ public class GMethod extends AbstractNode<GMethod> implements GNode {
 		this.methodNode.setModifiers(newModifiers);
 		return this;
 	}
-	
+
 }

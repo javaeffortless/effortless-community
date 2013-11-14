@@ -2,9 +2,9 @@ package org.effortless.gen.fields;
 
 import javax.persistence.ManyToOne;
 
-import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.GenericsType;
+import org.codehaus.groovy.ast.expr.ArrayExpression;
 import org.effortless.gen.GAnnotation;
 import org.effortless.gen.GClass;
 import org.effortless.gen.GField;
@@ -95,28 +95,64 @@ public class MappingPropertiesTransform extends AbstractPropertiesTransform {
 	protected void listProcessField (GField field) {
 		GMethod getter = field.getGetterMethod();
 //		@OneToMany(mappedBy="owner")
-		GAnnotation ann = null;
-		ann = getter.addAnnotation(javax.persistence.OneToMany.class);
-		ann.addMember("mappedBy", field.cte("owner"));
+		
+		boolean inner = false;
 
 		ClassNode cType = field.getType();
 		GenericsType[] types = cType.getGenericsTypes();
 		cType = types[0].getType();
 //		cType.isPrimaryClassNode();
 //		ClassNode outerClass = (cType != null ? cType.getOuterClass() : null);
+		GClass targetClass = (cType != null ? new GClass(cType) : null);
+		if (targetClass != null) {
+			targetClass.setApplication(field.getApplication());
+		}
 		if (cType != null) {
-			GClass innerClass = new GClass(cType);
-			innerClass.setApplication(field.getApplication());
-			if (innerClass != null && field.getClazz().checkInner(innerClass)) {
+			if (targetClass != null && field.getClazz().checkInner(targetClass)) {
+				GAnnotation ann = getter.addAnnotation(javax.persistence.OneToMany.class);
+				ann.addMember("mappedBy", field.cte("owner"));
+				
 	//			@ManyToOne
 				ClassNode plainClass = field.getClazz().getPlainClassForGenerics();
-				innerClass.addField(plainClass, "owner").addAnnotation(ManyToOne.class);
+				targetClass.addField(plainClass, "owner").addAnnotation(ManyToOne.class);
+				inner = true;
 			}
 		}
-//	    @JoinColumn(name="PART_ID")
-//		ann = getter.createAnnotation(javax.persistence.JoinColumn.class);
-//		ann.addMember("name", field.cte("ITEM_ID"));
-//		getter.addAnnotation(ann);
+
+		
+//	    @ManyToMany(
+//	            targetEntity=org.hibernate.test.metadata.manytomany.Employee.class,
+//	            cascade={CascadeType.PERSIST, CascadeType.MERGE}
+//	        )
+//	        @JoinTable(
+//	            name="EMPLOYER_EMPLOYEE",
+//	            joinColumns=@JoinColumn(name="EMPER_ID"),
+//	            inverseJoinColumns=@JoinColumn(name="EMPEE_ID")
+//	        )
+//	        public Collection getEmployees() {
+//	            return employees;
+//	        }		
+		if (!inner && targetClass != null) {
+			GAnnotation ann = null;
+			ann = getter.addAnnotation(javax.persistence.ManyToMany.class);
+			ann.addMember("targetEntity", getter.cteClass(cType));
+			ann.addMember("cascade", getter.cte(new javax.persistence.CascadeType[]{javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.MERGE}));
+			
+			String tableName = getter.getClassGen().getSimpleName() + "_" + field.getName() + "_" + targetClass.getSimpleName();
+			String ownerColumnName = "owner_id";
+			String itemColumnName = "item_id";
+			
+			ann = getter.addAnnotation(javax.persistence.JoinTable.class);
+			ann.addMember("name", getter.cte(tableName));
+//			javax.persistence.JoinColumn a = new javax.persistence.JoinColumn();
+			ArrayExpression exprOwner = getter.cteArray(javax.persistence.JoinColumn.class);
+			exprOwner.addExpression(getter.cteAnnotation(getter.createAnnotation(javax.persistence.JoinColumn.class).addMember("name", getter.cte(ownerColumnName))));
+			ann.addMember("joinColumns", exprOwner);
+
+			ArrayExpression exprItem = getter.cteArray(javax.persistence.JoinColumn.class);
+			exprItem.addExpression(getter.cteAnnotation(getter.createAnnotation(javax.persistence.JoinColumn.class).addMember("name", getter.cte(itemColumnName))));
+			ann.addMember("inverseJoinColumns", exprItem);
+		}
 	}
 	
 	protected void refProcessField (GField field) {

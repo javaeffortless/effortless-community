@@ -1,8 +1,0 @@
-#Wed, 16 Oct 2013 00:40:14 +0100
-#Build Number for ANT. Do not edit!
-#Wed Oct 16 00:40:14 WEST 2013
-version=1.0alpha
-build.number=12
-build.date=20131016004014+0100
-build.author=
-id=effortless-tests

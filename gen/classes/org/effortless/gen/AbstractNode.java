@@ -3,6 +3,7 @@ package org.effortless.gen;
 import java.io.File;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.expr.ArrayExpression;
 import org.codehaus.groovy.ast.expr.ClassExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
@@ -222,6 +224,35 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends Object imp
 	public Expression cteClass(ClassNode type) {
 		return new ClassExpression(type);
 	}
+
+	public GAnnotation createAnnotation (Class<?> type) {
+		return createAnnotation(ClassNodeHelper.toClassNode(type));
+	}
+	
+	public GAnnotation createAnnotation (ClassNode type) {
+		return new GAnnotation(new AnnotationNode(type), null);
+	}
+	
+	public Expression cteAnnotation (GAnnotation annotation) {
+		return new org.codehaus.groovy.ast.expr.AnnotationConstantExpression(annotation.getNode());	
+	}
+
+	public ArrayExpression cteArray(Class<?> type) {
+		return cteArray(ClassNodeHelper.toClassNode(type));
+	}
+	
+	public ArrayExpression cteArray(ClassNode type) {
+		return new ArrayExpression(type, new ArrayList<Expression>());
+	}
+
+	
+	
+//	public AnnotationNode cteAnnotation(Class<JoinColumn> class1) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+	
+	
 	
 	public GAnnotation getAnnotation (Class<?> clazz) {
 		GAnnotation result = null;
